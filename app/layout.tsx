@@ -3,6 +3,7 @@ import "./globals.css";
 
 import Navbar from "@/components/Navbar";
 import PremiumFooter from "@/components/PremiumFooter";
+import { GoogleAnalytics } from "@next/third-parties/google";
 
 const siteUrl = "https://arzmimarlik.net";
 
@@ -164,6 +165,7 @@ export default function RootLayout({
         <main>{children}</main>
 
         <PremiumFooter />
+        <GoogleAnalytics gaId="G-7EMGB9PSVS" />
       </body>
     </html>
   );
