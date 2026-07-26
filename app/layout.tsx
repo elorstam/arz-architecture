@@ -164,7 +164,7 @@ export default function RootLayout({
 
         <main>{children}</main>
 
-        <PremiumFooter />
+    
         <GoogleAnalytics gaId="G-7EMGB9PSVS" />
       </body>
     </html>
