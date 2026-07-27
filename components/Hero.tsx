@@ -2,12 +2,8 @@
 
 import Image from "next/image";
 import Link from "next/link";
-import { useLayoutEffect, useRef } from "react";
-import gsap from "gsap";
-import { ScrollTrigger } from "gsap/ScrollTrigger";
+import { useEffect, useRef } from "react";
 import PremiumFooter from "@/components/PremiumFooter";
-
-gsap.registerPlugin(ScrollTrigger);
 
 const values = [
   {
@@ -43,297 +39,36 @@ const services = [
 
 export default function Hero() {
   const pageRef = useRef<HTMLElement | null>(null);
-  const heroRef = useRef<HTMLElement | null>(null);
-  const backgroundRef = useRef<HTMLDivElement | null>(null);
-  const projectLinkRef = useRef<HTMLAnchorElement | null>(null);
 
-  useLayoutEffect(() => {
+  useEffect(() => {
     const page = pageRef.current;
-    const hero = heroRef.current;
 
-    if (!page || !hero) {
+    if (!page || window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
+      page?.querySelectorAll<HTMLElement>("[data-reveal]").forEach((element) => {
+        element.classList.remove("opacity-0", "translate-y-12", "translate-y-8");
+      });
       return;
     }
 
-    const context = gsap.context(() => {
-      gsap.set("[data-hero-reveal]", {
-        opacity: 0,
-        y: 40,
-      });
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (!entry.isIntersecting) return;
 
-      gsap.set("[data-title-line]", {
-        opacity: 0,
-        yPercent: 120,
-      });
-
-      gsap.set("[data-project-line]", {
-        scaleX: 0,
-        transformOrigin: "left center",
-      });
-
-      gsap.set("[data-project-hover-line]", {
-        scaleX: 0,
-        transformOrigin: "left center",
-      });
-
-      gsap.set(backgroundRef.current, {
-        scale: 1.08,
-      });
-
-      const heroTimeline = gsap.timeline({
-        delay: 0.5,
-        defaults: {
-          ease: "power4.out",
-        },
-      });
-
-      heroTimeline
-        .to(backgroundRef.current, {
-          scale: 1,
-          duration: 2,
-          ease: "power3.out",
-        })
-        .to(
-          "[data-hero-eyebrow]",
-          {
-            opacity: 1,
-            y: 0,
-            duration: 0.8,
-          },
-          "-=1.45",
-        )
-        .to(
-          "[data-title-line]",
-          {
-            opacity: 1,
-            yPercent: 0,
-            duration: 1.1,
-            stagger: 0.13,
-          },
-          "-=1.1",
-        )
-        .to(
-          "[data-hero-description]",
-          {
-            opacity: 1,
-            y: 0,
-            duration: 0.85,
-          },
-          "-=0.55",
-        )
-        .to(
-          "[data-project-line]",
-          {
-            scaleX: 1,
-            duration: 1,
-          },
-          "-=0.8",
-        )
-        .to(
-          "[data-hero-project]",
-          {
-            opacity: 1,
-            y: 0,
-            duration: 0.85,
-          },
-          "-=0.7",
-        )
-        .to(
-          "[data-scroll-indicator]",
-          {
-            opacity: 1,
-            y: 0,
-            duration: 0.7,
-          },
-          "-=0.55",
-        );
-
-      gsap.to(backgroundRef.current, {
-        yPercent: 7,
-        ease: "none",
-        scrollTrigger: {
-          trigger: hero,
-          start: "top top",
-          end: "bottom top",
-          scrub: 1.2,
-        },
-      });
-
-      gsap.to("[data-hero-content]", {
-        yPercent: -7,
-        opacity: 0.25,
-        ease: "none",
-        scrollTrigger: {
-          trigger: hero,
-          start: "top top",
-          end: "bottom 20%",
-          scrub: 1,
-        },
-      });
-
-      gsap.fromTo(
-        "[data-home-intro]",
-        {
-          opacity: 0,
-          y: 80,
-        },
-        {
-          opacity: 1,
-          y: 0,
-          duration: 1.15,
-          ease: "power3.out",
-          scrollTrigger: {
-            trigger: "[data-home-intro]",
-            start: "top 88%",
-            once: true,
-          },
-        },
-      );
-
-      gsap.utils
-        .toArray<HTMLElement>("[data-home-reveal]")
-        .forEach((element) => {
-          gsap.fromTo(
-            element,
-            {
-              opacity: 0,
-              y: 70,
-            },
-            {
-              opacity: 1,
-              y: 0,
-              duration: 1,
-              ease: "power3.out",
-              scrollTrigger: {
-                trigger: element,
-                start: "top 86%",
-                once: true,
-              },
-            },
-          );
+          const element = entry.target as HTMLElement;
+          element.classList.remove("opacity-0", "translate-y-12", "translate-y-8");
+          observer.unobserve(element);
         });
+      },
+      { rootMargin: "0px 0px -8% 0px", threshold: 0.08 },
+    );
 
-      gsap.utils
-        .toArray<HTMLElement>("[data-value-card]")
-        .forEach((element, index) => {
-          gsap.fromTo(
-            element,
-            {
-              opacity: 0,
-              y: 70,
-            },
-            {
-              opacity: 1,
-              y: 0,
-              duration: 0.95,
-              delay: index * 0.09,
-              ease: "power3.out",
-              scrollTrigger: {
-                trigger: element,
-                start: "top 90%",
-                once: true,
-              },
-            },
-          );
-        });
+    page.querySelectorAll<HTMLElement>("[data-reveal]").forEach((element) => {
+      observer.observe(element);
+    });
 
-      gsap.utils
-        .toArray<HTMLElement>("[data-service-item]")
-        .forEach((element, index) => {
-          gsap.fromTo(
-            element,
-            {
-              opacity: 0,
-              x: -30,
-            },
-            {
-              opacity: 1,
-              x: 0,
-              duration: 0.75,
-              delay: index * 0.04,
-              ease: "power3.out",
-              scrollTrigger: {
-                trigger: element,
-                start: "top 93%",
-                once: true,
-              },
-            },
-          );
-        });
-
-      requestAnimationFrame(() => {
-        ScrollTrigger.refresh();
-      });
-    }, page);
-
-    return () => {
-      context.revert();
-    };
+    return () => observer.disconnect();
   }, []);
-
-  const handleProjectMouseEnter = () => {
-    if (!projectLinkRef.current) {
-      return;
-    }
-
-    gsap.to("[data-project-arrow]", {
-      x: 10,
-      duration: 0.45,
-      ease: "power3.out",
-      overwrite: true,
-    });
-
-    gsap.to("[data-project-title]", {
-      x: 7,
-      duration: 0.45,
-      ease: "power3.out",
-      overwrite: true,
-    });
-
-    gsap.to("[data-project-hover-line]", {
-      scaleX: 1,
-      duration: 0.65,
-      ease: "power3.out",
-      overwrite: true,
-    });
-
-    gsap.to(backgroundRef.current, {
-      scale: 1.025,
-      duration: 1.2,
-      ease: "power3.out",
-      overwrite: true,
-    });
-  };
-
-  const handleProjectMouseLeave = () => {
-    gsap.to("[data-project-arrow]", {
-      x: 0,
-      duration: 0.45,
-      ease: "power3.out",
-      overwrite: true,
-    });
-
-    gsap.to("[data-project-title]", {
-      x: 0,
-      duration: 0.45,
-      ease: "power3.out",
-      overwrite: true,
-    });
-
-    gsap.to("[data-project-hover-line]", {
-      scaleX: 0,
-      duration: 0.5,
-      ease: "power3.out",
-      overwrite: true,
-    });
-
-    gsap.to(backgroundRef.current, {
-      scale: 1,
-      duration: 1.2,
-      ease: "power3.out",
-      overwrite: true,
-    });
-  };
 
   return (
     <main
@@ -342,13 +77,11 @@ export default function Hero() {
     >
       {/* HERO */}
       <section
-        ref={heroRef}
         className="relative min-h-[100svh] overflow-hidden bg-[#080808] text-white"
       >
         {/* Vespera arka plan görseli */}
         <div
-          ref={backgroundRef}
-          className="absolute -inset-y-[4%] inset-x-0 will-change-transform"
+          className="absolute -inset-y-[4%] inset-x-0 animate-[heroImageIn_1.8s_cubic-bezier(0.22,1,0.36,1)_both] motion-reduce:animate-none"
         >
           <Image
             src="/vespera.png"
@@ -383,22 +116,17 @@ export default function Hero() {
 
         {/* Hero içeriği */}
         <div
-          data-hero-content
-          className="relative z-20 mx-auto flex min-h-[100svh] w-full max-w-[1920px] flex-col px-6 pb-8 pt-32 will-change-transform md:px-10 md:pb-12 md:pt-40 lg:px-16 lg:pb-14 lg:pt-44"
+          className="relative z-20 mx-auto flex min-h-[100svh] w-full max-w-[1920px] flex-col px-6 pb-8 pt-32 md:px-10 md:pb-12 md:pt-40 lg:px-16 lg:pb-14 lg:pt-44"
         >
           <div className="flex flex-1 items-start">
             <div className="w-full">
               <div className="flex items-center gap-4">
                 <span
-                  data-hero-eyebrow
-                  data-hero-reveal
-                  className="block h-px w-8 bg-white/70 opacity-0 md:w-12"
+                  className="block h-px w-8 animate-[heroFadeUp_.7s_.2s_cubic-bezier(0.22,1,0.36,1)_both] bg-white/70 motion-reduce:animate-none md:w-12"
                 />
 
                 <p
-                  data-hero-eyebrow
-                  data-hero-reveal
-                  className="text-[8px] font-medium uppercase tracking-[0.4em] text-white/80 opacity-0 sm:text-[9px] md:text-[10px]"
+                  className="animate-[heroFadeUp_.7s_.25s_cubic-bezier(0.22,1,0.36,1)_both] text-[8px] font-medium uppercase tracking-[0.4em] text-white/80 motion-reduce:animate-none sm:text-[9px] md:text-[10px]"
                 >
                   Mimarlık · İç Mimarlık · Mühendislik · Danışmanlık
                 </p>
@@ -407,8 +135,7 @@ export default function Hero() {
               <h1 className="mt-10 max-w-[1100px] text-[clamp(4.4rem,10.5vw,12.5rem)] font-light leading-[0.71] tracking-[-0.085em] text-white md:mt-12">
                 <span className="block overflow-hidden pb-[0.08em]">
                   <span
-                    data-title-line
-                    className="block will-change-transform"
+                    className="block animate-[heroTitleIn_.95s_.3s_cubic-bezier(0.22,1,0.36,1)_both] motion-reduce:animate-none"
                   >
                     Sade.
                   </span>
@@ -416,8 +143,7 @@ export default function Hero() {
 
                 <span className="block overflow-hidden pb-[0.08em]">
                   <span
-                    data-title-line
-                    className="block will-change-transform"
+                    className="block animate-[heroTitleIn_.95s_.42s_cubic-bezier(0.22,1,0.36,1)_both] motion-reduce:animate-none"
                   >
                     Modern.
                   </span>
@@ -425,8 +151,7 @@ export default function Hero() {
 
                 <span className="block overflow-hidden pb-[0.08em]">
                   <span
-                    data-title-line
-                    className="block will-change-transform"
+                    className="block animate-[heroTitleIn_.95s_.54s_cubic-bezier(0.22,1,0.36,1)_both] motion-reduce:animate-none"
                   >
                     Kalıcı.
                   </span>
@@ -438,9 +163,7 @@ export default function Hero() {
           <div className="mt-16 grid items-end gap-14 md:mt-20 lg:grid-cols-[minmax(0,1fr)_430px] lg:gap-24">
             <div>
               <p
-                data-hero-description
-                data-hero-reveal
-                className="max-w-[560px] text-sm font-light leading-6 tracking-[-0.01em] text-white/85 opacity-0 md:text-[15px] md:leading-7"
+                className="max-w-[560px] animate-[heroFadeUp_.8s_.65s_cubic-bezier(0.22,1,0.36,1)_both] text-sm font-light leading-6 tracking-[-0.01em] text-white/85 motion-reduce:animate-none md:text-[15px] md:leading-7"
               >
                 Zamana direnen, işlev ve estetiği dengeli biçimde bir araya
                 getiren; bulunduğu çevreyle güçlü bir ilişki kuran mimari
@@ -448,9 +171,7 @@ export default function Hero() {
               </p>
 
               <div
-                data-scroll-indicator
-                data-hero-reveal
-                className="mt-8 hidden items-center gap-4 opacity-0 lg:flex"
+                className="mt-8 hidden animate-[heroFadeUp_.8s_.85s_cubic-bezier(0.22,1,0.36,1)_both] items-center gap-4 motion-reduce:animate-none lg:flex"
               >
                 <span className="relative block h-[46px] w-px overflow-hidden bg-white/30">
                   <span className="absolute left-0 top-0 h-4 w-px animate-[heroScroll_1.8s_ease-in-out_infinite] bg-white/90" />
@@ -464,23 +185,16 @@ export default function Hero() {
 
             {/* Vespera Port kartı */}
             <Link
-              ref={projectLinkRef}
-              data-hero-project
-              data-hero-reveal
               href="/projects/vespera-port"
               aria-label="Vespera Port projesini incele"
-              onMouseEnter={handleProjectMouseEnter}
-              onMouseLeave={handleProjectMouseLeave}
-              className="group relative block w-full opacity-0"
+              className="group relative block w-full animate-[heroFadeUp_.85s_.75s_cubic-bezier(0.22,1,0.36,1)_both] motion-reduce:animate-none"
             >
               <span
-                data-project-line
-                className="absolute left-0 top-0 h-px w-full bg-white/65"
+                className="absolute left-0 top-0 h-px w-full origin-left animate-[heroLineIn_1s_.8s_cubic-bezier(0.22,1,0.36,1)_both] bg-white/65 motion-reduce:animate-none"
               />
 
               <span
-                data-project-hover-line
-                className="absolute left-0 top-0 h-px w-full origin-left scale-x-0 bg-white"
+                className="absolute left-0 top-0 h-px w-full origin-left scale-x-0 bg-white transition-transform duration-500 ease-out group-hover:scale-x-100"
               />
 
               <div className="pb-2 pt-6">
@@ -491,16 +205,14 @@ export default function Hero() {
                     </p>
 
                     <h2
-                      data-project-title
-                      className="mt-5 text-[clamp(2rem,3vw,3.25rem)] font-light leading-none tracking-[-0.06em] text-white will-change-transform"
+                      className="mt-5 text-[clamp(2rem,3vw,3.25rem)] font-light leading-none tracking-[-0.06em] text-white transition-transform duration-500 ease-out group-hover:translate-x-2"
                     >
                       VESPERA PORT
                     </h2>
                   </div>
 
                   <span
-                    data-project-arrow
-                    className="mt-1 text-2xl font-light text-white/80 transition-colors duration-300 will-change-transform group-hover:text-white"
+                    className="mt-1 text-2xl font-light text-white/80 transition-all duration-500 ease-out group-hover:translate-x-2 group-hover:text-white"
                   >
                     →
                   </span>
@@ -554,7 +266,7 @@ export default function Hero() {
       {/* YAKLAŞIMIMIZ */}
       <section className="relative z-20 -mt-px bg-[#090909] px-6 pb-24 pt-28 md:px-10 md:pb-32 md:pt-40 lg:px-16 lg:pb-40 lg:pt-52">
         <div className="mx-auto max-w-[1800px]">
-          <div data-home-intro className="mb-16 opacity-0 md:mb-24">
+          <div data-reveal className="mb-16 translate-y-12 opacity-0 transition-all duration-1000 ease-out md:mb-24">
             <p className="text-[10px] uppercase tracking-[0.4em] text-white/35">
               Yaklaşımımız
             </p>
@@ -568,8 +280,8 @@ export default function Hero() {
             {values.map((value) => (
               <article
                 key={value.number}
-                data-value-card
-                className="group min-h-[430px] border-b border-white/15 py-10 opacity-0 transition-colors duration-500 hover:bg-white hover:text-black lg:border-b-0 lg:border-r lg:px-10 lg:first:pl-0 lg:last:border-r-0 lg:last:pr-0"
+                data-reveal
+                className="group min-h-[430px] translate-y-12 border-b border-white/15 py-10 opacity-0 transition-all duration-700 ease-out hover:bg-white hover:text-black lg:border-b-0 lg:border-r lg:px-10 lg:first:pl-0 lg:last:border-r-0 lg:last:pr-0"
               >
                 <div className="flex h-full flex-col justify-between">
                   <p className="text-xs tracking-[0.3em] text-white/35 transition-colors duration-500 group-hover:text-black/40">
@@ -596,7 +308,7 @@ export default function Hero() {
       <section className="border-t border-white/15 px-6 py-24 md:px-10 md:py-32 lg:px-16 lg:py-40">
         <div className="mx-auto max-w-[1800px]">
           <div className="grid gap-16 lg:grid-cols-[0.7fr_1.3fr] lg:gap-24">
-            <div data-home-reveal className="opacity-0">
+            <div data-reveal className="translate-y-12 opacity-0 transition-all duration-1000 ease-out">
               <p className="text-[10px] uppercase tracking-[0.4em] text-white/35">
                 Çalışma Alanlarımız
               </p>
@@ -612,8 +324,8 @@ export default function Hero() {
               {services.map((service, index) => (
                 <div
                   key={service}
-                  data-service-item
-                  className="group flex items-center justify-between border-b border-white/15 py-6 opacity-0 md:py-8"
+                  data-reveal
+                  className="group flex translate-y-8 items-center justify-between border-b border-white/15 py-6 opacity-0 transition-all duration-700 ease-out md:py-8"
                 >
                   <div className="flex items-center gap-6 md:gap-10">
                     <span className="text-[10px] tracking-[0.25em] text-white/30">
@@ -640,8 +352,8 @@ export default function Hero() {
       {/* İLETİŞİM YÖNLENDİRMESİ */}
       <section className="border-t border-white/15 px-6 py-28 md:px-10 md:py-40 lg:px-16 lg:py-48">
         <div
-          data-home-reveal
-          className="mx-auto flex max-w-[1800px] flex-col items-start opacity-0"
+          data-reveal
+          className="mx-auto flex max-w-[1800px] translate-y-12 flex-col items-start opacity-0 transition-all duration-1000 ease-out"
         >
           <p className="text-[10px] uppercase tracking-[0.4em] text-white/35">
             Yeni Bir Proje
@@ -671,6 +383,26 @@ export default function Hero() {
       <PremiumFooter />
 
       <style jsx global>{`
+        @keyframes heroImageIn {
+          from { transform: scale(1.06); }
+          to { transform: scale(1); }
+        }
+
+        @keyframes heroFadeUp {
+          from { opacity: 0; transform: translateY(28px); }
+          to { opacity: 1; transform: translateY(0); }
+        }
+
+        @keyframes heroTitleIn {
+          from { opacity: 0; transform: translateY(115%); }
+          to { opacity: 1; transform: translateY(0); }
+        }
+
+        @keyframes heroLineIn {
+          from { transform: scaleX(0); }
+          to { transform: scaleX(1); }
+        }
+
         @keyframes heroScroll {
           0% {
             transform: translateY(-18px);
