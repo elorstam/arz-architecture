@@ -2,7 +2,6 @@ import type { Metadata } from "next";
 import "./globals.css";
 
 import Navbar from "@/components/Navbar";
-import PremiumFooter from "@/components/PremiumFooter";
 import { GoogleAnalytics } from "@next/third-parties/google";
 
 const siteUrl = "https://arzmimarlik.net";
