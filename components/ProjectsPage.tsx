@@ -4,7 +4,6 @@ import Image from "next/image";
 import Link from "next/link";
 import { useLayoutEffect, useRef } from "react";
 import gsap from "gsap";
-import Navbar from "@/components/Navbar";
 import PremiumFooter from "@/components/PremiumFooter";
 
 const projects = [
@@ -214,7 +213,6 @@ export default function ProjectsPage() {
       ref={pageRef}
       className="min-h-screen overflow-x-hidden bg-black text-white"
     >
-      <Navbar />
 
       <section className="border-b border-white/10 bg-black px-5 pb-7 pt-28 md:px-8 md:pb-8 md:pt-32 lg:px-10">
         <div

@@ -3,7 +3,6 @@
 import { useLayoutEffect, useRef } from "react";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
-import Navbar from "@/components/Navbar";
 import PremiumFooter from "@/components/PremiumFooter";
 
 gsap.registerPlugin(ScrollTrigger);
@@ -148,7 +147,6 @@ export default function AboutPage() {
       ref={pageRef}
       className="min-h-screen overflow-hidden bg-[#090909] text-white"
     >
-      <Navbar />
 
       {/* Hero */}
       <section className="relative flex min-h-screen items-end px-6 pb-20 pt-36 md:px-10 md:pb-24 md:pt-40 lg:px-16 lg:pb-28 lg:pt-44">

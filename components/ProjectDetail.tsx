@@ -5,7 +5,6 @@ import Link from "next/link";
 import { useLayoutEffect, useRef } from "react";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
-import Navbar from "@/components/Navbar";
 import PremiumFooter from "@/components/PremiumFooter";
 import type { Project } from "@/data/projects";
 
@@ -177,7 +176,6 @@ export default function ProjectDetail({
       ref={pageRef}
       className="min-h-screen overflow-hidden bg-[#090909] text-white"
     >
-      <Navbar />
 
       <section className="relative min-h-screen">
         <div

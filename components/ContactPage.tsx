@@ -8,7 +8,6 @@ import {
 } from "react";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
-import Navbar from "@/components/Navbar";
 import PremiumFooter from "@/components/PremiumFooter";
 
 gsap.registerPlugin(ScrollTrigger);
@@ -193,8 +192,7 @@ export default function ContactPage() {
       ref={pageRef}
       className="min-h-screen overflow-hidden bg-[#090909] text-white"
     >
-      <Navbar />
-
+    
       <section className="px-6 pb-24 pt-36 md:px-10 md:pb-32 md:pt-40 lg:px-16 lg:pb-40">
         <div className="mx-auto w-full max-w-[1800px]">
           <p

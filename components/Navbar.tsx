@@ -2,8 +2,15 @@
 
 import Image from "next/image";
 import Link from "next/link";
+import { Manrope } from "next/font/google";
 import { usePathname } from "next/navigation";
 import { useEffect, useState } from "react";
+
+const manrope = Manrope({
+  subsets: ["latin", "latin-ext"],
+  weight: ["400"],
+  display: "swap",
+});
 
 const navigationItems = [
   {
@@ -72,14 +79,13 @@ export default function Navbar() {
   return (
     <>
       <header
-        className={`fixed left-0 top-0 z-50 w-full transition-[background-color,box-shadow] duration-700 ease-[cubic-bezier(0.22,1,0.36,1)] ${
+        className={`fixed left-0 top-0 z-50 w-full transition-[background-color,backdrop-filter,box-shadow] duration-700 ease-[cubic-bezier(0.22,1,0.36,1)] ${
           scrolled
-            ? "bg-black/70 shadow-[0_10px_35px_rgba(0,0,0,0.16)]"
+            ? "bg-black/60 shadow-[0_12px_40px_rgba(0,0,0,0.14)] backdrop-blur-md"
             : "bg-transparent shadow-none"
         }`}
       >
         <div className="relative mx-auto flex h-[76px] w-full max-w-[1920px] items-center px-5 sm:px-8 md:h-[82px] md:px-10 lg:px-14 xl:px-16">
-          {/* Logo */}
           <Link
             href="/"
             aria-label="ARZ Mimarlık ana sayfa"
@@ -95,8 +101,9 @@ export default function Navbar() {
             />
           </Link>
 
-          {/* Masaüstü menü */}
-          <nav className="absolute left-1/2 hidden -translate-x-1/2 items-center gap-10 lg:flex xl:gap-14">
+          <nav
+            className={`${manrope.className} absolute left-1/2 hidden -translate-x-1/2 items-center gap-11 lg:flex xl:gap-16`}
+          >
             {navigationItems.map((item) => {
               const active = isActive(item.href);
 
@@ -104,19 +111,19 @@ export default function Navbar() {
                 <Link
                   key={item.href}
                   href={item.href}
-                  className={`group relative py-3 text-[14px] font-normal uppercase tracking-[0.075em] transition-all duration-300 xl:text-[15px] ${
+                  className={`group relative py-3 text-[13px] font-normal uppercase tracking-[0.13em] transition-[color,transform] duration-500 ease-[cubic-bezier(0.22,1,0.36,1)] xl:text-[14px] ${
                     active
-                      ? "text-white"
-                      : "text-white/80 hover:-translate-y-px hover:text-white"
+                      ? "text-white/90"
+                      : "text-white/62 hover:-translate-y-px hover:text-white/90"
                   }`}
                 >
                   <span className="block whitespace-nowrap">{item.label}</span>
 
                   <span
-                    className={`absolute bottom-[3px] left-1/2 h-px -translate-x-1/2 bg-white transition-all duration-300 ${
+                    className={`absolute bottom-[2px] left-1/2 h-px -translate-x-1/2 bg-white/80 transition-[width,opacity] duration-500 ease-[cubic-bezier(0.22,1,0.36,1)] ${
                       active
-                        ? "w-full opacity-100"
-                        : "w-0 opacity-0 group-hover:w-full group-hover:opacity-100"
+                        ? "w-full opacity-80"
+                        : "w-0 opacity-0 group-hover:w-full group-hover:opacity-70"
                     }`}
                   />
                 </Link>
@@ -124,20 +131,19 @@ export default function Navbar() {
             })}
           </nav>
 
-          {/* Sosyal medya */}
           <div className="ml-auto hidden items-center gap-5 lg:flex">
             <a
               href={instagramUrl}
               target="_blank"
               rel="noopener noreferrer"
               aria-label="ARZ Mimarlık Instagram"
-              className="flex h-10 w-10 items-center justify-center text-white/80 transition-all duration-300 hover:-translate-y-1 hover:text-white"
+              className="flex h-10 w-10 items-center justify-center text-white/58 transition-[color,transform] duration-500 ease-[cubic-bezier(0.22,1,0.36,1)] hover:-translate-y-1 hover:text-white/90"
             >
               <svg
                 viewBox="0 0 24 24"
                 fill="none"
                 xmlns="http://www.w3.org/2000/svg"
-                className="h-[22px] w-[22px]"
+                className="h-[21px] w-[21px]"
                 aria-hidden="true"
               >
                 <rect
@@ -147,7 +153,7 @@ export default function Navbar() {
                   height="18"
                   rx="5"
                   stroke="currentColor"
-                  strokeWidth="1.7"
+                  strokeWidth="1.45"
                 />
 
                 <circle
@@ -155,10 +161,10 @@ export default function Navbar() {
                   cy="12"
                   r="4.25"
                   stroke="currentColor"
-                  strokeWidth="1.7"
+                  strokeWidth="1.45"
                 />
 
-                <circle cx="17.3" cy="6.8" r="1.1" fill="currentColor" />
+                <circle cx="17.3" cy="6.8" r="1" fill="currentColor" />
               </svg>
             </a>
 
@@ -167,13 +173,13 @@ export default function Navbar() {
               target="_blank"
               rel="noopener noreferrer"
               aria-label="ARZ Mimarlık LinkedIn"
-              className="flex h-10 w-10 items-center justify-center text-white/80 transition-all duration-300 hover:-translate-y-1 hover:text-white"
+              className="flex h-10 w-10 items-center justify-center text-white/58 transition-[color,transform] duration-500 ease-[cubic-bezier(0.22,1,0.36,1)] hover:-translate-y-1 hover:text-white/90"
             >
               <svg
                 viewBox="0 0 24 24"
                 fill="none"
                 xmlns="http://www.w3.org/2000/svg"
-                className="h-[22px] w-[22px]"
+                className="h-[21px] w-[21px]"
                 aria-hidden="true"
               >
                 <rect
@@ -183,41 +189,40 @@ export default function Navbar() {
                   height="18"
                   rx="1.8"
                   stroke="currentColor"
-                  strokeWidth="1.7"
+                  strokeWidth="1.45"
                 />
 
                 <path
                   d="M7.3 10.1V17"
                   stroke="currentColor"
-                  strokeWidth="1.8"
+                  strokeWidth="1.55"
                   strokeLinecap="round"
                 />
 
                 <path
                   d="M7.3 7V7.1"
                   stroke="currentColor"
-                  strokeWidth="2.2"
+                  strokeWidth="1.9"
                   strokeLinecap="round"
                 />
 
                 <path
                   d="M11.1 17V10.1"
                   stroke="currentColor"
-                  strokeWidth="1.8"
+                  strokeWidth="1.55"
                   strokeLinecap="round"
                 />
 
                 <path
                   d="M11.1 13.1C11.1 11.45 12.05 10.05 13.9 10.05C15.75 10.05 16.7 11.25 16.7 13.45V17"
                   stroke="currentColor"
-                  strokeWidth="1.8"
+                  strokeWidth="1.55"
                   strokeLinecap="round"
                 />
               </svg>
             </a>
           </div>
 
-          {/* Mobil menü butonu */}
           <button
             type="button"
             onClick={() => setMenuOpen((current) => !current)}
@@ -226,7 +231,7 @@ export default function Navbar() {
             className="relative z-[70] ml-auto flex h-11 w-11 flex-col items-end justify-center gap-[6px] lg:hidden"
           >
             <span
-              className={`block h-px bg-white transition-all duration-300 ${
+              className={`block h-px bg-white/85 transition-all duration-500 ease-[cubic-bezier(0.22,1,0.36,1)] ${
                 menuOpen
                   ? "w-8 translate-y-[7px] rotate-45"
                   : "w-8 translate-y-0 rotate-0"
@@ -234,13 +239,13 @@ export default function Navbar() {
             />
 
             <span
-              className={`block h-px bg-white transition-all duration-300 ${
+              className={`block h-px bg-white/85 transition-all duration-500 ease-[cubic-bezier(0.22,1,0.36,1)] ${
                 menuOpen ? "w-0 opacity-0" : "w-6 opacity-100"
               }`}
             />
 
             <span
-              className={`block h-px bg-white transition-all duration-300 ${
+              className={`block h-px bg-white/85 transition-all duration-500 ease-[cubic-bezier(0.22,1,0.36,1)] ${
                 menuOpen
                   ? "w-8 -translate-y-[7px] -rotate-45"
                   : "w-8 translate-y-0 rotate-0"
@@ -250,16 +255,17 @@ export default function Navbar() {
         </div>
       </header>
 
-      {/* Mobil menü */}
       <div
-        className={`fixed inset-0 z-40 bg-[#080b10] transition-all duration-500 lg:hidden ${
+        className={`fixed inset-0 z-40 bg-[#080b10] transition-[opacity,visibility] duration-500 ease-[cubic-bezier(0.22,1,0.36,1)] lg:hidden ${
           menuOpen
             ? "pointer-events-auto visible opacity-100"
             : "pointer-events-none invisible opacity-0"
         }`}
       >
-        <div className="flex min-h-screen flex-col px-6 pb-8 pt-[105px] sm:px-8">
-          <nav className="flex flex-col border-t border-white/15">
+        <div
+          className={`${manrope.className} flex min-h-screen flex-col px-6 pb-8 pt-[105px] sm:px-8`}
+        >
+          <nav className="flex flex-col border-t border-white/12">
             {navigationItems.map((item, index) => {
               const active = isActive(item.href);
 
@@ -268,25 +274,25 @@ export default function Navbar() {
                   key={item.href}
                   href={item.href}
                   onClick={() => setMenuOpen(false)}
-                  className="group flex items-center justify-between border-b border-white/15 py-7"
+                  className="group flex items-center justify-between border-b border-white/12 py-7"
                 >
                   <div className="flex items-center gap-5">
-                    <span className="text-[9px] tracking-[0.3em] text-white/30">
+                    <span className="text-[9px] font-normal tracking-[0.28em] text-white/28">
                       {String(index + 1).padStart(2, "0")}
                     </span>
 
                     <span
-                      className={`text-[clamp(2.3rem,10vw,4rem)] font-light leading-none tracking-[-0.035em] transition-all duration-300 ${
+                      className={`text-[clamp(2.1rem,9vw,3.7rem)] font-normal leading-none tracking-[-0.025em] transition-[color,transform] duration-500 ease-[cubic-bezier(0.22,1,0.36,1)] ${
                         active
-                          ? "text-white"
-                          : "text-white/65 group-hover:translate-x-2 group-hover:text-white"
+                          ? "text-white/92"
+                          : "text-white/58 group-hover:translate-x-2 group-hover:text-white/90"
                       }`}
                     >
                       {item.label}
                     </span>
                   </div>
 
-                  <span className="text-xl text-white/35 transition-transform duration-300 group-hover:translate-x-2">
+                  <span className="text-xl text-white/30 transition-transform duration-500 ease-[cubic-bezier(0.22,1,0.36,1)] group-hover:translate-x-2">
                     →
                   </span>
                 </Link>
@@ -294,8 +300,8 @@ export default function Navbar() {
             })}
           </nav>
 
-          <div className="mt-auto border-t border-white/15 pt-7">
-            <p className="text-[9px] uppercase tracking-[0.28em] text-white/30">
+          <div className="mt-auto border-t border-white/12 pt-7">
+            <p className="text-[9px] font-normal uppercase tracking-[0.28em] text-white/28">
               Sosyal Medya
             </p>
 
@@ -304,7 +310,7 @@ export default function Navbar() {
                 href={instagramUrl}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="flex items-center gap-3 text-sm uppercase tracking-[0.1em] text-white/70 transition-colors duration-300 hover:text-white"
+                className="text-[12px] font-normal uppercase tracking-[0.12em] text-white/55 transition-colors duration-500 hover:text-white/90"
               >
                 Instagram
               </a>
@@ -313,13 +319,13 @@ export default function Navbar() {
                 href={linkedinUrl}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="flex items-center gap-3 text-sm uppercase tracking-[0.1em] text-white/70 transition-colors duration-300 hover:text-white"
+                className="text-[12px] font-normal uppercase tracking-[0.12em] text-white/55 transition-colors duration-500 hover:text-white/90"
               >
                 LinkedIn
               </a>
             </div>
 
-            <div className="mt-9 flex items-center justify-between text-[9px] uppercase tracking-[0.18em] text-white/25">
+            <div className="mt-9 flex items-center justify-between text-[9px] font-normal uppercase tracking-[0.18em] text-white/22">
               <span>ARZ Mimarlık</span>
               <span>İstanbul</span>
             </div>

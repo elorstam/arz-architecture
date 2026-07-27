@@ -36,3 +36,12 @@ a {
   background: rgba(255, 255, 255, 0.9);
   color: #090909;
 }
+@font-face {
+  font-family: "Century Gothic";
+  src:
+    url("/fonts/CenturyGothic.woff2") format("woff2"),
+    url("/fonts/CenturyGothic.woff") format("woff");
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+}
