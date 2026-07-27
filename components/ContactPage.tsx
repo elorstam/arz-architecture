@@ -547,6 +547,49 @@ export default function ContactPage() {
                   </span>
                 </button>
 
+
+                <div
+                  data-form-field
+                  className="mt-8 opacity-0"
+                >
+                  <div className="mb-8 flex items-center gap-4">
+                    <div className="h-px flex-1 bg-white/10" />
+
+                    <span className="text-[9px] uppercase tracking-[0.35em] text-white/35">
+                      veya
+                    </span>
+
+                    <div className="h-px flex-1 bg-white/10" />
+                  </div>
+
+                  <a
+                    href="https://wa.me/905425704429?text=Merhaba%20ARZ%20Mimarl%C4%B1k.%20Web%20siteniz%20%C3%BCzerinden%20ula%C5%9F%C4%B1yorum."
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    aria-label="ARZ Mimarlık ile WhatsApp üzerinden iletişime geç"
+                    className="group flex w-full items-center justify-between border border-white/20 bg-white/[0.015] px-7 py-6 transition-all duration-300 hover:border-white hover:bg-white hover:text-black"
+                  >
+                    <div className="flex items-center gap-4">
+                      <WhatsappIcon />
+
+                      <div className="text-left">
+                        <p className="text-sm uppercase tracking-[0.24em] sm:tracking-[0.32em]">
+                          WhatsApp ile İletişime Geç
+                        </p>
+
+                        <p className="mt-2 text-xs leading-5 text-white/45 transition-colors duration-300 group-hover:text-black/60">
+                          Hızlı iletişim için bize WhatsApp üzerinden
+                          yazabilirsiniz.
+                        </p>
+                      </div>
+                    </div>
+
+                    <span className="ml-4 shrink-0 text-xl transition-transform duration-300 group-hover:translate-x-1 group-hover:-translate-y-1">
+                      ↗
+                    </span>
+                  </a>
+                </div>
+
                 <div
                   data-form-field
                   className="mt-6 opacity-0"
@@ -726,6 +769,25 @@ function MapIcon() {
       <path d="m3 5 5-2 8 2 5-2v16l-5 2-8-2-5 2V5Z" />
 
       <path d="M8 3v16M16 5v16" />
+    </svg>
+  );
+}
+
+
+function WhatsappIcon() {
+  return (
+    <svg
+      viewBox="0 0 32 32"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="1.8"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      className="h-7 w-7 shrink-0"
+      aria-hidden="true"
+    >
+      <path d="M16 5.2A10.8 10.8 0 0 0 6.7 21.5L5.3 27l5.7-1.4A10.8 10.8 0 1 0 16 5.2Z" />
+      <path d="M12.5 11.7c.2-.5.5-.6.8-.6h.8c.3 0 .5.1.7.5l1 2.4c.1.3.1.6-.2.9l-.8.9a8.8 8.8 0 0 0 3.5 3.5l.9-.8c.3-.2.6-.3.9-.2l2.4 1c.3.2.5.4.5.7v.8c0 .3-.1.6-.6.8-.8.4-1.7.5-2.6.3-4.2-.8-7.5-4.1-8.3-8.3-.2-.9 0-1.8.4-2.6Z" />
     </svg>
   );
 }

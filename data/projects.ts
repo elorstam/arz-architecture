@@ -200,6 +200,89 @@ export const projects: Project[] = [
     },
   ],
 },
+{
+  slug: "barlas-antrepo-konsept-ofis-tasarimlari",
+  title: "BARLAS ANTREPO KONSEPT OFİS TASARIMLARI",
+  titleLines: [
+    "BARLAS ANTREPO",
+    "KONSEPT OFİS",
+    "TASARIMLARI",
+  ],
+  category: "Ofis",
+  location: "Sancaktepe / İstanbul",
+  year: "2023",
+  services: [
+    "İç Mimarlık",
+    "Konsept Tasarım",
+    "3D Görselleştirme",
+  ],
+  cover:
+    "/images/barlas-antrepo-konsept-ofis-tasarimlari/cover.jpg",
+  coverAlt:
+    "Barlas Antrepo Konsept Ofis Tasarımları kapak görseli",
+  description:
+    "Barlas Antrepo için geliştirilen konsept ofis tasarımları, modern çalışma kültürünü estetik, işlevsellik ve kurumsal kimlikle buluşturan çağdaş iç mimari çözümler sunmaktadır.",
+  detailParagraphs: [
+    "Projede yönetici ofisleri, karşılama alanları, toplantı odaları ve ortak çalışma mekânları bütüncül bir tasarım diliyle ele alındı. Doğal taş, ahşap ve metal detaylar bir araya getirilerek güçlü, zamansız ve prestijli bir çalışma atmosferi oluşturuldu.",
+
+    "Aydınlatma tasarımı, malzeme seçimleri ve mekânsal organizasyon birlikte değerlendirilerek kullanıcı deneyimini ön plana çıkaran, estetik ve işlevselliği dengede tutan konsept ofis mekânları tasarlandı.",
+  ],
+  images: [
+    {
+      src: "/images/barlas-antrepo-konsept-ofis-tasarimlari/01.jpg",
+      alt: "Barlas Antrepo Konsept Ofis Tasarımı 01",
+    },
+    {
+      src: "/images/barlas-antrepo-konsept-ofis-tasarimlari/02.jpg",
+      alt: "Barlas Antrepo Konsept Ofis Tasarımı 02",
+    },
+    {
+      src: "/images/barlas-antrepo-konsept-ofis-tasarimlari/03.jpg",
+      alt: "Barlas Antrepo Konsept Ofis Tasarımı 03",
+    },
+    {
+      src: "/images/barlas-antrepo-konsept-ofis-tasarimlari/04.jpg",
+      alt: "Barlas Antrepo Konsept Ofis Tasarımı 04",
+    },
+    {
+      src: "/images/barlas-antrepo-konsept-ofis-tasarimlari/05.jpg",
+      alt: "Barlas Antrepo Konsept Ofis Tasarımı 05",
+    },
+    {
+      src: "/images/barlas-antrepo-konsept-ofis-tasarimlari/06.jpg",
+      alt: "Barlas Antrepo Konsept Ofis Tasarımı 06",
+    },
+    {
+      src: "/images/barlas-antrepo-konsept-ofis-tasarimlari/07.jpg",
+      alt: "Barlas Antrepo Konsept Ofis Tasarımı 07",
+    },
+    {
+      src: "/images/barlas-antrepo-konsept-ofis-tasarimlari/08.jpg",
+      alt: "Barlas Antrepo Konsept Ofis Tasarımı 08",
+    },
+    {
+      src: "/images/barlas-antrepo-konsept-ofis-tasarimlari/09.jpg",
+      alt: "Barlas Antrepo Konsept Ofis Tasarımı 09",
+    },
+    {
+      src: "/images/barlas-antrepo-konsept-ofis-tasarimlari/010.jpg",
+      alt: "Barlas Antrepo Konsept Ofis Tasarımı 10",
+    },
+    {
+      src: "/images/barlas-antrepo-konsept-ofis-tasarimlari/011.jpg",
+      alt: "Barlas Antrepo Konsept Ofis Tasarımı 11",
+    },
+    {
+      src: "/images/barlas-antrepo-konsept-ofis-tasarimlari/012.jpg",
+      alt: "Barlas Antrepo Konsept Ofis Tasarımı 12",
+    },
+    {
+      src: "/images/barlas-antrepo-konsept-ofis-tasarimlari/013.jpg",
+      alt: "Barlas Antrepo Konsept Ofis Tasarımı 13",
+    },
+  ],
+},
+
 ];
 
 export function getProjectBySlug(slug: string) {
