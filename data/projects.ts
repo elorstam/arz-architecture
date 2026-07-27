@@ -144,6 +144,62 @@ export const projects: Project[] = [
       },
     ],
   },
+  {
+  slug: "barlas-antrepo-acik-calisma-alani",
+  title: "BARLAS ANTREPO AÇIK ÇALIŞMA ALANI",
+  titleLines: ["BARLAS ANTREPO", "AÇIK ÇALIŞMA ALANI"],
+  category: "Ofis",
+  location: "Sancaktepe / İstanbul",
+  year: "2023",
+  services: [
+    "İç Mimarlık",
+    "Ofis Tasarımı",
+    "Uygulama Projesi",
+  ],
+  cover:
+    "/images/barlas-antrepo-acik-calisma-alani/cover.jpg",
+  coverAlt: "Barlas Antrepo Açık Çalışma Alanı kapak görseli",
+
+  description:
+    "Barlas Antrepo Açık Çalışma Alanı, ekipler arası iletişimi destekleyen, gün ışığından maksimum düzeyde yararlanan ve modern çalışma kültürüne uyum sağlayan çağdaş bir ofis projesi olarak tasarlandı.",
+
+  detailParagraphs: [
+    "Açık ofis kurgusunda çalışma alanları, toplantı noktaları ve ortak kullanım bölümleri bütüncül bir planlama anlayışıyla ele alındı. Mekânın ferahlığını artırmak amacıyla doğal ışık ön plana çıkarılırken sade renk paleti ve doğal ahşap yüzeyler modern bir atmosfer oluşturdu.",
+
+    "Mobilya yerleşimi, aydınlatma tasarımı ve dolaşım aksları kullanıcı konforunu destekleyecek şekilde planlandı. İşlevsellik ile estetik yaklaşım dengelenerek uzun ömürlü, verimli ve çağdaş bir çalışma ortamı hedeflendi.",
+  ],
+
+  images: [
+    {
+      src: "/images/barlas-antrepo-acik-calisma-alani/01.jpg",
+      alt: "Barlas Antrepo Açık Çalışma Alanı görünümü 01",
+    },
+    {
+      src: "/images/barlas-antrepo-acik-calisma-alani/02.jpg",
+      alt: "Barlas Antrepo Açık Çalışma Alanı görünümü 02",
+    },
+    {
+      src: "/images/barlas-antrepo-acik-calisma-alani/03.jpg",
+      alt: "Barlas Antrepo Açık Çalışma Alanı görünümü 03",
+    },
+    {
+      src: "/images/barlas-antrepo-acik-calisma-alani/04.jpg",
+      alt: "Barlas Antrepo Açık Çalışma Alanı görünümü 04",
+    },
+    {
+      src: "/images/barlas-antrepo-acik-calisma-alani/05.jpg",
+      alt: "Barlas Antrepo Açık Çalışma Alanı görünümü 05",
+    },
+    {
+      src: "/images/barlas-antrepo-acik-calisma-alani/06.jpg",
+      alt: "Barlas Antrepo Açık Çalışma Alanı görünümü 06",
+    },
+    {
+      src: "/images/barlas-antrepo-acik-calisma-alani/07.jpg",
+      alt: "Barlas Antrepo Açık Çalışma Alanı görünümü 07",
+    },
+  ],
+},
 ];
 
 export function getProjectBySlug(slug: string) {

@@ -1,28 +1,34 @@
 "use client";
 
-import Link from "next/link";
-import { useLayoutEffect, useRef } from "react";
+import {
+  useLayoutEffect,
+  useRef,
+  useState,
+  type FormEvent,
+} from "react";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import Navbar from "@/components/Navbar";
+import PremiumFooter from "@/components/PremiumFooter";
+
+gsap.registerPlugin(ScrollTrigger);
 
 const googleMapsUrl =
-  "https://www.google.com/maps/search/?api=1&query=Arz%20Mimarl%C4%B1k%20Sancaktepe%20%C4%B0stanbul";
+  "https://www.google.com/maps/search/?api=1&query=Arz%20Mimarl%C4%B1k%20Abdurrahmangazi%20Mahallesi%20Bet%C3%BCl%20Sokak%20Tuna%20%C4%B0%C5%9F%20Merkezi%20No%202%2F4%20Sancaktepe%20%C4%B0stanbul";
 
 const instagramUrl = "https://www.instagram.com/arzmimarliknet/";
 const linkedinUrl = "https://www.linkedin.com/company/90222590";
 
+type FormStatus = "idle" | "sending" | "success" | "error";
+
 export default function ContactPage() {
   const pageRef = useRef<HTMLElement | null>(null);
-  const labelRef = useRef<HTMLParagraphElement | null>(null);
-  const titleLineOneRef = useRef<HTMLSpanElement | null>(null);
-  const titleLineTwoRef = useRef<HTMLSpanElement | null>(null);
-  const titleLineThreeRef = useRef<HTMLSpanElement | null>(null);
-  const descriptionRef = useRef<HTMLParagraphElement | null>(null);
+  const formRef = useRef<HTMLFormElement | null>(null);
+
+  const [formStatus, setFormStatus] = useState<FormStatus>("idle");
+  const [statusMessage, setStatusMessage] = useState("");
 
   useLayoutEffect(() => {
-    gsap.registerPlugin(ScrollTrigger);
-
     const page = pageRef.current;
 
     if (!page) {
@@ -30,107 +36,83 @@ export default function ContactPage() {
     }
 
     const context = gsap.context(() => {
-      const titleLines = [
-        titleLineOneRef.current,
-        titleLineTwoRef.current,
-        titleLineThreeRef.current,
-      ].filter(Boolean);
+      const label = page.querySelector<HTMLElement>(
+        "[data-contact-label]",
+      );
 
-      gsap.set(labelRef.current, {
-        opacity: 0,
-        y: 24,
-      });
+      const leftItems = gsap.utils.toArray<HTMLElement>(
+        "[data-contact-info]",
+      );
 
-      gsap.set(titleLines, {
-        opacity: 0,
-        yPercent: 115,
-      });
+      const formHeading = page.querySelector<HTMLElement>(
+        "[data-form-heading]",
+      );
 
-      gsap.set(descriptionRef.current, {
-        opacity: 0,
-        y: 35,
-      });
+      const formFields = gsap.utils.toArray<HTMLElement>(
+        "[data-form-field]",
+      );
 
-      const heroTimeline = gsap.timeline({
-        delay: 0.15,
+      const timeline = gsap.timeline({
+        delay: 0.1,
         defaults: {
-          ease: "power4.out",
+          ease: "power3.out",
         },
       });
 
-      heroTimeline
-        .to(labelRef.current, {
-          opacity: 1,
-          y: 0,
-          duration: 0.7,
-        })
-        .to(
-          titleLines,
+      timeline
+        .fromTo(
+          label,
+          {
+            opacity: 0,
+            y: 20,
+          },
           {
             opacity: 1,
-            yPercent: 0,
-            duration: 1.15,
-            stagger: 0.12,
+            y: 0,
+            duration: 0.65,
           },
-          "-=0.35",
         )
-        .to(
-          descriptionRef.current,
-          {
-            opacity: 1,
-            y: 0,
-            duration: 0.85,
-          },
-          "-=0.55",
-        );
-
-      const revealElements =
-        page.querySelectorAll<HTMLElement>("[data-reveal]");
-
-      revealElements.forEach((element) => {
-        gsap.fromTo(
-          element,
+        .fromTo(
+          leftItems,
           {
             opacity: 0,
-            y: 70,
-          },
-          {
-            opacity: 1,
-            y: 0,
-            duration: 1,
-            ease: "power3.out",
-            scrollTrigger: {
-              trigger: element,
-              start: "top 88%",
-              toggleActions: "play none none none",
-            },
-          },
-        );
-      });
-
-      const contactItems =
-        page.querySelectorAll<HTMLElement>("[data-contact-item]");
-
-      contactItems.forEach((element) => {
-        gsap.fromTo(
-          element,
-          {
-            opacity: 0,
-            x: -35,
+            x: -40,
           },
           {
             opacity: 1,
             x: 0,
-            duration: 0.8,
-            ease: "power3.out",
-            scrollTrigger: {
-              trigger: element,
-              start: "top 93%",
-              toggleActions: "play none none none",
-            },
+            duration: 0.85,
+            stagger: 0.09,
           },
+          "-=0.3",
+        )
+        .fromTo(
+          formHeading,
+          {
+            opacity: 0,
+            y: 20,
+          },
+          {
+            opacity: 1,
+            y: 0,
+            duration: 0.65,
+          },
+          "-=0.75",
+        )
+        .fromTo(
+          formFields,
+          {
+            opacity: 0,
+            y: 35,
+          },
+          {
+            opacity: 1,
+            y: 0,
+            duration: 0.75,
+            stagger: 0.08,
+          },
+          "-=0.45",
         );
-      });
 
       requestAnimationFrame(() => {
         ScrollTrigger.refresh();
@@ -142,6 +124,70 @@ export default function ContactPage() {
     };
   }, []);
 
+  async function handleSubmit(event: FormEvent<HTMLFormElement>) {
+    event.preventDefault();
+
+    if (formStatus === "sending") {
+      return;
+    }
+
+    setFormStatus("sending");
+    setStatusMessage("");
+
+    const form = event.currentTarget;
+    const formData = new FormData(form);
+
+    const payload = {
+      name: String(formData.get("name") ?? "").trim(),
+      phone: String(formData.get("phone") ?? "").trim(),
+      email: String(formData.get("email") ?? "").trim(),
+      projectType: String(formData.get("projectType") ?? "").trim(),
+      message: String(formData.get("message") ?? "").trim(),
+      website: String(formData.get("website") ?? "").trim(),
+    };
+
+    if (!payload.name || !payload.phone || !payload.message) {
+      setFormStatus("error");
+      setStatusMessage(
+        "Lütfen ad soyad, telefon ve mesaj alanlarını doldurun.",
+      );
+      return;
+    }
+
+    try {
+      const response = await fetch("/api/contact", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(payload),
+      });
+
+      const result = (await response.json()) as {
+        message?: string;
+      };
+
+      if (!response.ok) {
+        throw new Error(
+          result.message || "Mesaj gönderilirken bir hata oluştu.",
+        );
+      }
+
+      form.reset();
+      setFormStatus("success");
+      setStatusMessage(
+        "Mesajınız başarıyla gönderildi. En kısa sürede sizinle iletişime geçeceğiz.",
+      );
+    } catch (error) {
+      setFormStatus("error");
+      setStatusMessage(
+        error instanceof Error
+          ? error.message
+          : "Mesaj gönderilemedi. Lütfen daha sonra tekrar deneyin.",
+      );
+    }
+  }
+
   return (
     <main
       ref={pageRef}
@@ -149,367 +195,554 @@ export default function ContactPage() {
     >
       <Navbar />
 
-      <section className="flex min-h-screen items-end px-6 pb-14 pt-36 md:px-10 md:pb-20 lg:px-16 lg:pb-24">
+      <section className="px-6 pb-24 pt-36 md:px-10 md:pb-32 md:pt-40 lg:px-16 lg:pb-40">
         <div className="mx-auto w-full max-w-[1800px]">
           <p
-            ref={labelRef}
-            className="text-[10px] uppercase tracking-[0.42em] text-white/40"
+            data-contact-label
+            className="text-[10px] uppercase tracking-[0.45em] text-white/40 opacity-0"
           >
             İletişim
           </p>
 
-          <div className="mt-10 grid gap-14 lg:grid-cols-[1.15fr_0.85fr] lg:items-end lg:gap-24">
-            <h1 className="text-[clamp(4rem,9vw,10rem)] font-light leading-[0.82] tracking-[-0.075em]">
-              <span className="block overflow-hidden pb-[0.08em]">
-                <span ref={titleLineOneRef} className="block">
-                  Yeni bir
-                </span>
-              </span>
-
-              <span className="block overflow-hidden pb-[0.08em]">
-                <span ref={titleLineTwoRef} className="block">
-                  proje üzerine
-                </span>
-              </span>
-
-              <span className="block overflow-hidden pb-[0.08em]">
-                <span
-                  ref={titleLineThreeRef}
-                  className="block text-white/40"
+          <div className="mt-14 grid gap-20 lg:grid-cols-[0.82fr_1.18fr] lg:gap-0">
+            {/* Sol taraf */}
+            <div className="lg:border-r lg:border-white/15 lg:pr-16 xl:pr-24">
+              <div className="border-t border-white/15">
+                {/* Telefon */}
+                <a
+                  data-contact-info
+                  href="tel:+905425704429"
+                  className="group grid grid-cols-[42px_1fr_auto] items-center gap-6 border-b border-white/15 py-8 opacity-0 md:py-10"
                 >
-                  konuşalım.
-                </span>
-              </span>
-            </h1>
+                  <PhoneIcon />
 
-            <p
-              ref={descriptionRef}
-              className="max-w-xl text-base leading-7 text-white/55 md:text-lg md:leading-8"
-            >
-              Mimari tasarım, iç mimarlık, proje geliştirme ve danışmanlık
-              hizmetleri hakkında bizimle doğrudan iletişime geçebilirsiniz.
-            </p>
-          </div>
-        </div>
-      </section>
+                  <div>
+                    <p className="text-[9px] uppercase tracking-[0.32em] text-white/40">
+                      Telefon
+                    </p>
 
-      <section className="border-t border-white/15 px-6 py-20 md:px-10 md:py-28 lg:px-16 lg:py-32">
-        <div className="mx-auto grid max-w-[1800px] gap-16 lg:grid-cols-2 lg:gap-24">
-          <div data-reveal>
-            <p className="text-[10px] uppercase tracking-[0.4em] text-white/35">
-              İletişim Bilgileri
-            </p>
+                    <p className="mt-3 text-xl font-light tracking-[-0.025em] text-white md:text-2xl">
+                      +90 542 570 44 29
+                    </p>
+                  </div>
 
-            <div className="mt-10 border-t border-white/15">
-              <a
-                data-contact-item
-                href="tel:+905425704429"
-                className="group flex items-center justify-between border-b border-white/15 py-7"
-              >
-                <div>
-                  <p className="text-[10px] uppercase tracking-[0.28em] text-white/35">
-                    Telefon
-                  </p>
+                  <span className="text-xl font-light text-white/35 transition-all duration-300 group-hover:translate-x-2 group-hover:text-white">
+                    →
+                  </span>
+                </a>
 
-                  <p className="mt-3 text-2xl font-light tracking-[-0.03em] md:text-3xl">
-                    +90 542 570 44 29
-                  </p>
+                {/* E-posta */}
+                <a
+                  data-contact-info
+                  href="mailto:info@arzmimarlik.net"
+                  className="group grid grid-cols-[42px_1fr_auto] items-center gap-6 border-b border-white/15 py-8 opacity-0 md:py-10"
+                >
+                  <MailIcon />
+
+                  <div className="min-w-0">
+                    <p className="text-[9px] uppercase tracking-[0.32em] text-white/40">
+                      E-posta
+                    </p>
+
+                    <p className="mt-3 break-all text-xl font-light tracking-[-0.025em] text-white md:text-2xl">
+                      info@arzmimarlik.net
+                    </p>
+                  </div>
+
+                  <span className="text-xl font-light text-white/35 transition-all duration-300 group-hover:translate-x-2 group-hover:text-white">
+                    →
+                  </span>
+                </a>
+
+                {/* Adres */}
+                <div
+                  data-contact-info
+                  className="grid grid-cols-[42px_1fr_auto] gap-6 border-b border-white/15 py-8 opacity-0 md:py-10"
+                >
+                  <LocationIcon />
+
+                  <div>
+                    <p className="text-[9px] uppercase tracking-[0.32em] text-white/40">
+                      Adres
+                    </p>
+
+                    <address className="mt-3 not-italic text-xl font-light leading-[1.5] tracking-[-0.025em] text-white md:text-2xl">
+                      Abdurrahmangazi Mah.
+                      <br />
+                      Betül Sok.
+                      <br />
+                      Tuna İş Merkezi No: 2/4
+                      <br />
+                      Sancaktepe / İstanbul
+                    </address>
+
+                    <a
+                      href={googleMapsUrl}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="group/map mt-7 inline-flex items-center gap-4 border border-white/30 px-5 py-4 text-[9px] uppercase tracking-[0.3em] text-white transition-colors duration-300 hover:border-white hover:bg-white hover:text-black"
+                    >
+                      <MapIcon />
+
+                      Yol Tarifi Al
+
+                      <span className="text-base transition-transform duration-300 group-hover/map:translate-x-1 group-hover/map:-translate-y-1">
+                        ↗
+                      </span>
+                    </a>
+                  </div>
+
+                  <span className="pt-8 text-xl font-light text-white/35">
+                    →
+                  </span>
                 </div>
 
-                <span className="text-xl text-white/35 transition-all duration-300 group-hover:translate-x-2 group-hover:text-white">
-                  →
-                </span>
-              </a>
+                {/* Çalışma saatleri */}
+                <div
+                  data-contact-info
+                  className="grid grid-cols-[42px_1fr_auto] items-center gap-6 border-b border-white/15 py-8 opacity-0 md:py-10"
+                >
+                  <ClockIcon />
 
-              <a
-                data-contact-item
-                href="mailto:info@arzmimarlik.net"
-                className="group flex items-center justify-between border-b border-white/15 py-7"
-              >
-                <div>
-                  <p className="text-[10px] uppercase tracking-[0.28em] text-white/35">
-                    E-posta
-                  </p>
+                  <div>
+                    <p className="text-[9px] uppercase tracking-[0.32em] text-white/40">
+                      Çalışma Saatleri
+                    </p>
 
-                  <p className="mt-3 break-all text-2xl font-light tracking-[-0.03em] md:text-3xl">
-                    info@arzmimarlik.net
-                  </p>
+                    <p className="mt-3 text-xl font-light leading-[1.45] tracking-[-0.025em] text-white md:text-2xl">
+                      Pazartesi – Cuma
+                      <br />
+                      09:00 – 18:00
+                    </p>
+                  </div>
+
+                  <span className="text-xl font-light text-white/35">
+                    →
+                  </span>
                 </div>
 
-                <span className="text-xl text-white/35 transition-all duration-300 group-hover:translate-x-2 group-hover:text-white">
-                  →
-                </span>
-              </a>
+                {/* Sosyal medya */}
+                <div
+                  data-contact-info
+                  className="grid grid-cols-[42px_1fr_auto] items-center gap-6 border-b border-white/15 py-8 opacity-0 md:py-10"
+                >
+                  <ShareIcon />
+
+                  <div>
+                    <p className="text-[9px] uppercase tracking-[0.32em] text-white/40">
+                      Sosyal Medya
+                    </p>
+
+                    <div className="mt-3 flex flex-col items-start gap-2">
+                      <a
+                        href={instagramUrl}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="group/social text-xl font-light tracking-[-0.025em] text-white md:text-2xl"
+                      >
+                        Instagram
+                        <span className="ml-3 inline-block text-sm text-white/50 transition-transform duration-300 group-hover/social:translate-x-1 group-hover/social:-translate-y-1">
+                          ↗
+                        </span>
+                      </a>
+
+                      <a
+                        href={linkedinUrl}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="group/social text-xl font-light tracking-[-0.025em] text-white md:text-2xl"
+                      >
+                        LinkedIn
+                        <span className="ml-3 inline-block text-sm text-white/50 transition-transform duration-300 group-hover/social:translate-x-1 group-hover/social:-translate-y-1">
+                          ↗
+                        </span>
+                      </a>
+                    </div>
+                  </div>
+
+                  <span className="text-xl font-light text-white/35">
+                    →
+                  </span>
+                </div>
+              </div>
             </div>
-          </div>
 
-          <div data-reveal>
-            <p className="text-[10px] uppercase tracking-[0.4em] text-white/35">
-              Ofis
-            </p>
-
-            <address className="mt-10 not-italic">
-              <p className="max-w-xl text-2xl font-light leading-[1.45] tracking-[-0.03em] text-white/85 md:text-3xl">
-                Abdurrahmangazi Mah.
-                <br />
-                Betül Sok.
-                <br />
-                Tuna İş Merkezi No: 2/4
-                <br />
-                Sancaktepe / İstanbul
+            {/* Sağ taraf – form */}
+            <div className="lg:pl-16 xl:pl-24">
+              <p
+                data-form-heading
+                className="text-[10px] uppercase tracking-[0.45em] text-white/40 opacity-0"
+              >
+                Bize Yazın
               </p>
-            </address>
 
-            <a
-              href={googleMapsUrl}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="group mt-10 inline-flex items-center gap-5 border-b border-white/30 pb-3 text-[10px] uppercase tracking-[0.3em] transition-colors duration-300 hover:border-white"
-            >
-              Yol Tarifi
-
-              <span className="text-lg transition-transform duration-300 group-hover:translate-x-2">
-                →
-              </span>
-            </a>
-          </div>
-        </div>
-      </section>
-
-      <section className="border-t border-white/15 px-6 py-20 md:px-10 md:py-28 lg:px-16 lg:py-32">
-        <div className="mx-auto grid max-w-[1800px] gap-16 lg:grid-cols-2 lg:gap-24">
-          <div data-reveal>
-            <p className="text-[10px] uppercase tracking-[0.4em] text-white/35">
-              Sosyal Medya
-            </p>
-
-            <div className="mt-10 border-t border-white/15">
-              <a
-                data-contact-item
-                href={instagramUrl}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="group flex items-center justify-between border-b border-white/15 py-7"
+              <form
+                ref={formRef}
+                onSubmit={handleSubmit}
+                className="mt-10"
+                noValidate
               >
-                <span className="text-2xl font-light tracking-[-0.03em] md:text-3xl">
-                  Instagram
-                </span>
+                {/* Spam koruması */}
+                <div
+                  className="absolute -left-[9999px] top-auto h-px w-px overflow-hidden"
+                  aria-hidden="true"
+                >
+                  <label htmlFor="website">Website</label>
 
-                <span className="text-xl text-white/35 transition-all duration-300 group-hover:translate-x-2 group-hover:text-white">
-                  ↗
-                </span>
-              </a>
+                  <input
+                    id="website"
+                    name="website"
+                    type="text"
+                    tabIndex={-1}
+                    autoComplete="off"
+                  />
+                </div>
 
-              <a
-                data-contact-item
-                href={linkedinUrl}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="group flex items-center justify-between border-b border-white/15 py-7"
-              >
-                <span className="text-2xl font-light tracking-[-0.03em] md:text-3xl">
-                  LinkedIn
-                </span>
+                <div className="grid gap-6 md:grid-cols-2">
+                  <FormField
+                    label="Ad Soyad"
+                    name="name"
+                    type="text"
+                    placeholder="Adınız Soyadınız"
+                    autoComplete="name"
+                    required
+                  />
 
-                <span className="text-xl text-white/35 transition-all duration-300 group-hover:translate-x-2 group-hover:text-white">
-                  ↗
-                </span>
-              </a>
-            </div>
-          </div>
+                  <FormField
+                    label="Telefon"
+                    name="phone"
+                    type="tel"
+                    placeholder="05XX XXX XX XX"
+                    autoComplete="tel"
+                    required
+                  />
 
-          <div data-reveal>
-            <p className="text-[10px] uppercase tracking-[0.4em] text-white/35">
-              Çalışma Saatleri
-            </p>
+                  <FormField
+                    label="E-posta"
+                    name="email"
+                    type="email"
+                    placeholder="ornek@mail.com"
+                    autoComplete="email"
+                  />
 
-            <div className="mt-10 border-t border-white/15">
-              <div
-                data-contact-item
-                className="flex items-center justify-between border-b border-white/15 py-7"
-              >
-                <span className="text-lg font-light text-white/75">
-                  Pazartesi – Cuma
-                </span>
-
-                <span className="text-sm tracking-[0.15em] text-white/45">
-                  09:00 – 18:00
-                </span>
-              </div>
-
-              <div
-                data-contact-item
-                className="flex items-center justify-between border-b border-white/15 py-7"
-              >
-                <span className="text-lg font-light text-white/75">
-                  Cumartesi
-                </span>
-
-                <span className="text-sm tracking-[0.15em] text-white/45">
-                  Randevu ile
-                </span>
-              </div>
-
-              <div
-                data-contact-item
-                className="flex items-center justify-between border-b border-white/15 py-7"
-              >
-                <span className="text-lg font-light text-white/75">Pazar</span>
-
-                <span className="text-sm tracking-[0.15em] text-white/45">
-                  Kapalı
-                </span>
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      <footer className="border-t border-white/15 bg-[#070707] px-6 md:px-10 lg:px-16">
-        <div className="mx-auto max-w-[1800px]">
-          <div
-            data-reveal
-            className="grid gap-14 py-16 md:py-20 lg:grid-cols-[1.1fr_0.9fr] lg:gap-24"
-          >
-            <div>
-              <Link
-                href="/"
-                className="inline-block text-[clamp(2.8rem,5vw,6rem)] font-light leading-none tracking-[-0.065em] transition-opacity duration-300 hover:opacity-65"
-              >
-                ARZ
-                <br />
-                Mimarlık
-              </Link>
-
-              <p className="mt-8 max-w-md text-sm leading-7 text-white/40">
-                Mimari tasarım, iç mimarlık, proje geliştirme ve danışmanlık
-                hizmetleri.
-              </p>
-            </div>
-
-            <div className="grid gap-10 sm:grid-cols-2">
-              <div>
-                <p className="text-[9px] uppercase tracking-[0.32em] text-white/30">
-                  Sayfalar
-                </p>
-
-                <nav className="mt-6 flex flex-col items-start gap-4">
-                  <Link
-                    href="/"
-                    className="group flex items-center gap-3 text-sm uppercase tracking-[0.1em] text-white/60 transition-colors duration-300 hover:text-white"
+                  <div
+                    data-form-field
+                    className="relative border border-white/20 bg-white/[0.015] opacity-0 transition-colors duration-300 focus-within:border-white/65"
                   >
-                    Anasayfa
-                    <span className="translate-x-0 text-white/25 transition-transform duration-300 group-hover:translate-x-1">
-                      →
+                    <label
+                      htmlFor="projectType"
+                      className="pointer-events-none absolute left-5 top-5 z-10 text-[9px] uppercase tracking-[0.3em] text-white/75"
+                    >
+                      Proje Türü
+                    </label>
+
+                    <select
+                      id="projectType"
+                      name="projectType"
+                      defaultValue=""
+                      className="h-[92px] w-full appearance-none bg-transparent px-5 pb-4 pt-10 text-base text-white/65 outline-none"
+                    >
+                      <option value="" className="bg-[#111] text-white">
+                        Seçiniz
+                      </option>
+
+                      <option
+                        value="Konut"
+                        className="bg-[#111] text-white"
+                      >
+                        Konut
+                      </option>
+
+                      <option
+                        value="Villa"
+                        className="bg-[#111] text-white"
+                      >
+                        Villa
+                      </option>
+
+                      <option
+                        value="Ticari Alan"
+                        className="bg-[#111] text-white"
+                      >
+                        Ticari Alan
+                      </option>
+
+                      <option
+                        value="Ofis"
+                        className="bg-[#111] text-white"
+                      >
+                        Ofis
+                      </option>
+
+                      <option
+                        value="İç Mimarlık"
+                        className="bg-[#111] text-white"
+                      >
+                        İç Mimarlık
+                      </option>
+
+                      <option
+                        value="Kentsel Dönüşüm"
+                        className="bg-[#111] text-white"
+                      >
+                        Kentsel Dönüşüm
+                      </option>
+
+                      <option
+                        value="Mimari Proje"
+                        className="bg-[#111] text-white"
+                      >
+                        Mimari Proje
+                      </option>
+
+                      <option
+                        value="Diğer"
+                        className="bg-[#111] text-white"
+                      >
+                        Diğer
+                      </option>
+                    </select>
+
+                    <span className="pointer-events-none absolute right-5 top-1/2 mt-2 -translate-y-1/2 text-white/60">
+                      ⌄
                     </span>
-                  </Link>
+                  </div>
+                </div>
 
-                  <Link
-                    href="/about"
-                    className="group flex items-center gap-3 text-sm uppercase tracking-[0.1em] text-white/60 transition-colors duration-300 hover:text-white"
+                <div
+                  data-form-field
+                  className="relative mt-6 border border-white/20 bg-white/[0.015] opacity-0 transition-colors duration-300 focus-within:border-white/65"
+                >
+                  <label
+                    htmlFor="message"
+                    className="absolute left-5 top-5 text-[9px] uppercase tracking-[0.3em] text-white/75"
                   >
-                    Hakkımızda
-                    <span className="translate-x-0 text-white/25 transition-transform duration-300 group-hover:translate-x-1">
-                      →
-                    </span>
-                  </Link>
+                    Mesaj <span className="text-white/45">*</span>
+                  </label>
 
-                  <Link
-                    href="/projects"
-                    className="group flex items-center gap-3 text-sm uppercase tracking-[0.1em] text-white/60 transition-colors duration-300 hover:text-white"
-                  >
-                    Projeler
-                    <span className="translate-x-0 text-white/25 transition-transform duration-300 group-hover:translate-x-1">
-                      →
-                    </span>
-                  </Link>
+                  <textarea
+                    id="message"
+                    name="message"
+                    required
+                    rows={8}
+                    placeholder="Projeniz hakkında detaylı bilgi yazabilirsiniz..."
+                    className="min-h-[220px] w-full resize-y bg-transparent px-5 pb-5 pt-12 text-base leading-7 text-white outline-none placeholder:text-white/35"
+                  />
+                </div>
 
-                  <Link
-                    href="/contact"
-                    className="group flex items-center gap-3 text-sm uppercase tracking-[0.1em] text-white/60 transition-colors duration-300 hover:text-white"
-                  >
-                    İletişim
-                    <span className="translate-x-0 text-white/25 transition-transform duration-300 group-hover:translate-x-1">
-                      →
-                    </span>
-                  </Link>
-                </nav>
-              </div>
+                <button
+                  data-form-field
+                  type="submit"
+                  disabled={formStatus === "sending"}
+                  className="group mt-6 flex w-full items-center justify-between border border-white/30 px-7 py-6 text-left opacity-0 transition-all duration-300 hover:border-white hover:bg-white hover:text-black disabled:cursor-wait disabled:opacity-50"
+                >
+                  <span className="text-sm uppercase tracking-[0.32em]">
+                    {formStatus === "sending"
+                      ? "Gönderiliyor"
+                      : "Gönder"}
+                  </span>
 
-              <div>
-                <p className="text-[9px] uppercase tracking-[0.32em] text-white/30">
-                  İletişim
-                </p>
+                  <span className="text-xl transition-transform duration-300 group-hover:translate-x-2">
+                    →
+                  </span>
+                </button>
 
-                <div className="mt-6 flex flex-col items-start gap-4">
-                  <a
-                    href="tel:+905425704429"
-                    className="text-sm leading-6 text-white/60 transition-colors duration-300 hover:text-white"
-                  >
-                    +90 542 570 44 29
-                  </a>
+                <div
+                  data-form-field
+                  className="mt-6 opacity-0"
+                  aria-live="polite"
+                >
+                  {statusMessage && (
+                    <p
+                      className={`text-sm leading-6 ${
+                        formStatus === "success"
+                          ? "text-white/75"
+                          : "text-red-300/90"
+                      }`}
+                    >
+                      {statusMessage}
+                    </p>
+                  )}
 
-                  <a
-                    href="mailto:info@arzmimarlik.net"
-                    className="text-sm leading-6 text-white/60 transition-colors duration-300 hover:text-white"
-                  >
-                    info@arzmimarlik.net
-                  </a>
+                  <p className="flex items-start gap-3 text-xs leading-6 text-white/35">
+                    <LockIcon />
 
-                  <p className="text-sm leading-6 text-white/40">
-                    Sancaktepe
-                    <br />
-                    İstanbul
+                    Gönderdiğiniz bilgiler gizli tutulur ve yalnızca
+                    sizinle iletişim kurmak için kullanılır.
                   </p>
                 </div>
-              </div>
-            </div>
-          </div>
-
-          <div className="flex flex-col gap-6 border-t border-white/10 py-7 md:flex-row md:items-center md:justify-between">
-            <div className="flex flex-wrap items-center gap-x-7 gap-y-3 text-[9px] uppercase tracking-[0.22em] text-white/25">
-              <p>© 2026 ARZ Mimarlık</p>
-              <p>Tüm hakları saklıdır</p>
-            </div>
-
-            <div className="flex items-center gap-6">
-              <a
-                href={instagramUrl}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="text-[9px] uppercase tracking-[0.22em] text-white/35 transition-colors duration-300 hover:text-white"
-              >
-                Instagram ↗
-              </a>
-
-              <a
-                href={linkedinUrl}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="text-[9px] uppercase tracking-[0.22em] text-white/35 transition-colors duration-300 hover:text-white"
-              >
-                LinkedIn ↗
-              </a>
-
-              <button
-                type="button"
-                onClick={() =>
-                  window.scrollTo({
-                    top: 0,
-                    behavior: "smooth",
-                  })
-                }
-                className="group flex items-center gap-2 text-[9px] uppercase tracking-[0.22em] text-white/35 transition-colors duration-300 hover:text-white"
-              >
-                Yukarı
-                <span className="transition-transform duration-300 group-hover:-translate-y-1">
-                  ↑
-                </span>
-              </button>
+              </form>
             </div>
           </div>
         </div>
-      </footer>
+      </section>
+
+      <PremiumFooter />
     </main>
+  );
+}
+
+type FormFieldProps = {
+  label: string;
+  name: string;
+  type: "text" | "tel" | "email";
+  placeholder: string;
+  autoComplete: string;
+  required?: boolean;
+};
+
+function FormField({
+  label,
+  name,
+  type,
+  placeholder,
+  autoComplete,
+  required = false,
+}: FormFieldProps) {
+  return (
+    <div
+      data-form-field
+      className="relative border border-white/20 bg-white/[0.015] opacity-0 transition-colors duration-300 focus-within:border-white/65"
+    >
+      <label
+        htmlFor={name}
+        className="absolute left-5 top-5 text-[9px] uppercase tracking-[0.3em] text-white/75"
+      >
+        {label}
+
+        {required && <span className="ml-1 text-white/45">*</span>}
+      </label>
+
+      <input
+        id={name}
+        name={name}
+        type={type}
+        required={required}
+        autoComplete={autoComplete}
+        placeholder={placeholder}
+        className="h-[92px] w-full bg-transparent px-5 pb-4 pt-10 text-base text-white outline-none placeholder:text-white/35"
+      />
+    </div>
+  );
+}
+
+function PhoneIcon() {
+  return (
+    <svg
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="1.4"
+      className="h-7 w-7 text-white"
+      aria-hidden="true"
+    >
+      <path d="M6.6 2.8 9.3 7a1.5 1.5 0 0 1-.2 1.8L7.5 10.4a16 16 0 0 0 6.1 6.1l1.6-1.6a1.5 1.5 0 0 1 1.8-.2l4.2 2.7a1.5 1.5 0 0 1 .6 1.8l-.7 2.1a2 2 0 0 1-1.9 1.4C9.3 22.7 1.3 14.7 1.3 4.8a2 2 0 0 1 1.4-1.9l2.1-.7a1.5 1.5 0 0 1 1.8.6Z" />
+    </svg>
+  );
+}
+
+function MailIcon() {
+  return (
+    <svg
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="1.4"
+      className="h-7 w-7 text-white"
+      aria-hidden="true"
+    >
+      <rect x="2" y="4" width="20" height="16" rx="1.5" />
+
+      <path d="m3 6 9 7 9-7" />
+    </svg>
+  );
+}
+
+function LocationIcon() {
+  return (
+    <svg
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="1.4"
+      className="h-7 w-7 text-white"
+      aria-hidden="true"
+    >
+      <path d="M20 10c0 5.5-8 12-8 12S4 15.5 4 10a8 8 0 1 1 16 0Z" />
+
+      <circle cx="12" cy="10" r="2.5" />
+    </svg>
+  );
+}
+
+function ClockIcon() {
+  return (
+    <svg
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="1.4"
+      className="h-7 w-7 text-white"
+      aria-hidden="true"
+    >
+      <circle cx="12" cy="12" r="9.5" />
+
+      <path d="M12 6.5V12l4 2.5" />
+    </svg>
+  );
+}
+
+function ShareIcon() {
+  return (
+    <svg
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="1.4"
+      className="h-7 w-7 text-white"
+      aria-hidden="true"
+    >
+      <circle cx="18" cy="5" r="2.5" />
+
+      <circle cx="6" cy="12" r="2.5" />
+
+      <circle cx="18" cy="19" r="2.5" />
+
+      <path d="m8.2 10.8 7.6-4.5M8.2 13.2l7.6 4.5" />
+    </svg>
+  );
+}
+
+function MapIcon() {
+  return (
+    <svg
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="1.4"
+      className="h-4 w-4"
+      aria-hidden="true"
+    >
+      <path d="m3 5 5-2 8 2 5-2v16l-5 2-8-2-5 2V5Z" />
+
+      <path d="M8 3v16M16 5v16" />
+    </svg>
+  );
+}
+
+function LockIcon() {
+  return (
+    <svg
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="1.5"
+      className="mt-1 h-4 w-4 shrink-0"
+      aria-hidden="true"
+    >
+      <rect x="5" y="10" width="14" height="11" rx="1.5" />
+
+      <path d="M8 10V7a4 4 0 0 1 8 0v3" />
+    </svg>
   );
 }
