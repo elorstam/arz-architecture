@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import "./globals.css";
 
 import Navbar from "@/components/Navbar";
+import ScrollToTop from "@/components/ScrollToTop";
 import { GoogleAnalytics } from "@next/third-parties/google";
 
 const siteUrl = "https://arzmimarlik.net";
@@ -42,7 +43,6 @@ export const metadata: Metadata = {
 
   creator: "ARZ Mimarlık",
   publisher: "ARZ Mimarlık",
-
   applicationName: "ARZ Mimarlık",
 
   alternates: {
@@ -159,11 +159,11 @@ export default function RootLayout({
           }}
         />
 
+        <ScrollToTop />
         <Navbar />
 
         <main>{children}</main>
 
-    
         <GoogleAnalytics gaId="G-7EMGB9PSVS" />
       </body>
     </html>
