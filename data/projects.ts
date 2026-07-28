@@ -62,6 +62,66 @@ export const projects: Project[] = [
   },
 
   {
+    slug: "eryilmaz-apartmani",
+    title: "ERYILMAZ APARTMANI",
+    titleLines: ["ERYILMAZ", "APARTMANI"],
+    category: "Apartman",
+    location: "Sancaktepe / İstanbul",
+    year: "2026",
+    services: ["Mimari Tasarım", "Cephe Tasarımı", "3D Görselleştirme"],
+    cover: "/images/eryilmaz-apartmani/cover.png",
+    coverAlt: "Eryılmaz Apartmanı gündüz dış cephe görünümü",
+    description:
+      "Eryılmaz Apartmanı, çağdaş mimari anlayışıyla estetik ve işlevselliği bir araya getiren butik bir konut projesi olarak tasarlandı.",
+    detailParagraphs: [
+      "Cephe tasarımında modern çizgiler, doğal malzeme dokuları ve dengeli kütle kompozisyonu bir arada ele alındı. Balkon boşlukları, yüzey derinlikleri ve malzeme geçişleriyle yapıya güçlü ve çağdaş bir mimari karakter kazandırıldı.",
+      "Ferah yaşam alanları, doğal ışık kullanımı ve kullanıcı konforu projenin temel kararlarını oluşturdu. Yapının bulunduğu çevreyle uyum kurarken kendine özgü kimliğini koruyan nitelikli ve zamansız bir konut yapısı olması hedeflendi.",
+    ],
+    images: [
+      {
+        src: "/images/eryilmaz-apartmani/01.png",
+        alt: "Eryılmaz Apartmanı gece görünümü",
+      },
+      {
+        src: "/images/eryilmaz-apartmani/02.png",
+        alt: "Eryılmaz Apartmanı ön cephe gece görünümü",
+      },
+      {
+        src: "/images/eryilmaz-apartmani/03.png",
+        alt: "Eryılmaz Apartmanı gündüz görünümü",
+      },
+    ],
+  },
+
+  {
+    slug: "ozger-apartmani",
+    title: "ÖZGER APARTMANI",
+    titleLines: ["ÖZGER", "APARTMANI"],
+    category: "Apartman",
+    location: "Sancaktepe / İstanbul",
+    year: "2026",
+    services: ["Mimari Tasarım", "Cephe Tasarımı", "Görselleştirme"],
+    cover: "/images/ozger-apartmani/cover.png",
+    coverAlt: "Özger Apartmanı kapak görseli",
+    description:
+      "Özger Apartmanı, modern kent yaşamına uyum sağlayan işlevsel planlama kararları ile güçlü ve dengeli bir cephe karakterini bir araya getiren bir konut projesi olarak tasarlandı.",
+    detailParagraphs: [
+      "Yapının cephe kurgusunda yatay çizgiler, balkon boşlukları ve farklı yüzey derinlikleri kullanılarak dinamik ancak ölçülü bir mimari ifade oluşturuldu.",
+      "Malzeme seçimleri, doğal ışık kullanımı ve yaşam alanlarının konforu birlikte değerlendirilerek çevresiyle uyumlu, çağdaş ve kalıcı bir yapı kimliği hedeflendi.",
+    ],
+    images: [
+      {
+        src: "/images/ozger-apartmani/01.png",
+        alt: "Özger Apartmanı dış cephe görünümü",
+      },
+      {
+        src: "/images/ozger-apartmani/02.png",
+        alt: "Özger Apartmanı cephe tasarımı",
+      },
+    ],
+  },
+
+  {
     slug: "zeynep-hanim-2-apartmani",
     title: "ZEYNEP HANIM 2 APARTMANI",
     titleLines: ["ZEYNEP HANIM", "2 APARTMANI"],
@@ -118,62 +178,6 @@ export const projects: Project[] = [
   },
 
   {
-  slug: "eryilmaz-apartmani",
-  title: "Eryılmaz Apartmanı",
-  category: "Apartman Projesi",
-  location: "Sancaktepe / İstanbul",
-  year: "2026",
-
-  description:
-    "Eryılmaz Apartmanı, çağdaş mimari anlayışıyla estetik ve işlevselliği bir araya getiren butik bir konut projesidir. Cephe tasarımında modern çizgiler, doğal malzeme dokuları ve dengeli kütle kompozisyonu ön plana çıkarılırken; yaşam konforunu artıran ferah balkonlar ve gün ışığından maksimum fayda sağlayan planlama anlayışı benimsenmiştir. Proje, bulunduğu çevreyle uyum sağlayan mimari dili ve kullanıcı odaklı yaklaşımıyla nitelikli bir yaşam alanı sunmayı hedeflemektedir.",
-
-  coverImage: "/images/eryilmaz-apartmani/cover.png",
-
-  images: [
-    {
-      src: "/images/eryilmaz-apartmani/01.png",
-      alt: "Eryılmaz Apartmanı Gece Renderı",
-    },
-    {
-      src: "/images/eryilmaz-apartmani/02.png",
-      alt: "Eryılmaz Apartmanı Ön Cephe Gece Renderı",
-    },
-    {
-      src: "/images/eryilmaz-apartmani/03.png",
-      alt: "Eryılmaz Apartmanı Gündüz Renderı",
-    },
-  ],
-},
-
-
-  {
-    slug: "ozger-apartmani",
-    title: "ÖZGER APARTMANI",
-    titleLines: ["ÖZGER", "APARTMANI"],
-    category: "Apartman",
-    location: "Sancaktepe / İstanbul",
-    year: "2026",
-    services: ["Mimari Tasarım", "Cephe Tasarımı", "Görselleştirme"],
-    cover: "/images/ozger-apartmani/cover.png",
-    coverAlt: "Özger Apartmanı kapak görseli",
-    description:
-      "Özger Apartmanı, modern kent yaşamına uyum sağlayan işlevsel planlama kararları ile güçlü ve dengeli bir cephe karakterini bir araya getiren bir konut projesi olarak tasarlandı.",
-    detailParagraphs: [
-      "Yapının cephe kurgusunda yatay çizgiler, balkon boşlukları ve farklı yüzey derinlikleri kullanılarak dinamik ancak ölçülü bir mimari ifade oluşturuldu.",
-      "Malzeme seçimleri, doğal ışık kullanımı ve yaşam alanlarının konforu birlikte değerlendirilerek çevresiyle uyumlu, çağdaş ve kalıcı bir yapı kimliği hedeflendi.",
-    ],
-    images: [
-      {
-        src: "/images/ozger-apartmani/01.png",
-        alt: "Özger Apartmanı dış cephe görünümü",
-      },
-      {
-        src: "/images/ozger-apartmani/02.png",
-        alt: "Özger Apartmanı cephe tasarımı",
-      },
-    ],
-  },
-  {
   slug: "barlas-antrepo-acik-calisma-alani",
   title: "BARLAS ANTREPO AÇIK ÇALIŞMA ALANI",
   titleLines: ["BARLAS ANTREPO", "AÇIK ÇALIŞMA ALANI"],
@@ -229,7 +233,8 @@ export const projects: Project[] = [
     },
   ],
 },
-{
+
+  {
   slug: "barlas-antrepo-konsept-ofis-tasarimlari",
   title: "BARLAS ANTREPO KONSEPT OFİS TASARIMLARI",
   titleLines: [
@@ -310,8 +315,7 @@ export const projects: Project[] = [
       alt: "Barlas Antrepo Konsept Ofis Tasarımı 13",
     },
   ],
-},
-
+}
 ];
 
 export function getProjectBySlug(slug: string) {
