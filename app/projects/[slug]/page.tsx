@@ -46,5 +46,5 @@ export default async function ProjectPage({
     notFound();
   }
 
-  return <ProjectDetail project={project} />;
+  return <ProjectDetail project={project!} />;
 }

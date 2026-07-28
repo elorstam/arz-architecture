@@ -39,3 +39,7 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+
+# Admin runtime data / sensitive 2FA state
+data/admin-security.json
+ARZ-Backup-*.zip

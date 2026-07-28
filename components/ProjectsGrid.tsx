@@ -12,11 +12,11 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
-import { projects } from "@/data/projects";
+import type {Project} from "@/data/projects";
+import { useLocale } from "next-intl";
 
 gsap.registerPlugin(ScrollTrigger);
 
-type Project = (typeof projects)[number];
 
 type TransitionState = {
   project: Project;
@@ -28,8 +28,10 @@ type TransitionState = {
   };
 } | null;
 
-export default function ProjectsGrid() {
+export default function ProjectsGrid({projects}: {projects: Project[]}) {
   const router = useRouter();
+  const locale = useLocale();
+  const localizedProjects = projects;
 
   const gridRef = useRef<HTMLDivElement | null>(null);
   const overlayRef = useRef<HTMLDivElement | null>(null);
@@ -41,10 +43,10 @@ export default function ProjectsGrid() {
   const [isTransitioning, setIsTransitioning] = useState(false);
 
   useEffect(() => {
-    projects.forEach((project) => {
-      router.prefetch(`/projects/${project.slug}`);
+    localizedProjects.forEach((project) => {
+      router.prefetch(`/${locale}/${locale === "tr" ? "projeler" : "projects"}/${project.slug}`);
     });
-  }, [router]);
+  }, [locale, router]);
 
   /*
    * Proje kartlarının sayfa açılış animasyonu
@@ -133,7 +135,7 @@ export default function ProjectsGrid() {
     ).matches;
 
     if (prefersReducedMotion) {
-      router.push(`/projects/${transition.project.slug}`);
+      router.push(`/${locale}/${locale === "tr" ? "projeler" : "projects"}/${transition.project.slug}`);
 
       return () => {
         document.body.style.overflow = previousOverflow;
@@ -169,7 +171,7 @@ export default function ProjectsGrid() {
         overwrite: true,
       },
       onComplete: () => {
-        router.push(`/projects/${transition.project.slug}`);
+        router.push(`/${locale}/${locale === "tr" ? "projeler" : "projects"}/${transition.project.slug}`);
       },
     });
 
@@ -229,7 +231,7 @@ export default function ProjectsGrid() {
       timeline.kill();
       document.body.style.overflow = previousOverflow;
     };
-  }, [router, transition]);
+  }, [locale, router, transition]);
 
   function handleProjectClick(
     event: MouseEvent<HTMLAnchorElement>,
@@ -257,7 +259,7 @@ export default function ProjectsGrid() {
       );
 
     if (!imageContainer) {
-      router.push(`/projects/${project.slug}`);
+      router.push(`/${locale}/${locale === "tr" ? "projeler" : "projects"}/${project.slug}`);
       return;
     }
 
@@ -282,16 +284,16 @@ export default function ProjectsGrid() {
         ref={gridRef}
         className="grid gap-x-8 gap-y-16 md:grid-cols-2 md:gap-y-24 lg:gap-x-12"
       >
-        {projects.map((project, index) => (
+        {localizedProjects.map((project, index) => (
           <article
             key={project.slug}
             data-project-card
             className="group opacity-0"
           >
             <Link
-              href={`/projects/${project.slug}`}
+              href={`/${locale}/${locale === "tr" ? "projeler" : "projects"}/${project.slug}`}
               className="block"
-              aria-label={`${project.title} projesini incele`}
+              aria-label={locale === "en" ? `Explore ${project.title}` : `${project.title} projesini incele`}
               onClick={(event) =>
                 handleProjectClick(event, project)
               }
@@ -313,7 +315,7 @@ export default function ProjectsGrid() {
 
                 <div className="absolute inset-x-0 bottom-0 flex translate-y-5 items-center justify-between px-5 pb-5 opacity-0 transition-all duration-500 ease-out group-hover:translate-y-0 group-hover:opacity-100 md:px-7 md:pb-7">
                   <span className="text-[9px] uppercase tracking-[0.3em] text-white">
-                    Projeyi İncele
+                    {locale === "en" ? "View Project" : "Projeyi İncele"}
                   </span>
 
                   <span className="text-2xl font-light text-white transition-transform duration-500 group-hover:translate-x-1">

@@ -3,9 +3,26 @@ import "./globals.css";
 
 import Navbar from "@/components/Navbar";
 import ScrollToTop from "@/components/ScrollToTop";
+import LocalePreference from "@/components/LocalePreference";
 import { GoogleAnalytics } from "@next/third-parties/google";
+import { NextIntlClientProvider } from "next-intl";
+import { getLocale, getMessages } from "next-intl/server";
 
 const siteUrl = "https://arzmimarlik.net";
+
+const themeScript = `
+  try {
+    const stored = localStorage.getItem("arz-theme");
+    const theme = stored === "light" || stored === "dark"
+      ? stored
+      : "dark";
+    document.documentElement.dataset.theme = theme;
+    document.documentElement.style.colorScheme = theme;
+  } catch (_) {
+    document.documentElement.dataset.theme = "dark";
+  }
+`;
+
 
 export const metadata: Metadata = {
   metadataBase: new URL(siteUrl),
@@ -144,14 +161,19 @@ const jsonLd = {
   },
 };
 
-export default function RootLayout({
+export default async function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  const locale = await getLocale();
+  const messages = await getMessages();
+
   return (
-    <html lang="tr">
+    <html lang={locale} data-theme="dark" suppressHydrationWarning>
       <body>
+        <script dangerouslySetInnerHTML={{__html: themeScript}} />
+
         <script
           type="application/ld+json"
           dangerouslySetInnerHTML={{
@@ -159,10 +181,13 @@ export default function RootLayout({
           }}
         />
 
-        <ScrollToTop />
-        <Navbar />
+        <NextIntlClientProvider messages={messages}>
+          <ScrollToTop />
+          <LocalePreference />
+          <Navbar />
 
-        <main>{children}</main>
+          <main>{children}</main>
+        </NextIntlClientProvider>
 
         <GoogleAnalytics gaId="G-7EMGB9PSVS" />
       </body>

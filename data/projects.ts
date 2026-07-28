@@ -318,6 +318,92 @@ export const projects: Project[] = [
 }
 ];
 
+
+
+export const projectEnglishSlugs: Record<string, string> = {
+  "vespera-port": "vespera-port",
+  "eryilmaz-apartmani": "eryilmaz-apartment",
+  "ozger-apartmani": "ozger-apartment",
+  "zeynep-hanim-2-apartmani": "zeynep-hanim-2-apartment",
+  "zeynep-hanim-apartmani": "zeynep-hanim-apartment",
+  "barlas-antrepo-acik-calisma-alani": "barlas-warehouse-open-workspace",
+  "barlas-antrepo-konsept-ofis-tasarimlari": "barlas-warehouse-concept-office-designs",
+};
+
+export function getProjectSlug(project: Project, locale: string) {
+  return locale === "en" ? (projectEnglishSlugs[project.slug] ?? project.slug) : project.slug;
+}
+
+export function getTurkishSlug(slug: string) {
+  return Object.entries(projectEnglishSlugs).find(([, englishSlug]) => englishSlug === slug)?.[0] ?? slug;
+}
+
+const projectEnglish: Record<string, Partial<Project>> = {
+  "vespera-port": {
+    category: "Commercial",
+    services: ["Architectural Design", "3D Visualization"],
+    coverAlt: "VESPERA PORT project cover",
+    description: "VESPERA PORT was designed as a commercial project with a strong facade identity, combining contemporary architecture with the functional needs of modern business life.",
+    detailParagraphs: [
+      "The building's relationship with its urban context was developed through transparent surfaces, horizontal lines and balanced facade proportions. Functional planning and a distinctive exterior expression were considered as a unified design approach.",
+      "Material choices, facade depth and changing light conditions throughout the day were carefully coordinated to give the building a memorable character both by day and by night."
+    ],
+    images: [
+      {src: "/images/vespera-port/01.png", alt: "VESPERA PORT daytime exterior"},
+      {src: "/images/vespera-port/02.png", alt: "VESPERA PORT night exterior"},
+      {src: "/images/vespera-port/03.png", alt: "VESPERA PORT front facade"},
+      {src: "/images/vespera-port/04.png", alt: "VESPERA PORT perspective view"},
+      {src: "/images/vespera-port/05.png", alt: "VESPERA PORT facade design", contain: true}
+    ]
+  },
+  "eryilmaz-apartmani": {
+    title: "ERYILMAZ APARTMENT", titleLines: ["ERYILMAZ", "APARTMENT"], category: "Residential", location: "Sancaktepe / Istanbul",
+    services: ["Architectural Design", "Facade Design", "3D Visualization"], coverAlt: "Eryilmaz Apartment daytime exterior",
+    description: "Eryilmaz Apartment was conceived as a boutique residential project that brings aesthetics and functionality together through a contemporary architectural approach.",
+    detailParagraphs: ["Modern lines, natural material textures and a balanced mass composition define the facade. Balcony voids, surface depth and material transitions give the building a strong contemporary identity.", "Generous living spaces, natural daylight and user comfort shaped the key design decisions. The aim was to create a timeless residential building that responds to its surroundings while retaining a distinctive character."],
+    images: [{src:"/images/eryilmaz-apartmani/01.png",alt:"Eryilmaz Apartment night view"},{src:"/images/eryilmaz-apartmani/02.png",alt:"Eryilmaz Apartment front facade at night"},{src:"/images/eryilmaz-apartmani/03.png",alt:"Eryilmaz Apartment daytime view"}]
+  },
+  "ozger-apartmani": {
+    title:"OZGER APARTMENT", titleLines:["OZGER","APARTMENT"], category:"Residential", location:"Sancaktepe / Istanbul", services:["Architectural Design","Facade Design","3D Visualization"], coverAlt:"Ozger Apartment project cover",
+    description:"Ozger Apartment combines functional planning for contemporary urban life with a strong and balanced facade character.",
+    detailParagraphs:["Horizontal lines, balcony voids and varied surface depths create a dynamic yet measured architectural expression.","Material choices, daylight and residential comfort were considered together to establish a contemporary, enduring identity that fits naturally into its context."],
+    images:[{src:"/images/ozger-apartmani/01.png",alt:"Ozger Apartment exterior"},{src:"/images/ozger-apartmani/02.png",alt:"Ozger Apartment facade design"}]
+  },
+  "zeynep-hanim-2-apartmani": {
+    title:"ZEYNEP HANIM 2 APARTMENT", titleLines:["ZEYNEP HANIM","2 APARTMENT"], category:"Residential", location:"Sancaktepe / Istanbul", services:["Architectural Design","Facade Design","3D Visualization"], coverAlt:"Zeynep Hanim 2 Apartment project cover",
+    description:"Zeynep Hanim 2 Apartment brings the needs of contemporary urban living together with a simple, balanced and confident architectural identity.",
+    detailParagraphs:["Horizontal and vertical facade elements were composed in careful balance. Material transitions, balcony voids and facade depth give the building a modern and distinctive appearance.","Functional living spaces, daylight and user comfort were prioritised, while a timeless facade language allows the building to relate to its surroundings without losing its own identity."],
+    images:[{src:"/images/zeynep-hanim-2-apartmani/01.png",alt:"Zeynep Hanim 2 Apartment exterior"},{src:"/images/zeynep-hanim-2-apartmani/02.png",alt:"Zeynep Hanim 2 Apartment facade design"}]
+  },
+  "zeynep-hanim-apartmani": {
+    title:"ZEYNEP HANIM APARTMENT", titleLines:["ZEYNEP HANIM","APARTMENT"], category:"Residential", location:"Sancaktepe / Istanbul", services:["Architectural Design","Facade Design","3D Visualization"], coverAlt:"Zeynep Hanim Apartment project cover",
+    description:"Zeynep Hanim Apartment combines the functional requirements of urban living with a contemporary and restrained facade approach.",
+    detailParagraphs:["Balconies, window openings and material transitions were organised as a balanced composition, allowing the building's measured architectural language to sit comfortably within its surroundings.","Efficient daylight, practical living spaces and a timeless exterior expression formed the central design decisions."],
+    images:[{src:"/images/zeynep-hanim-apartmani/01.png",alt:"Zeynep Hanim Apartment exterior"},{src:"/images/zeynep-hanim-apartmani/02.png",alt:"Zeynep Hanim Apartment facade design"}]
+  },
+  "barlas-antrepo-acik-calisma-alani": {
+    title:"BARLAS WAREHOUSE OPEN WORKSPACE", titleLines:["BARLAS WAREHOUSE","OPEN WORKSPACE"], category:"Office", location:"Sancaktepe / Istanbul", services:["Interior Architecture","Office Design","Construction Documentation"], coverAlt:"Barlas Warehouse Open Workspace project cover",
+    description:"The Barlas Warehouse Open Workspace was designed as a contemporary office that supports communication between teams, maximises daylight and responds to modern working culture.",
+    detailParagraphs:["Workstations, meeting points and shared spaces were planned as an integrated open-office environment. Natural daylight, a restrained colour palette and timber surfaces create a bright and modern atmosphere.","Furniture layout, lighting and circulation were developed around user comfort. Function and aesthetics were balanced to create an efficient, durable and contemporary workplace."],
+    images: Array.from({length:7},(_,i)=>({src:`/images/barlas-antrepo-acik-calisma-alani/0${i+1}.jpg`,alt:`Barlas Warehouse Open Workspace view ${String(i+1).padStart(2,"0")}`}))
+  },
+  "barlas-antrepo-konsept-ofis-tasarimlari": {
+    title:"BARLAS WAREHOUSE CONCEPT OFFICE DESIGNS", titleLines:["BARLAS WAREHOUSE","CONCEPT OFFICE","DESIGNS"], category:"Office", location:"Sancaktepe / Istanbul", services:["Interior Architecture","Concept Design","3D Visualization"], coverAlt:"Barlas Warehouse Concept Office Designs project cover",
+    description:"The concept office designs developed for Barlas Warehouse offer contemporary interior solutions that unite modern working culture with aesthetics, functionality and corporate identity.",
+    detailParagraphs:["Executive offices, reception areas, meeting rooms and shared workspaces were developed through a consistent design language. Natural stone, timber and metal details create a strong, timeless and prestigious atmosphere.","Lighting, furniture and material choices were coordinated to support both visual continuity and day-to-day use, resulting in flexible, comfortable and representative office environments."],
+    images: Array.from({length:13},(_,i)=>{const n=i+1; const file=n<10?`0${n}.jpg`:`0${n}.jpg`; return {src:`/images/barlas-antrepo-konsept-ofis-tasarimlari/${file}`,alt:`Barlas Warehouse Concept Office Design ${String(n).padStart(2,"0")}`}})
+  }
+};
+
+export function localizeProject(project: Project, locale: string): Project {
+  return locale === "en" ? {...project, ...projectEnglish[project.slug], slug: getProjectSlug(project, locale)} : project;
+}
+
+export function getLocalizedProjects(locale: string): Project[] {
+  return projects.map((project) => localizeProject(project, locale));
+}
+
 export function getProjectBySlug(slug: string) {
-  return projects.find((project) => project.slug === slug);
+  const turkishSlug = getTurkishSlug(slug);
+  return projects.find((project) => project.slug === turkishSlug);
 }

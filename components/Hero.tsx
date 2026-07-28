@@ -3,42 +3,29 @@
 import Image from "next/image";
 import Link from "next/link";
 import { useEffect, useRef } from "react";
+import { useLocale, useTranslations } from "next-intl";
 import PremiumFooter from "@/components/PremiumFooter";
 
-const values = [
-  {
-    number: "01",
-    title: "Modern\nTasarım",
-    description:
-      "Güncel tasarım anlayışını, zamana karşı değerini koruyacak sade ve güçlü bir mimari dille bir araya getiriyoruz.",
-  },
-  {
-    number: "02",
-    title: "İşlevsellik",
-    description:
-      "Her mekânın kullanıcı ihtiyaçlarına cevap vermesini, estetik kadar kullanışlı ve sürdürülebilir olmasını önemsiyoruz.",
-  },
-  {
-    number: "03",
-    title: "Hızlı\nÇözüm",
-    description:
-      "Tasarım ve uygulama süreçlerinde oluşabilecek problemlere hızlı, gerçekçi ve uygulanabilir çözümler üretiyoruz.",
-  },
-];
+const valueKeys = ["modern", "functionality", "solutions"] as const;
 
-const services = [
-  "Konut",
-  "Villa",
-  "Ticari Alan",
-  "Ofis",
-  "Kentsel Dönüşüm",
-  "İç Mimarlık",
-  "Mimari Proje",
-  "Uygulama ve Danışmanlık",
-];
+const serviceKeys = [
+  "residential",
+  "villa",
+  "commercial",
+  "office",
+  "urbanTransformation",
+  "interiorArchitecture",
+  "architecturalProject",
+  "implementationConsulting",
+] as const;
 
 export default function Hero() {
   const pageRef = useRef<HTMLElement | null>(null);
+  const locale = useLocale();
+  const t = useTranslations("Hero");
+
+  const projectsHref = `/${locale}/${locale === "tr" ? "projeler" : "projects"}/vespera-port`;
+  const contactHref = `/${locale}/${locale === "tr" ? "iletisim" : "contact"}`;
 
   useEffect(() => {
     const page = pageRef.current;
@@ -77,7 +64,7 @@ export default function Hero() {
     >
       {/* HERO */}
       <section
-        className="relative min-h-[100svh] overflow-hidden bg-[#080808] text-white"
+        className="theme-dark-surface relative min-h-[100svh] overflow-hidden bg-[#080808] text-white"
       >
         {/* Vespera arka plan görseli */}
         <div
@@ -85,11 +72,19 @@ export default function Hero() {
         >
           <Image
             src="/vespera.png"
-            alt="ARZ Mimarlık Vespera Port projesi"
+            alt={t("imageAlt")}
             fill
             priority
             sizes="100vw"
-            className="object-cover object-center"
+            className="hero-image-dark object-cover object-center"
+          />
+          <Image
+            src="/images/vespera-port/cover.png"
+            alt={t("imageAlt")}
+            fill
+            priority
+            sizes="100vw"
+            className="hero-image-light object-cover object-center"
           />
         </div>
 
@@ -106,10 +101,10 @@ export default function Hero() {
         <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_72%_38%,transparent_0%,transparent_42%,rgba(0,0,0,0.18)_100%)]" />
 
         {/* Vespera görselinden siyah bölüme yumuşak geçiş */}
-        <div className="pointer-events-none absolute inset-x-0 bottom-0 z-[8] h-[38vh] min-h-[280px] bg-gradient-to-b from-transparent via-[#090909]/65 to-[#090909]" />
+        <div className="hero-transition-primary pointer-events-none absolute inset-x-0 bottom-0 z-[8] h-[38vh] min-h-[280px] bg-gradient-to-b from-transparent via-[#090909]/65 to-[#090909]" />
 
         {/* Geçişi daha doğal yapan ikinci katman */}
-        <div className="pointer-events-none absolute inset-x-0 bottom-0 z-[9] h-[18vh] bg-gradient-to-b from-transparent to-[#090909]" />
+        <div className="hero-transition-secondary pointer-events-none absolute inset-x-0 bottom-0 z-[9] h-[18vh] bg-gradient-to-b from-transparent to-[#090909]" />
 
         {/* İnce çerçeve */}
         <div className="pointer-events-none absolute inset-x-5 bottom-5 top-24 z-10 border border-white/[0.11] md:inset-x-8 md:bottom-8 md:top-28 lg:inset-x-12 lg:bottom-10 lg:top-32" />
@@ -128,7 +123,7 @@ export default function Hero() {
                 <p
                   className="animate-[heroFadeUp_.7s_.25s_cubic-bezier(0.22,1,0.36,1)_both] text-[8px] font-medium uppercase tracking-[0.4em] text-white/80 motion-reduce:animate-none sm:text-[9px] md:text-[10px]"
                 >
-                  Mimarlık · İç Mimarlık · Mühendislik · Danışmanlık
+                  {t("eyebrow")}
                 </p>
               </div>
 
@@ -137,7 +132,7 @@ export default function Hero() {
                   <span
                     className="block animate-[heroTitleIn_.95s_.3s_cubic-bezier(0.22,1,0.36,1)_both] motion-reduce:animate-none"
                   >
-                    Sade.
+                    {t("titleLine1")}
                   </span>
                 </span>
 
@@ -145,7 +140,7 @@ export default function Hero() {
                   <span
                     className="block animate-[heroTitleIn_.95s_.42s_cubic-bezier(0.22,1,0.36,1)_both] motion-reduce:animate-none"
                   >
-                    Modern.
+                    {t("titleLine2")}
                   </span>
                 </span>
 
@@ -153,7 +148,7 @@ export default function Hero() {
                   <span
                     className="block animate-[heroTitleIn_.95s_.54s_cubic-bezier(0.22,1,0.36,1)_both] motion-reduce:animate-none"
                   >
-                    Kalıcı.
+                    {t("titleLine3")}
                   </span>
                 </span>
               </h1>
@@ -165,9 +160,7 @@ export default function Hero() {
               <p
                 className="max-w-[560px] animate-[heroFadeUp_.8s_.65s_cubic-bezier(0.22,1,0.36,1)_both] text-sm font-light leading-6 tracking-[-0.01em] text-white/85 motion-reduce:animate-none md:text-[15px] md:leading-7"
               >
-                Zamana direnen, işlev ve estetiği dengeli biçimde bir araya
-                getiren; bulunduğu çevreyle güçlü bir ilişki kuran mimari
-                mekânlar tasarlıyoruz.
+                {t("intro")}
               </p>
 
               <div
@@ -178,15 +171,15 @@ export default function Hero() {
                 </span>
 
                 <span className="text-[8px] uppercase tracking-[0.36em] text-white/60">
-                  Aşağı Kaydır
+                  {t("scroll")}
                 </span>
               </div>
             </div>
 
             {/* Vespera Port kartı */}
             <Link
-              href="/projects/vespera-port"
-              aria-label="Vespera Port projesini incele"
+              href={projectsHref}
+              aria-label={t("featuredProject.ariaLabel")}
               className="group relative block w-full animate-[heroFadeUp_.85s_.75s_cubic-bezier(0.22,1,0.36,1)_both] motion-reduce:animate-none"
             >
               <span
@@ -201,7 +194,7 @@ export default function Hero() {
                 <div className="flex items-start justify-between gap-8">
                   <div>
                     <p className="text-[8px] uppercase tracking-[0.38em] text-white/70 md:text-[9px]">
-                      Gelecek Proje
+                      {t("featuredProject.label")}
                     </p>
 
                     <h2
@@ -252,7 +245,7 @@ export default function Hero() {
 
                 <div className="mt-6 flex items-center justify-between">
                   <span className="text-[8px] uppercase tracking-[0.34em] text-white/70 transition-colors duration-500 group-hover:text-white">
-                    Projeyi Keşfet
+                    {t("featuredProject.cta")}
                   </span>
 
                   <span className="h-px w-10 bg-white/45 transition-all duration-500 group-hover:w-16 group-hover:bg-white" />
@@ -268,33 +261,33 @@ export default function Hero() {
         <div className="mx-auto max-w-[1800px]">
           <div data-reveal className="mb-16 translate-y-12 opacity-0 transition-all duration-1000 ease-out md:mb-24">
             <p className="text-[10px] uppercase tracking-[0.4em] text-white/35">
-              Yaklaşımımız
+              {t("approach.eyebrow")}
             </p>
 
             <h2 className="mt-7 max-w-5xl text-[clamp(3rem,6vw,7rem)] font-light leading-[0.9] tracking-[-0.06em]">
-              Tasarımda üç temel ilke.
+              {t("approach.title")}
             </h2>
           </div>
 
           <div className="grid border-t border-white/15 lg:grid-cols-3">
-            {values.map((value) => (
+            {valueKeys.map((valueKey, index) => (
               <article
-                key={value.number}
+                key={valueKey}
                 data-reveal
                 className="group min-h-[430px] translate-y-12 border-b border-white/15 py-10 opacity-0 transition-all duration-700 ease-out hover:bg-white hover:text-black lg:border-b-0 lg:border-r lg:px-10 lg:first:pl-0 lg:last:border-r-0 lg:last:pr-0"
               >
                 <div className="flex h-full flex-col justify-between">
                   <p className="text-xs tracking-[0.3em] text-white/35 transition-colors duration-500 group-hover:text-black/40">
-                    {value.number}
+                    {String(index + 1).padStart(2, "0")}
                   </p>
 
                   <div className="mt-24">
                     <h3 className="whitespace-pre-line text-4xl font-light leading-[0.95] tracking-[-0.05em] md:text-5xl">
-                      {value.title}
+                      {t(`approach.values.${valueKey}.title`)}
                     </h3>
 
                     <p className="mt-8 max-w-sm text-sm leading-7 text-white/50 transition-colors duration-500 group-hover:text-black/65 md:text-base">
-                      {value.description}
+                      {t(`approach.values.${valueKey}.description`)}
                     </p>
                   </div>
                 </div>
@@ -310,20 +303,20 @@ export default function Hero() {
           <div className="grid gap-16 lg:grid-cols-[0.7fr_1.3fr] lg:gap-24">
             <div data-reveal className="translate-y-12 opacity-0 transition-all duration-1000 ease-out">
               <p className="text-[10px] uppercase tracking-[0.4em] text-white/35">
-                Çalışma Alanlarımız
+                {t("services.eyebrow")}
               </p>
 
               <h2 className="mt-7 text-[clamp(3.4rem,6vw,7rem)] font-light leading-[0.88] tracking-[-0.06em]">
-                Farklı ölçeklerde,
+                {t("services.titleLine1")}
                 <br />
-                aynı yaklaşım.
+                {t("services.titleLine2")}
               </h2>
             </div>
 
             <div className="border-t border-white/15">
-              {services.map((service, index) => (
+              {serviceKeys.map((serviceKey, index) => (
                 <div
-                  key={service}
+                  key={serviceKey}
                   data-reveal
                   className="group flex translate-y-8 items-center justify-between border-b border-white/15 py-6 opacity-0 transition-all duration-700 ease-out md:py-8"
                 >
@@ -333,7 +326,7 @@ export default function Hero() {
                     </span>
 
                     <h3 className="text-2xl font-light tracking-[-0.035em] transition-transform duration-300 group-hover:translate-x-3 md:text-4xl">
-                      {service}
+                      {t(`services.items.${serviceKey}`)}
                     </h3>
                   </div>
 
@@ -356,22 +349,22 @@ export default function Hero() {
           className="mx-auto flex max-w-[1800px] translate-y-12 flex-col items-start opacity-0 transition-all duration-1000 ease-out"
         >
           <p className="text-[10px] uppercase tracking-[0.4em] text-white/35">
-            Yeni Bir Proje
+            {t("contact.eyebrow")}
           </p>
 
           <h2 className="mt-8 max-w-6xl text-[clamp(3.8rem,8vw,9.5rem)] font-light leading-[0.84] tracking-[-0.07em]">
-            Bir sonraki
+            {t("contact.titleLine1")}
             <br />
-            projenizi
+            {t("contact.titleLine2")}
             <br />
-            birlikte tasarlayalım.
+            {t("contact.titleLine3")}
           </h2>
 
           <Link
-            href="/contact"
+            href={contactHref}
             className="group mt-14 inline-flex items-center gap-5 border-b border-white/30 pb-3 text-[10px] uppercase tracking-[0.32em] transition-colors duration-300 hover:border-white md:text-xs"
           >
-            İletişime Geç
+            {t("contact.cta")}
 
             <span className="text-lg transition-transform duration-300 group-hover:translate-x-2">
               →

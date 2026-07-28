@@ -9,6 +9,7 @@ import {
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import PremiumFooter from "@/components/PremiumFooter";
+import {useLocale} from "next-intl";
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -22,6 +23,8 @@ type FormStatus = "idle" | "sending" | "success" | "error";
 
 export default function ContactPage() {
   const pageRef = useRef<HTMLElement | null>(null);
+  const locale = useLocale();
+  const en = locale === "en";
   const formRef = useRef<HTMLFormElement | null>(null);
 
   const [formStatus, setFormStatus] = useState<FormStatus>("idle");
@@ -148,7 +151,7 @@ export default function ContactPage() {
     if (!payload.name || !payload.phone || !payload.message) {
       setFormStatus("error");
       setStatusMessage(
-        "Lütfen ad soyad, telefon ve mesaj alanlarını doldurun.",
+        en ? "Please complete the name, phone and message fields." : "Lütfen ad soyad, telefon ve mesaj alanlarını doldurun.",
       );
       return;
     }
@@ -168,21 +171,21 @@ export default function ContactPage() {
 
       if (!response.ok) {
         throw new Error(
-          result.message || "Mesaj gönderilirken bir hata oluştu.",
+          result.message || (en ? "An error occurred while sending your message." : "Mesaj gönderilirken bir hata oluştu."),
         );
       }
 
       form.reset();
       setFormStatus("success");
       setStatusMessage(
-        "Mesajınız başarıyla gönderildi. En kısa sürede sizinle iletişime geçeceğiz.",
+        en ? "Your message has been sent successfully. We will contact you shortly." : "Mesajınız başarıyla gönderildi. En kısa sürede sizinle iletişime geçeceğiz.",
       );
     } catch (error) {
       setFormStatus("error");
       setStatusMessage(
         error instanceof Error
           ? error.message
-          : "Mesaj gönderilemedi. Lütfen daha sonra tekrar deneyin.",
+          : en ? "Your message could not be sent. Please try again later." : "Mesaj gönderilemedi. Lütfen daha sonra tekrar deneyin.",
       );
     }
   }
@@ -199,7 +202,7 @@ export default function ContactPage() {
             data-contact-label
             className="text-[10px] uppercase tracking-[0.45em] text-white/40 opacity-0"
           >
-            İletişim
+            {en ? "Contact" : "İletişim"}
           </p>
 
           <div className="mt-14 grid gap-20 lg:grid-cols-[0.82fr_1.18fr] lg:gap-0">
@@ -216,7 +219,7 @@ export default function ContactPage() {
 
                   <div>
                     <p className="text-[9px] uppercase tracking-[0.32em] text-white/40">
-                      Telefon
+                      {en ? "Phone" : "Telefon"}
                     </p>
 
                     <p className="mt-3 text-xl font-light tracking-[-0.025em] text-white md:text-2xl">
@@ -239,7 +242,7 @@ export default function ContactPage() {
 
                   <div className="min-w-0">
                     <p className="text-[9px] uppercase tracking-[0.32em] text-white/40">
-                      E-posta
+                      {en ? "Email" : "E-posta"}
                     </p>
 
                     <p className="mt-3 break-all text-xl font-light tracking-[-0.025em] text-white md:text-2xl">
@@ -261,7 +264,7 @@ export default function ContactPage() {
 
                   <div>
                     <p className="text-[9px] uppercase tracking-[0.32em] text-white/40">
-                      Adres
+                      {en ? "Address" : "Adres"}
                     </p>
 
                     <address className="mt-3 not-italic text-xl font-light leading-[1.5] tracking-[-0.025em] text-white md:text-2xl">
@@ -271,7 +274,7 @@ export default function ContactPage() {
                       <br />
                       Tuna İş Merkezi No: 2/4
                       <br />
-                      Sancaktepe / İstanbul
+                      {en ? "Sancaktepe / Istanbul" : "Sancaktepe / İstanbul"}
                     </address>
 
                     <a
@@ -282,7 +285,7 @@ export default function ContactPage() {
                     >
                       <MapIcon />
 
-                      Yol Tarifi Al
+                      {en ? "Get Directions" : "Yol Tarifi Al"}
 
                       <span className="text-base transition-transform duration-300 group-hover/map:translate-x-1 group-hover/map:-translate-y-1">
                         ↗
@@ -304,11 +307,11 @@ export default function ContactPage() {
 
                   <div>
                     <p className="text-[9px] uppercase tracking-[0.32em] text-white/40">
-                      Çalışma Saatleri
+                      {en ? "Working Hours" : "Çalışma Saatleri"}
                     </p>
 
                     <p className="mt-3 text-xl font-light leading-[1.45] tracking-[-0.025em] text-white md:text-2xl">
-                      Pazartesi – Cuma
+                      {en ? "Monday – Friday" : "Pazartesi – Cuma"}
                       <br />
                       09:00 – 18:00
                     </p>
@@ -328,7 +331,7 @@ export default function ContactPage() {
 
                   <div>
                     <p className="text-[9px] uppercase tracking-[0.32em] text-white/40">
-                      Sosyal Medya
+                      {en ? "Social Media" : "Sosyal Medya"}
                     </p>
 
                     <div className="mt-3 flex flex-col items-start gap-2">
@@ -371,7 +374,7 @@ export default function ContactPage() {
                 data-form-heading
                 className="text-[10px] uppercase tracking-[0.45em] text-white/40 opacity-0"
               >
-                Bize Yazın
+                {en ? "Write to Us" : "Bize Yazın"}
               </p>
 
               <form
@@ -398,16 +401,16 @@ export default function ContactPage() {
 
                 <div className="grid gap-6 md:grid-cols-2">
                   <FormField
-                    label="Ad Soyad"
+                    label={en ? "Full Name" : "Ad Soyad"}
                     name="name"
                     type="text"
-                    placeholder="Adınız Soyadınız"
+                    placeholder={en ? "Your full name" : "Adınız Soyadınız"}
                     autoComplete="name"
                     required
                   />
 
                   <FormField
-                    label="Telefon"
+                    label={en ? "Phone" : "Telefon"}
                     name="phone"
                     type="tel"
                     placeholder="05XX XXX XX XX"
@@ -416,7 +419,7 @@ export default function ContactPage() {
                   />
 
                   <FormField
-                    label="E-posta"
+                    label={en ? "Email" : "E-posta"}
                     name="email"
                     type="email"
                     placeholder="ornek@mail.com"
@@ -431,7 +434,7 @@ export default function ContactPage() {
                       htmlFor="projectType"
                       className="pointer-events-none absolute left-5 top-5 z-10 text-[9px] uppercase tracking-[0.3em] text-white/75"
                     >
-                      Proje Türü
+                      {en ? "Project Type" : "Proje Türü"}
                     </label>
 
                     <select
@@ -441,14 +444,14 @@ export default function ContactPage() {
                       className="h-[92px] w-full appearance-none bg-transparent px-5 pb-4 pt-10 text-base text-white/65 outline-none"
                     >
                       <option value="" className="bg-[#111] text-white">
-                        Seçiniz
+                        {en ? "Select" : "Seçiniz"}
                       </option>
 
                       <option
                         value="Konut"
                         className="bg-[#111] text-white"
                       >
-                        Konut
+                        {en ? "Residential" : "Konut"}
                       </option>
 
                       <option
@@ -462,42 +465,42 @@ export default function ContactPage() {
                         value="Ticari Alan"
                         className="bg-[#111] text-white"
                       >
-                        Ticari Alan
+                        {en ? "Commercial Space" : "Ticari Alan"}
                       </option>
 
                       <option
                         value="Ofis"
                         className="bg-[#111] text-white"
                       >
-                        Ofis
+                        {en ? "Office" : "Ofis"}
                       </option>
 
                       <option
                         value="İç Mimarlık"
                         className="bg-[#111] text-white"
                       >
-                        İç Mimarlık
+                        {en ? "Interior Architecture" : "İç Mimarlık"}
                       </option>
 
                       <option
                         value="Kentsel Dönüşüm"
                         className="bg-[#111] text-white"
                       >
-                        Kentsel Dönüşüm
+                        {en ? "Urban Transformation" : "Kentsel Dönüşüm"}
                       </option>
 
                       <option
                         value="Mimari Proje"
                         className="bg-[#111] text-white"
                       >
-                        Mimari Proje
+                        {en ? "Architectural Project" : "Mimari Proje"}
                       </option>
 
                       <option
                         value="Diğer"
                         className="bg-[#111] text-white"
                       >
-                        Diğer
+                        {en ? "Other" : "Diğer"}
                       </option>
                     </select>
 
@@ -515,7 +518,7 @@ export default function ContactPage() {
                     htmlFor="message"
                     className="absolute left-5 top-5 text-[9px] uppercase tracking-[0.3em] text-white/75"
                   >
-                    Mesaj <span className="text-white/45">*</span>
+                    {en ? "Message" : "Mesaj"} <span className="text-white/45">*</span>
                   </label>
 
                   <textarea
@@ -523,7 +526,7 @@ export default function ContactPage() {
                     name="message"
                     required
                     rows={8}
-                    placeholder="Projeniz hakkında detaylı bilgi yazabilirsiniz..."
+                    placeholder={en ? "Tell us about your project..." : "Projeniz hakkında detaylı bilgi yazabilirsiniz..."}
                     className="min-h-[220px] w-full resize-y bg-transparent px-5 pb-5 pt-12 text-base leading-7 text-white outline-none placeholder:text-white/35"
                   />
                 </div>
@@ -536,8 +539,8 @@ export default function ContactPage() {
                 >
                   <span className="text-sm uppercase tracking-[0.32em]">
                     {formStatus === "sending"
-                      ? "Gönderiliyor"
-                      : "Gönder"}
+                      ? (en ? "Sending" : "Gönderiliyor")
+                      : (en ? "Send" : "Gönder")}
                   </span>
 
                   <span className="text-xl transition-transform duration-300 group-hover:translate-x-2">
@@ -554,7 +557,7 @@ export default function ContactPage() {
                     <div className="h-px flex-1 bg-white/10" />
 
                     <span className="text-[9px] uppercase tracking-[0.35em] text-white/35">
-                      veya
+                      {en ? "or" : "veya"}
                     </span>
 
                     <div className="h-px flex-1 bg-white/10" />
@@ -572,12 +575,11 @@ export default function ContactPage() {
 
                       <div className="text-left">
                         <p className="text-sm uppercase tracking-[0.24em] sm:tracking-[0.32em]">
-                          WhatsApp ile İletişime Geç
+                          {en ? "Contact Us on WhatsApp" : "WhatsApp ile İletişime Geç"}
                         </p>
 
                         <p className="mt-2 text-xs leading-5 text-white/45 transition-colors duration-300 group-hover:text-black/60">
-                          Hızlı iletişim için bize WhatsApp üzerinden
-                          yazabilirsiniz.
+                          {en ? "For a quick response, write to us on WhatsApp." : "Hızlı iletişim için bize WhatsApp üzerinden yazabilirsiniz."}
                         </p>
                       </div>
                     </div>
@@ -608,8 +610,7 @@ export default function ContactPage() {
                   <p className="flex items-start gap-3 text-xs leading-6 text-white/35">
                     <LockIcon />
 
-                    Gönderdiğiniz bilgiler gizli tutulur ve yalnızca
-                    sizinle iletişim kurmak için kullanılır.
+                    {en ? "The information you submit is kept confidential and used only to contact you." : "Gönderdiğiniz bilgiler gizli tutulur ve yalnızca sizinle iletişim kurmak için kullanılır."}
                   </p>
                 </div>
               </form>

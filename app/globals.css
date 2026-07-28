@@ -45,3 +45,212 @@ a {
   font-weight: 400;
   font-display: swap;
 }
+/* Light / dark theme ----------------------------------------------------- */
+:root,
+html[data-theme="dark"] {
+  --theme-bg: 9 9 9;
+  --theme-bg-deep: 7 7 7;
+  --theme-fg: 255 255 255;
+  --theme-inverse-bg: 255 255 255;
+  --theme-inverse-fg: 9 9 9;
+}
+
+html[data-theme="light"] {
+  --theme-bg: 244 243 239;
+  --theme-bg-deep: 235 233 227;
+  --theme-fg: 20 20 18;
+  --theme-inverse-bg: 20 20 18;
+  --theme-inverse-fg: 255 255 255;
+  --background: #f4f3ef;
+  --foreground: #141412;
+}
+
+html,
+body {
+  transition: background-color 450ms cubic-bezier(0.22, 1, 0.36, 1), color 450ms cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.theme-dark-surface {
+  --theme-bg: 9 9 9;
+  --theme-bg-deep: 7 7 7;
+  --theme-fg: 255 255 255;
+  --theme-inverse-bg: 255 255 255;
+  --theme-inverse-fg: 9 9 9;
+  color-scheme: dark;
+}
+
+html[data-theme="light"] [class~="bg-[#090909]"],
+html[data-theme="light"] [class~="bg-[#080808]"],
+html[data-theme="light"] [class~="bg-[#101010]"],
+html[data-theme="light"] [class~="bg-[#111]"] {
+  background-color: rgb(var(--theme-bg));
+}
+
+html[data-theme="light"] [class~="bg-[#070707]"],
+html[data-theme="light"] [class~="bg-[#080b10]"] {
+  background-color: rgb(var(--theme-bg-deep));
+}
+
+html[data-theme="light"] [class~="text-white"] { color: rgb(var(--theme-fg)); }
+html[data-theme="light"] [class~="text-white/95"] { color: rgb(var(--theme-fg) / .95); }
+html[data-theme="light"] [class~="text-white/92"] { color: rgb(var(--theme-fg) / .92); }
+html[data-theme="light"] [class~="text-white/90"] { color: rgb(var(--theme-fg) / .90); }
+html[data-theme="light"] [class~="text-white/85"] { color: rgb(var(--theme-fg) / .85); }
+html[data-theme="light"] [class~="text-white/80"] { color: rgb(var(--theme-fg) / .80); }
+html[data-theme="light"] [class~="text-white/75"] { color: rgb(var(--theme-fg) / .75); }
+html[data-theme="light"] [class~="text-white/70"] { color: rgb(var(--theme-fg) / .70); }
+html[data-theme="light"] [class~="text-white/65"] { color: rgb(var(--theme-fg) / .65); }
+html[data-theme="light"] [class~="text-white/62"] { color: rgb(var(--theme-fg) / .62); }
+html[data-theme="light"] [class~="text-white/60"] { color: rgb(var(--theme-fg) / .60); }
+html[data-theme="light"] [class~="text-white/58"] { color: rgb(var(--theme-fg) / .58); }
+html[data-theme="light"] [class~="text-white/55"] { color: rgb(var(--theme-fg) / .55); }
+html[data-theme="light"] [class~="text-white/50"] { color: rgb(var(--theme-fg) / .50); }
+html[data-theme="light"] [class~="text-white/45"] { color: rgb(var(--theme-fg) / .45); }
+html[data-theme="light"] [class~="text-white/40"] { color: rgb(var(--theme-fg) / .40); }
+html[data-theme="light"] [class~="text-white/35"] { color: rgb(var(--theme-fg) / .35); }
+html[data-theme="light"] [class~="text-white/30"] { color: rgb(var(--theme-fg) / .30); }
+html[data-theme="light"] [class~="text-white/28"] { color: rgb(var(--theme-fg) / .28); }
+html[data-theme="light"] [class~="text-white/25"] { color: rgb(var(--theme-fg) / .25); }
+html[data-theme="light"] [class~="text-white/22"] { color: rgb(var(--theme-fg) / .22); }
+
+html[data-theme="light"] [class~="text-black"] { color: rgb(var(--theme-inverse-fg)); }
+html[data-theme="light"] [class~="text-black/65"] { color: rgb(var(--theme-inverse-fg) / .65); }
+html[data-theme="light"] [class~="text-black/60"] { color: rgb(var(--theme-inverse-fg) / .60); }
+html[data-theme="light"] [class~="text-black/40"] { color: rgb(var(--theme-inverse-fg) / .40); }
+
+html[data-theme="light"] [class~="border-white"] { border-color: rgb(var(--theme-fg)); }
+html[data-theme="light"] [class~="border-white/65"] { border-color: rgb(var(--theme-fg) / .65); }
+html[data-theme="light"] [class~="border-white/45"] { border-color: rgb(var(--theme-fg) / .45); }
+html[data-theme="light"] [class~="border-white/40"] { border-color: rgb(var(--theme-fg) / .40); }
+html[data-theme="light"] [class~="border-white/35"] { border-color: rgb(var(--theme-fg) / .35); }
+html[data-theme="light"] [class~="border-white/30"] { border-color: rgb(var(--theme-fg) / .30); }
+html[data-theme="light"] [class~="border-white/25"] { border-color: rgb(var(--theme-fg) / .25); }
+html[data-theme="light"] [class~="border-white/20"] { border-color: rgb(var(--theme-fg) / .20); }
+html[data-theme="light"] [class~="border-white/18"] { border-color: rgb(var(--theme-fg) / .18); }
+html[data-theme="light"] [class~="border-white/15"] { border-color: rgb(var(--theme-fg) / .15); }
+html[data-theme="light"] [class~="border-white/12"] { border-color: rgb(var(--theme-fg) / .12); }
+html[data-theme="light"] [class~="border-white/10"] { border-color: rgb(var(--theme-fg) / .10); }
+
+html[data-theme="light"] [class~="bg-white"] { background-color: rgb(var(--theme-inverse-bg)); }
+html[data-theme="light"] [class~="bg-white/90"] { background-color: rgb(var(--theme-fg) / .90); }
+html[data-theme="light"] [class~="bg-white/85"] { background-color: rgb(var(--theme-fg) / .85); }
+html[data-theme="light"] [class~="bg-white/80"] { background-color: rgb(var(--theme-fg) / .80); }
+html[data-theme="light"] [class~="bg-white/70"] { background-color: rgb(var(--theme-fg) / .70); }
+html[data-theme="light"] [class~="bg-white/65"] { background-color: rgb(var(--theme-fg) / .65); }
+html[data-theme="light"] [class~="bg-white/50"] { background-color: rgb(var(--theme-fg) / .50); }
+html[data-theme="light"] [class~="bg-white/45"] { background-color: rgb(var(--theme-fg) / .45); }
+html[data-theme="light"] [class~="bg-white/30"] { background-color: rgb(var(--theme-fg) / .30); }
+html[data-theme="light"] [class~="bg-white/25"] { background-color: rgb(var(--theme-fg) / .25); }
+html[data-theme="light"] [class~="bg-white/20"] { background-color: rgb(var(--theme-fg) / .20); }
+html[data-theme="light"] [class~="bg-white/10"] { background-color: rgb(var(--theme-fg) / .10); }
+
+.theme-toggle svg {
+  transition: transform 450ms cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.theme-toggle:hover svg {
+  transform: rotate(12deg) scale(1.04);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html,
+  body,
+  .theme-toggle svg {
+    transition: none;
+  }
+}
+
+/* Light-theme navbar behavior -------------------------------------------
+   Home hero at the top: transparent with white controls.
+   After scrolling, and on every other page: light glass with black controls. */
+html[data-theme="light"] .site-header[data-overlay="true"] {
+  background-color: transparent !important;
+  box-shadow: none !important;
+  backdrop-filter: none !important;
+  -webkit-backdrop-filter: none !important;
+  border-bottom-color: transparent !important;
+}
+
+html[data-theme="light"] .site-header[data-overlay="true"] .site-logo {
+  filter: none !important;
+}
+
+html[data-theme="light"] .site-header[data-overlay="true"] [class*="text-white"] {
+  color: rgb(255 255 255 / .90) !important;
+}
+
+html[data-theme="light"] .site-header[data-overlay="true"] [class*="border-white"] {
+  border-color: rgb(255 255 255 / .22) !important;
+}
+
+html[data-theme="light"] .site-header[data-overlay="true"] [class*="bg-white"] {
+  background-color: rgb(255 255 255 / .80) !important;
+}
+
+html[data-theme="light"] .site-header[data-overlay="false"] {
+  background-color: rgb(244 243 239 / .84) !important;
+  box-shadow: 0 10px 34px rgb(20 20 18 / .09) !important;
+  backdrop-filter: blur(16px) !important;
+  -webkit-backdrop-filter: blur(16px) !important;
+  border-bottom: 1px solid rgb(20 20 18 / .06);
+}
+
+html[data-theme="light"] .site-header[data-overlay="false"] .site-logo {
+  filter: invert(1) !important;
+}
+
+html[data-theme="light"] .site-header[data-overlay="false"] [class*="text-white"] {
+  color: rgb(20 20 18 / .78) !important;
+}
+
+html[data-theme="light"] .site-header[data-overlay="false"] [class*="border-white"] {
+  border-color: rgb(20 20 18 / .20) !important;
+}
+
+html[data-theme="light"] .site-header[data-overlay="false"] [class*="bg-white"] {
+  background-color: rgb(20 20 18 / .78) !important;
+}
+
+/* Theme-specific Vespera hero images ------------------------------------ */
+.hero-image-dark,
+.hero-image-light {
+  transition: opacity 650ms cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.hero-image-dark { opacity: 1; }
+.hero-image-light { opacity: 0; }
+
+html[data-theme="light"] .hero-image-dark { opacity: 0; }
+html[data-theme="light"] .hero-image-light { opacity: 1; }
+
+/* Smoothly blend the daylight Vespera image into the light page surface. */
+html[data-theme="light"] .hero-transition-primary {
+  background: linear-gradient(
+    to bottom,
+    transparent 0%,
+    rgb(244 243 239 / .08) 22%,
+    rgb(244 243 239 / .48) 58%,
+    rgb(244 243 239 / .92) 86%,
+    rgb(244 243 239) 100%
+  ) !important;
+}
+
+html[data-theme="light"] .hero-transition-secondary {
+  background: linear-gradient(
+    to bottom,
+    transparent 0%,
+    rgb(244 243 239 / .58) 48%,
+    rgb(244 243 239) 100%
+  ) !important;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .hero-image-dark,
+  .hero-image-light {
+    transition: none;
+  }
+}
+
+/* Admin panel */
+.field { margin-top: .5rem; width: 100%; border: 1px solid rgba(255,255,255,.14); background: transparent; padding: .75rem; color: white; outline: none; }
+.field:focus { border-color: rgba(255,255,255,.55); }

@@ -4,10 +4,11 @@ import { useLayoutEffect, useRef } from "react";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import PremiumFooter from "@/components/PremiumFooter";
+import {useLocale} from "next-intl";
 
 gsap.registerPlugin(ScrollTrigger);
 
-const services = [
+const servicesTr = [
   {
     number: "01",
     title: "Mimari Tasarım",
@@ -25,8 +26,17 @@ const services = [
   },
 ];
 
+const servicesEn = [
+  {number:"01", title:"Architectural Design", text:"We develop original architectural solutions by considering context, user needs and technical requirements together."},
+  {number:"02", title:"Interior Architecture", text:"We design timeless and functional spaces through an integrated approach to material, light, proportion and patterns of use."},
+  {number:"03", title:"Implementation & Consultancy", text:"We closely follow decisions from design through construction, helping each project come to life accurately and under control."},
+];
+
 export default function AboutPage() {
   const pageRef = useRef<HTMLElement | null>(null);
+  const locale = useLocale();
+  const en = locale === "en";
+  const services = en ? servicesEn : servicesTr;
 
   useLayoutEffect(() => {
     const page = pageRef.current;
@@ -155,7 +165,7 @@ export default function AboutPage() {
             data-about-label
             className="text-[10px] uppercase tracking-[0.45em] text-white/40 opacity-0"
           >
-            Hakkımızda
+            {en ? "About" : "Hakkımızda"}
           </p>
 
           <div className="mt-10 grid gap-16 lg:grid-cols-[1.16fr_0.84fr] lg:items-end lg:gap-24 xl:gap-32">
@@ -164,11 +174,11 @@ export default function AboutPage() {
                 data-about-title
                 className="text-[clamp(4rem,8.7vw,10rem)] font-light leading-[0.82] tracking-[-0.075em]"
               >
-                <span className="block opacity-0">Mimarlık,</span>
-                <span className="block opacity-0">yaşamın</span>
-                <span className="block opacity-0">kalitesini</span>
+                <span className="block opacity-0">{en ? "Architecture" : "Mimarlık,"}</span>
+                <span className="block opacity-0">{en ? "shapes" : "yaşamın"}</span>
+                <span className="block opacity-0">{en ? "the quality" : "kalitesini"}</span>
                 <span className="block text-white/40 opacity-0">
-                  şekillendirir.
+                  {en ? "of life." : "şekillendirir."}
                 </span>
               </h1>
             </div>
@@ -178,26 +188,21 @@ export default function AboutPage() {
                 data-hero-copy
                 className="text-2xl font-light leading-[1.4] tracking-[-0.035em] text-white/95 opacity-0 md:text-3xl"
               >
-                ARZ Mimarlık; mimari tasarım, iç mimarlık ve uygulama süreçlerini
-                tek bir bütün olarak ele alan İstanbul merkezli bağımsız bir
-                tasarım ofisidir.
+                {en ? "ARZ Architecture is an independent Istanbul-based design studio that approaches architecture, interior design and implementation as a single integrated process." : "ARZ Mimarlık; mimari tasarım, iç mimarlık ve uygulama süreçlerini tek bir bütün olarak ele alan İstanbul merkezli bağımsız bir tasarım ofisidir."}
               </p>
 
               <p
                 data-hero-copy
                 className="mt-8 max-w-2xl text-sm leading-7 text-white/50 opacity-0 md:text-base md:leading-8"
               >
-                Tasarımı yalnızca görsel bir karar olarak değil; kullanıcı,
-                yapı, malzeme ve uygulama arasındaki ilişkinin sonucu olarak
-                görüyoruz. Her projeyi kendi bağlamı içinde değerlendiriyor,
-                estetik ile teknik gerçekliği aynı çizgide buluşturuyoruz.
+                {en ? "We see design not merely as a visual decision, but as the outcome of the relationship between users, structure, materials and construction. Every project is evaluated in its own context, bringing aesthetics and technical reality onto the same line." : "Tasarımı yalnızca görsel bir karar olarak değil; kullanıcı, yapı, malzeme ve uygulama arasındaki ilişkinin sonucu olarak görüyoruz. Her projeyi kendi bağlamı içinde değerlendiriyor, estetik ile teknik gerçekliği aynı çizgide buluşturuyoruz."}
               </p>
 
               <div
                 data-hero-copy
                 className="mt-10 flex items-center gap-4 text-[9px] uppercase tracking-[0.36em] text-white/40 opacity-0"
               >
-                <span>İstanbul</span>
+                <span>{en ? "Istanbul" : "İstanbul"}</span>
                 <span className="h-px w-10 bg-white/20" />
                 <span>2023</span>
               </div>
@@ -216,34 +221,26 @@ export default function AboutPage() {
         <div className="mx-auto grid w-full max-w-[1800px] gap-14 border-t border-white/15 pt-12 lg:grid-cols-[0.72fr_1.28fr] lg:gap-24 lg:pt-16">
           <div>
             <p className="text-[10px] uppercase tracking-[0.45em] text-white/40">
-              Biz Kimiz
+              {en ? "Who We Are" : "Biz Kimiz"}
             </p>
 
             <h2 className="mt-8 max-w-xl text-[clamp(2.7rem,5vw,6.5rem)] font-light leading-[0.95] tracking-[-0.06em]">
-              İki kardeşin ortak tasarım dili.
+              {en ? "A shared design language between two brothers." : "İki kardeşin ortak tasarım dili."}
             </h2>
           </div>
 
           <div className="lg:pt-16">
             <p className="max-w-3xl text-2xl font-light leading-[1.45] tracking-[-0.03em] text-white/90 md:text-3xl">
-              ARZ Mimarlık, Şubat 2023&apos;te ortak bir tasarım anlayışı
-              etrafında kuruldu.
+              {en ? "ARZ Architecture was founded in February 2023 around a shared approach to design." : <>ARZ Mimarlık, Şubat 2023&apos;te ortak bir tasarım anlayışı etrafında kuruldu.</>}
             </p>
 
             <div className="mt-10 grid gap-8 md:grid-cols-2 md:gap-12">
               <p className="text-sm leading-7 text-white/50 md:text-base md:leading-8">
-                Mimari tasarım, iç mimarlık, proje geliştirme ve uygulama
-                süreçlerini birbirinden bağımsız aşamalar olarak değil, aynı
-                bütünün parçaları olarak ele alıyoruz. Bu yaklaşım, tasarım
-                kararlarının sahada kaybolmadan uygulanmasını sağlıyor.
+                {en ? "We treat architectural design, interior architecture, project development and construction not as separate stages, but as parts of the same whole. This approach protects design decisions throughout implementation." : "Mimari tasarım, iç mimarlık, proje geliştirme ve uygulama süreçlerini birbirinden bağımsız aşamalar olarak değil, aynı bütünün parçaları olarak ele alıyoruz. Bu yaklaşım, tasarım kararlarının sahada kaybolmadan uygulanmasını sağlıyor."}
               </p>
 
               <p className="text-sm leading-7 text-white/50 md:text-base md:leading-8">
-                Küçük ve doğrudan bir ekip yapısıyla çalışıyor, proje
-                sahipleriyle iletişimi sürecin merkezinde tutuyoruz.
-                Mühendislik ve uygulama kararlarını projenin ilk aşamasından
-                itibaren birlikte değerlendirerek her detayı yakından takip
-                ediyoruz.
+                {en ? "We work as a compact, direct team and keep communication with our clients at the centre of the process. Engineering and implementation decisions are considered from the earliest stages, allowing us to follow every detail closely." : "Küçük ve doğrudan bir ekip yapısıyla çalışıyor, proje sahipleriyle iletişimi sürecin merkezinde tutuyoruz. Mühendislik ve uygulama kararlarını projenin ilk aşamasından itibaren birlikte değerlendirerek her detayı yakından takip ediyoruz."}
               </p>
             </div>
           </div>
@@ -259,18 +256,16 @@ export default function AboutPage() {
           >
             <div>
               <p className="text-[10px] uppercase tracking-[0.45em] text-white/40">
-                Çalışma Biçimimiz
+                {en ? "How We Work" : "Çalışma Biçimimiz"}
               </p>
 
               <h2 className="mt-8 max-w-3xl text-[clamp(2.7rem,5.4vw,7rem)] font-light leading-[0.92] tracking-[-0.065em]">
-                Fikirden gerçeğe,
-                <span className="block text-white/40">tek bir bütün.</span>
+                {en ? <>From idea to reality,<span className="block text-white/40">one integrated whole.</span></> : <>Fikirden gerçeğe,<span className="block text-white/40">tek bir bütün.</span></>}
               </h2>
             </div>
 
             <p className="max-w-md text-sm leading-7 text-white/45 md:text-right md:text-base md:leading-8">
-              Projenin ölçeği ne olursa olsun, tasarımın ilk kararından son
-              uygulama detayına kadar aynı özeni koruyoruz.
+              {en ? "Whatever the scale, we maintain the same care from the first design decision to the final construction detail." : "Projenin ölçeği ne olursa olsun, tasarımın ilk kararından son uygulama detayına kadar aynı özeni koruyoruz."}
             </p>
           </div>
 
@@ -305,13 +300,11 @@ export default function AboutPage() {
       >
         <div className="mx-auto w-full max-w-[1800px] py-16 md:py-24 lg:py-32">
           <p className="text-[10px] uppercase tracking-[0.45em] text-white/35">
-            Yaklaşımımız
+            {en ? "Our Approach" : "Yaklaşımımız"}
           </p>
 
           <p className="mt-10 max-w-[1500px] text-[clamp(2.8rem,6.4vw,8.5rem)] font-light leading-[0.94] tracking-[-0.07em]">
-            Her projede daha fazla alan değil,
-            <span className="text-white/40"> daha nitelikli bir yaşam</span>{" "}
-            üretmeyi amaçlıyoruz.
+            {en ? <>Our aim is not simply to create more space,<span className="text-white/40"> but a better quality of life.</span></> : <>Her projede daha fazla alan değil,<span className="text-white/40"> daha nitelikli bir yaşam</span>{" "}üretmeyi amaçlıyoruz.</>}
           </p>
         </div>
       </section>

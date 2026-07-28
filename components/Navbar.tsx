@@ -5,6 +5,9 @@ import Link from "next/link";
 import { Manrope } from "next/font/google";
 import { usePathname } from "next/navigation";
 import { useEffect, useState } from "react";
+import { useLocale, useTranslations } from "next-intl";
+import {getProjectBySlug, getProjectSlug} from "@/data/projects";
+import ThemeToggle from "@/components/ThemeToggle";
 
 const manrope = Manrope({
   subsets: ["latin", "latin-ext"],
@@ -14,31 +17,56 @@ const manrope = Manrope({
 
 const navigationItems = [
   {
-    label: "Anasayfa",
+    key: "home",
     href: "/",
   },
   {
-    label: "Hakkımızda",
+    key: "about",
     href: "/about",
   },
   {
-    label: "Projeler",
+    key: "projects",
     href: "/projects",
   },
   {
-    label: "İletişim",
+    key: "contact",
     href: "/contact",
   },
-];
+] as const;
 
 const instagramUrl = "https://www.instagram.com/arzmimarliknet/";
 const linkedinUrl = "https://www.linkedin.com/company/90222590";
 
 export default function Navbar() {
   const pathname = usePathname();
+  const locale = useLocale();
+  const t = useTranslations("Navbar");
+
+  const localizedHomeHref = `/${locale}`;
+  const alternateLocale = locale === "en" ? "tr" : "en";
+  const alternateLocaleLabel = alternateLocale.toUpperCase();
+  const pathWithoutLocale = pathname.replace(/^\/(tr|en)(?=\/|$)/, "") || "/";
+  const routePairs: Record<string, string> = {"/hakkimizda":"/about","/about":"/hakkimizda","/projeler":"/projects","/projects":"/projeler","/iletisim":"/contact","/contact":"/iletisim"};
+  const segments = pathWithoutLocale.split("/");
+  const base = `/${segments[1] || ""}`;
+  const mappedBase = routePairs[base] ?? base;
+  const tailSegments = segments.slice(2);
+  if ((base === "/projeler" || base === "/projects") && tailSegments[0]) {
+    const project = getProjectBySlug(tailSegments[0]);
+    if (project) tailSegments[0] = getProjectSlug(project, alternateLocale);
+  }
+  const mappedPath = [mappedBase, ...tailSegments].join("/").replace(/\/+/g, "/");
+  const alternateLocaleHref = `/${alternateLocale}${mappedPath === "/" ? "" : mappedPath}`;
+  const isHomePage = pathWithoutLocale === "/";
+  const usesDarkHeaderOverlay = isHomePage;
 
   const [menuOpen, setMenuOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
+
+  const saveLocalePreference = () => {
+    window.localStorage.setItem("arz-locale", alternateLocale);
+    document.cookie = `arz-locale=${alternateLocale}; Path=/; Max-Age=31536000; SameSite=Lax`;
+  };
 
   useEffect(() => {
     const handleScroll = () => {
@@ -68,36 +96,52 @@ export default function Navbar() {
     setMenuOpen(false);
   }, [pathname]);
 
+  const getHref = (href: string) => {
+    if (href === "/") return localizedHomeHref;
+    const routes: Record<string, Record<string, string>> = {
+      tr: {"/about": "/hakkimizda", "/projects": "/projeler", "/contact": "/iletisim"},
+      en: {"/about": "/about", "/projects": "/projects", "/contact": "/contact"}
+    };
+    return `/${locale}${routes[locale]?.[href] ?? href}`;
+  };
+
   const isActive = (href: string) => {
+    const resolvedHref = getHref(href);
+
     if (href === "/") {
-      return pathname === "/";
+      return pathname === resolvedHref || pathname === "/";
     }
 
-    return pathname === href || pathname.startsWith(`${href}/`);
+    return pathname === resolvedHref || pathname.startsWith(`${resolvedHref}/`);
   };
+
+  if (pathname.startsWith("/admin")) return null;
 
   return (
     <>
       <header
-        className={`fixed left-0 top-0 z-50 w-full transition-[background-color,backdrop-filter,box-shadow] duration-700 ease-[cubic-bezier(0.22,1,0.36,1)] ${
+        data-scrolled={scrolled ? "true" : "false"}
+        data-overlay={usesDarkHeaderOverlay && !scrolled ? "true" : "false"}
+        className={`site-header fixed left-0 top-0 z-50 w-full transition-[background-color,backdrop-filter,box-shadow] duration-700 ease-[cubic-bezier(0.22,1,0.36,1)] ${
           scrolled
             ? "bg-black/60 shadow-[0_12px_40px_rgba(0,0,0,0.14)] backdrop-blur-md"
             : "bg-transparent shadow-none"
         }`}
       >
-        <div className="relative mx-auto flex h-[76px] w-full max-w-[1920px] items-center px-5 sm:px-8 md:h-[82px] md:px-10 lg:px-14 xl:px-16">
+        <div className="relative mx-auto flex h-[72px] w-full max-w-[1920px] items-center px-5 sm:px-8 md:h-[80px] md:px-10 lg:px-14 xl:px-16">
           <Link
-            href="/"
-            aria-label="ARZ Mimarlık ana sayfa"
-            className="relative z-[70] block h-[66px] w-[138px] shrink-0 md:h-[72px] md:w-[152px]"
+            href={localizedHomeHref}
+            scroll
+            aria-label={t("logoAriaLabel")}
+            className="relative z-[70] block h-[60px] w-[126px] shrink-0 md:h-[68px] md:w-[144px]"
           >
             <Image
               src="/arz-logo-final.png"
               alt="ARZ Mimarlık"
               fill
               priority
-              sizes="152px"
-              className="object-contain object-left-center"
+              sizes="144px"
+              className="site-logo object-contain object-left-center"
             />
           </Link>
 
@@ -109,15 +153,16 @@ export default function Navbar() {
 
               return (
                 <Link
-                  key={item.href}
-                  href={item.href}
+                  key={item.key}
+                  href={getHref(item.href)}
+                  scroll
                   className={`group relative py-3 text-[13px] font-normal uppercase tracking-[0.13em] transition-[color,transform] duration-500 ease-[cubic-bezier(0.22,1,0.36,1)] xl:text-[14px] ${
                     active
                       ? "text-white/90"
                       : "text-white/62 hover:-translate-y-px hover:text-white/90"
                   }`}
                 >
-                  <span className="block whitespace-nowrap">{item.label}</span>
+                  <span className="block whitespace-nowrap">{t(`items.${item.key}`)}</span>
 
                   <span
                     className={`absolute bottom-[2px] left-1/2 h-px -translate-x-1/2 bg-white/80 transition-[width,opacity] duration-500 ease-[cubic-bezier(0.22,1,0.36,1)] ${
@@ -132,6 +177,20 @@ export default function Navbar() {
           </nav>
 
           <div className="ml-auto hidden items-center gap-5 lg:flex">
+            <ThemeToggle />
+
+            <a
+              href={alternateLocaleHref}
+              hrefLang={alternateLocale}
+              onClick={saveLocalePreference}
+              aria-label={t("switchLanguageAriaLabel", {
+                language: alternateLocaleLabel,
+              })}
+              className={`${manrope.className} flex h-10 min-w-10 items-center justify-center border border-white/18 px-3 text-[10px] font-normal uppercase tracking-[0.18em] text-white/65 transition-[border-color,color,transform] duration-500 ease-[cubic-bezier(0.22,1,0.36,1)] hover:-translate-y-px hover:border-white/45 hover:text-white`}
+            >
+              {alternateLocaleLabel}
+            </a>
+
             <a
               href={instagramUrl}
               target="_blank"
@@ -226,7 +285,7 @@ export default function Navbar() {
           <button
             type="button"
             onClick={() => setMenuOpen((current) => !current)}
-            aria-label={menuOpen ? "Menüyü kapat" : "Menüyü aç"}
+            aria-label={menuOpen ? t("closeMenu") : t("openMenu")}
             aria-expanded={menuOpen}
             className="relative z-[70] ml-auto flex h-11 w-11 flex-col items-end justify-center gap-[6px] lg:hidden"
           >
@@ -256,7 +315,7 @@ export default function Navbar() {
       </header>
 
       <div
-        className={`fixed inset-0 z-40 bg-[#080b10] transition-[opacity,visibility] duration-500 ease-[cubic-bezier(0.22,1,0.36,1)] lg:hidden ${
+        className={`theme-dark-surface fixed inset-0 z-40 bg-[#080b10] transition-[opacity,visibility] duration-500 ease-[cubic-bezier(0.22,1,0.36,1)] lg:hidden ${
           menuOpen
             ? "pointer-events-auto visible opacity-100"
             : "pointer-events-none invisible opacity-0"
@@ -271,8 +330,9 @@ export default function Navbar() {
 
               return (
                 <Link
-                  key={item.href}
-                  href={item.href}
+                  key={item.key}
+                  href={getHref(item.href)}
+                  scroll
                   onClick={() => setMenuOpen(false)}
                   className="group flex items-center justify-between border-b border-white/12 py-7"
                 >
@@ -288,7 +348,7 @@ export default function Navbar() {
                           : "text-white/58 group-hover:translate-x-2 group-hover:text-white/90"
                       }`}
                     >
-                      {item.label}
+                      {t(`items.${item.key}`)}
                     </span>
                   </div>
 
@@ -302,10 +362,24 @@ export default function Navbar() {
 
           <div className="mt-auto border-t border-white/12 pt-7">
             <p className="text-[9px] font-normal uppercase tracking-[0.28em] text-white/28">
-              Sosyal Medya
+              {t("socialMedia")}
             </p>
 
             <div className="mt-5 flex flex-wrap items-center gap-8">
+              <ThemeToggle className="mr-1" />
+
+              <a
+                href={alternateLocaleHref}
+                hrefLang={alternateLocale}
+                onClick={() => {
+                  saveLocalePreference();
+                  setMenuOpen(false);
+                }}
+                className="border border-white/18 px-4 py-2 text-[10px] font-normal uppercase tracking-[0.18em] text-white/65 transition-colors duration-500 hover:border-white/45 hover:text-white"
+              >
+                {t("languageSwitch", {language: alternateLocaleLabel})}
+              </a>
+
               <a
                 href={instagramUrl}
                 target="_blank"
@@ -326,8 +400,8 @@ export default function Navbar() {
             </div>
 
             <div className="mt-9 flex items-center justify-between text-[9px] font-normal uppercase tracking-[0.18em] text-white/22">
-              <span>ARZ Mimarlık</span>
-              <span>İstanbul</span>
+              <span>{t("brand")}</span>
+              <span>{t("city")}</span>
             </div>
           </div>
         </div>

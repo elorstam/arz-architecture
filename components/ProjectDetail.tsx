@@ -2,11 +2,12 @@
 
 import Image from "next/image";
 import Link from "next/link";
+import { useLocale } from "next-intl";
 import { useLayoutEffect, useRef } from "react";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import PremiumFooter from "@/components/PremiumFooter";
-import type { Project } from "@/data/projects";
+import type {Project} from "@/data/projects";
 
 type ProjectDetailProps = {
   project: Project;
@@ -15,6 +16,8 @@ type ProjectDetailProps = {
 export default function ProjectDetail({
   project,
 }: ProjectDetailProps) {
+  const locale = useLocale();
+  const localizedProject = project;
   const pageRef = useRef<HTMLElement | null>(null);
   const imageRef = useRef<HTMLDivElement | null>(null);
   const titleRef = useRef<HTMLHeadingElement | null>(null);
@@ -169,7 +172,7 @@ export default function ProjectDetail({
     return () => {
       context.revert();
     };
-  }, [project.slug]);
+  }, [localizedProject.slug]);
 
   return (
     <main
@@ -183,8 +186,8 @@ export default function ProjectDetail({
           className="absolute inset-0 overflow-hidden bg-[#111]"
         >
           <Image
-            src={project.cover}
-            alt={project.coverAlt}
+            src={localizedProject.cover}
+            alt={localizedProject.coverAlt}
             fill
             priority
             sizes="100vw"
@@ -200,19 +203,19 @@ export default function ProjectDetail({
               ref={metaRef}
               className="mb-7 flex flex-wrap items-center gap-x-7 gap-y-2 text-[10px] uppercase tracking-[0.22em] text-white/65"
             >
-              <span>{project.category}</span>
-              <span>{project.location}</span>
-              <span>{project.year}</span>
+              <span>{localizedProject.category}</span>
+              <span>{localizedProject.location}</span>
+              <span>{localizedProject.year}</span>
             </div>
 
             <h1
               ref={titleRef}
               className="text-[clamp(3.3rem,9vw,10rem)] font-light leading-[0.84] tracking-[-0.075em]"
             >
-              {project.titleLines.map((line, index) => (
+              {localizedProject.titleLines.map((line, index) => (
                 <span key={line} className="block">
                   {line}
-                  {index < project.titleLines.length - 1 && <br />}
+                  {index < localizedProject.titleLines.length - 1 && <br />}
                 </span>
               ))}
             </h1>
@@ -221,7 +224,7 @@ export default function ProjectDetail({
               ref={scrollRef}
               className="mt-10 text-[9px] uppercase tracking-[0.35em] text-white/55"
             >
-              Projeyi Keşfet ↓
+              {locale === "en" ? "Explore Project ↓" : "Projeyi Keşfet ↓"}
             </p>
           </div>
         </div>
@@ -231,57 +234,57 @@ export default function ProjectDetail({
         <div className="mx-auto grid max-w-[1800px] gap-16 lg:grid-cols-[0.75fr_1.25fr] lg:gap-28">
           <div data-reveal>
             <p className="text-[10px] uppercase tracking-[0.4em] text-white/35">
-              Proje Bilgileri
+              {locale === "en" ? "Project Information" : "Proje Bilgileri"}
             </p>
 
             <dl className="mt-10 border-t border-white/15">
               <div className="flex items-center justify-between gap-8 border-b border-white/15 py-5">
                 <dt className="text-[10px] uppercase tracking-[0.22em] text-white/35">
-                  Proje
+                  {locale === "en" ? "Project" : "Proje"}
                 </dt>
 
                 <dd className="text-right text-sm text-white/75">
-                  {project.title}
+                  {localizedProject.title}
                 </dd>
               </div>
 
               <div className="flex items-center justify-between gap-8 border-b border-white/15 py-5">
                 <dt className="text-[10px] uppercase tracking-[0.22em] text-white/35">
-                  Kategori
+                  {locale === "en" ? "Category" : "Kategori"}
                 </dt>
 
                 <dd className="text-right text-sm text-white/75">
-                  {project.category}
+                  {localizedProject.category}
                 </dd>
               </div>
 
               <div className="flex items-center justify-between gap-8 border-b border-white/15 py-5">
                 <dt className="text-[10px] uppercase tracking-[0.22em] text-white/35">
-                  Konum
+                  {locale === "en" ? "Location" : "Konum"}
                 </dt>
 
                 <dd className="text-right text-sm text-white/75">
-                  {project.location}
+                  {localizedProject.location}
                 </dd>
               </div>
 
               <div className="flex items-center justify-between gap-8 border-b border-white/15 py-5">
                 <dt className="text-[10px] uppercase tracking-[0.22em] text-white/35">
-                  Yıl
+                  {locale === "en" ? "Year" : "Yıl"}
                 </dt>
 
                 <dd className="text-right text-sm text-white/75">
-                  {project.year}
+                  {localizedProject.year}
                 </dd>
               </div>
 
               <div className="flex items-center justify-between gap-8 border-b border-white/15 py-5">
                 <dt className="text-[10px] uppercase tracking-[0.22em] text-white/35">
-                  Hizmet
+                  {locale === "en" ? "Services" : "Hizmet"}
                 </dt>
 
                 <dd className="text-right text-sm leading-6 text-white/75">
-                  {project.services.map((service) => (
+                  {localizedProject.services.map((service) => (
                     <span key={service} className="block">
                       {service}
                     </span>
@@ -293,11 +296,11 @@ export default function ProjectDetail({
 
           <div data-reveal>
             <p className="max-w-4xl text-2xl font-light leading-[1.4] tracking-[-0.035em] text-white/90 md:text-4xl md:leading-[1.32]">
-              {project.description}
+              {localizedProject.description}
             </p>
 
             <div className="mt-12 grid gap-8 border-t border-white/15 pt-10 md:grid-cols-2 md:gap-12">
-              {project.detailParagraphs.map((paragraph) => (
+              {localizedProject.detailParagraphs.map((paragraph) => (
                 <p
                   key={paragraph}
                   className="text-sm leading-7 text-white/50 md:text-base md:leading-8"
@@ -315,21 +318,21 @@ export default function ProjectDetail({
           <div data-reveal className="mb-12 flex items-end justify-between">
             <div>
               <p className="text-[10px] uppercase tracking-[0.4em] text-white/35">
-                Galeri
+                {locale === "en" ? "Gallery" : "Galeri"}
               </p>
 
               <h2 className="mt-5 text-[clamp(3rem,6vw,7rem)] font-light leading-none tracking-[-0.06em]">
-                Görseller
+                {locale === "en" ? "Images" : "Görseller"}
               </h2>
             </div>
 
             <p className="hidden text-[10px] uppercase tracking-[0.25em] text-white/30 md:block">
-              {String(project.images.length).padStart(2, "0")} Görsel
+              {String(localizedProject.images.length).padStart(2, "0")} {locale === "en" ? "Images" : "Görsel"}
             </p>
           </div>
 
           <div className="space-y-8 md:space-y-12 lg:space-y-16">
-            {project.images.map((image, index) => (
+            {localizedProject.images.map((image, index) => (
               <figure
                 key={image.src}
                 data-gallery-image
@@ -356,10 +359,10 @@ export default function ProjectDetail({
                 <figcaption className="flex items-center justify-between border-t border-white/10 px-1 py-4 text-[9px] uppercase tracking-[0.25em] text-white/30">
                   <span>
                     {String(index + 1).padStart(2, "0")} /{" "}
-                    {String(project.images.length).padStart(2, "0")}
+                    {String(localizedProject.images.length).padStart(2, "0")}
                   </span>
 
-                  <span>{project.title}</span>
+                  <span>{localizedProject.title}</span>
                 </figcaption>
               </figure>
             ))}
@@ -374,21 +377,19 @@ export default function ProjectDetail({
         >
           <div>
             <p className="text-[10px] uppercase tracking-[0.4em] text-white/35">
-              Projeler
+              {locale === "en" ? "Projects" : "Projeler"}
             </p>
 
             <h2 className="mt-7 text-[clamp(3.5rem,7vw,8rem)] font-light leading-[0.88] tracking-[-0.065em]">
-              Diğer projeleri
-              <br />
-              keşfedin.
+              {locale === "en" ? <>Discover more<br />projects.</> : <>Diğer projeleri<br />keşfedin.</>}
             </h2>
           </div>
 
           <Link
-            href="/projects"
+            href={`/${locale}/${locale === "tr" ? "projeler" : "projects"}`}
             className="group inline-flex w-fit items-center gap-5 border-b border-white/30 pb-3 text-[10px] uppercase tracking-[0.3em] transition-colors duration-300 hover:border-white"
           >
-            Tüm Projelere Dön
+            {locale === "en" ? "Back to All Projects" : "Tüm Projelere Dön"}
 
             <span className="text-lg transition-transform duration-300 group-hover:translate-x-2">
               →

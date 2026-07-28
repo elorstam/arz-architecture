@@ -344,7 +344,7 @@ export default function ProjectsPage() {
           </div>
 
           <Link
-            href="/contact"
+            href="/tr/iletisim"
             className="group inline-flex w-fit items-center gap-5 border-b border-white/25 pb-3 text-[9px] uppercase tracking-[0.3em] transition-colors duration-300 hover:border-white"
           >
             Yeni Bir Proje Konuşalım

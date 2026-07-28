@@ -1,0 +1,95 @@
+{
+  "Common": {
+    "languageName": "Türkçe"
+  },
+  "Navbar": {
+    "items": {
+      "home": "Anasayfa",
+      "about": "Hakkımızda",
+      "projects": "Projeler",
+      "contact": "İletişim"
+    },
+    "logoAriaLabel": "ARZ Mimarlık ana sayfa",
+    "openMenu": "Menüyü aç",
+    "closeMenu": "Menüyü kapat",
+    "socialMedia": "Sosyal Medya",
+    "brand": "ARZ Mimarlık",
+    "city": "İstanbul",
+    "languageSwitch": "{language} diline geç",
+    "switchLanguageAriaLabel": "{language} diline geç"
+  },
+  "Hero": {
+    "imageAlt": "ARZ Mimarlık Vespera Port projesi",
+    "eyebrow": "Mimarlık · İç Mimarlık · Mühendislik · Danışmanlık",
+    "titleLine1": "Sade.",
+    "titleLine2": "Modern.",
+    "titleLine3": "Kalıcı.",
+    "intro": "Zamana direnen, işlev ve estetiği dengeli biçimde bir araya getiren; bulunduğu çevreyle güçlü bir ilişki kuran mimari mekânlar tasarlıyoruz.",
+    "scroll": "Aşağı Kaydır",
+    "featuredProject": {
+      "ariaLabel": "Vespera Port projesini incele",
+      "label": "Gelecek Proje",
+      "typeLabel": "Tip",
+      "typeValue": "Ticari",
+      "locationLabel": "Konum",
+      "yearLabel": "Yıl",
+      "cta": "Projeyi Keşfet"
+    },
+    "approach": {
+      "eyebrow": "Yaklaşımımız",
+      "title": "Tasarımda üç temel ilke.",
+      "values": {
+        "modern": {
+          "title": "Modern\nTasarım",
+          "description": "Güncel tasarım anlayışını, zamana karşı değerini koruyacak sade ve güçlü bir mimari dille bir araya getiriyoruz."
+        },
+        "functionality": {
+          "title": "İşlevsellik",
+          "description": "Her mekânın kullanıcı ihtiyaçlarına cevap vermesini, estetik kadar kullanışlı ve sürdürülebilir olmasını önemsiyoruz."
+        },
+        "solutions": {
+          "title": "Hızlı\nÇözüm",
+          "description": "Tasarım ve uygulama süreçlerinde oluşabilecek problemlere hızlı, gerçekçi ve uygulanabilir çözümler üretiyoruz."
+        }
+      }
+    },
+    "services": {
+      "eyebrow": "Çalışma Alanlarımız",
+      "titleLine1": "Farklı ölçeklerde,",
+      "titleLine2": "aynı yaklaşım.",
+      "items": {
+        "residential": "Konut",
+        "villa": "Villa",
+        "commercial": "Ticari Alan",
+        "office": "Ofis",
+        "urbanTransformation": "Kentsel Dönüşüm",
+        "interiorArchitecture": "İç Mimarlık",
+        "architecturalProject": "Mimari Proje",
+        "implementationConsulting": "Uygulama ve Danışmanlık"
+      }
+    },
+    "contact": {
+      "eyebrow": "Yeni Bir Proje",
+      "titleLine1": "Bir sonraki",
+      "titleLine2": "projenizi",
+      "titleLine3": "birlikte tasarlayalım.",
+      "cta": "İletişime Geç"
+    }
+  },
+  "Footer": {
+    "brandLine1": "ARZ",
+    "brandLine2": "Mimarlık",
+    "description": "Mimari tasarım, iç mimarlık, proje geliştirme ve danışmanlık hizmetleri.",
+    "pagesTitle": "Sayfalar",
+    "links": {
+      "home": "Anasayfa",
+      "about": "Hakkımızda",
+      "projects": "Projeler",
+      "contact": "İletişim"
+    },
+    "contactTitle": "İletişim",
+    "copyright": "© 2026 ARZ Mimarlık",
+    "rights": "Tüm hakları saklıdır",
+    "backToTop": "Yukarı"
+  }
+}

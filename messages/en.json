@@ -1,0 +1,95 @@
+{
+  "Common": {
+    "languageName": "English"
+  },
+  "Navbar": {
+    "items": {
+      "home": "Home",
+      "about": "About",
+      "projects": "Projects",
+      "contact": "Contact"
+    },
+    "logoAriaLabel": "ARZ Architecture home page",
+    "openMenu": "Open menu",
+    "closeMenu": "Close menu",
+    "socialMedia": "Social Media",
+    "brand": "ARZ Architecture",
+    "city": "Istanbul",
+    "languageSwitch": "Switch to {language}",
+    "switchLanguageAriaLabel": "Switch to {language}"
+  },
+  "Hero": {
+    "imageAlt": "ARZ Architecture Vespera Port project",
+    "eyebrow": "Architecture · Interior Design · Engineering · Consultancy",
+    "titleLine1": "Simple.",
+    "titleLine2": "Modern.",
+    "titleLine3": "Timeless.",
+    "intro": "We design enduring architectural spaces that balance function and aesthetics while forming a strong relationship with their surroundings.",
+    "scroll": "Scroll Down",
+    "featuredProject": {
+      "ariaLabel": "Explore the Vespera Port project",
+      "label": "Upcoming Project",
+      "typeLabel": "Type",
+      "typeValue": "Commercial",
+      "locationLabel": "Location",
+      "yearLabel": "Year",
+      "cta": "Explore Project"
+    },
+    "approach": {
+      "eyebrow": "Our Approach",
+      "title": "Three principles of design.",
+      "values": {
+        "modern": {
+          "title": "Modern\nDesign",
+          "description": "We combine contemporary design thinking with a clear and powerful architectural language that retains its value over time."
+        },
+        "functionality": {
+          "title": "Functionality",
+          "description": "We ensure that every space responds to its users' needs while remaining as practical and sustainable as it is visually refined."
+        },
+        "solutions": {
+          "title": "Agile\nSolutions",
+          "description": "We develop fast, realistic and buildable solutions to challenges that may arise throughout the design and implementation process."
+        }
+      }
+    },
+    "services": {
+      "eyebrow": "Areas of Expertise",
+      "titleLine1": "Different scales,",
+      "titleLine2": "one approach.",
+      "items": {
+        "residential": "Residential",
+        "villa": "Villas",
+        "commercial": "Commercial Spaces",
+        "office": "Offices",
+        "urbanTransformation": "Urban Transformation",
+        "interiorArchitecture": "Interior Architecture",
+        "architecturalProject": "Architectural Design",
+        "implementationConsulting": "Implementation & Consultancy"
+      }
+    },
+    "contact": {
+      "eyebrow": "A New Project",
+      "titleLine1": "Let’s design",
+      "titleLine2": "your next project",
+      "titleLine3": "together.",
+      "cta": "Get in Touch"
+    }
+  },
+  "Footer": {
+    "brandLine1": "ARZ",
+    "brandLine2": "Architecture",
+    "description": "Architectural design, interior architecture, project development and consultancy services.",
+    "pagesTitle": "Pages",
+    "links": {
+      "home": "Home",
+      "about": "About",
+      "projects": "Projects",
+      "contact": "Contact"
+    },
+    "contactTitle": "Contact",
+    "copyright": "© 2026 ARZ Architecture",
+    "rights": "All rights reserved",
+    "backToTop": "Back to top"
+  }
+}
