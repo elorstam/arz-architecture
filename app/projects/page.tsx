@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import PremiumFooter from "@/components/PremiumFooter";
 import ProjectsGrid from "@/components/ProjectsGrid";
+import { getLocalizedStoreProjects } from "@/lib/project-store";
 
 export const metadata: Metadata = {
   title: "Projeler",
@@ -8,7 +9,9 @@ export const metadata: Metadata = {
     "ARZ Mimarlık tarafından tasarlanan seçili mimari projeleri inceleyin.",
 };
 
-export default function ProjectsPage() {
+export default async function ProjectsPage() {
+  const projects = await getLocalizedStoreProjects("tr");
+
   return (
     <main className="min-h-screen bg-[#090909] text-white">
       <section className="px-5 pb-24 pt-32 sm:px-8 md:px-10 md:pb-32 md:pt-40 lg:px-16 lg:pb-40">
@@ -23,7 +26,7 @@ export default function ProjectsPage() {
             </h1>
           </div>
 
-          <ProjectsGrid />
+          <ProjectsGrid projects={projects} />
         </div>
       </section>
 
