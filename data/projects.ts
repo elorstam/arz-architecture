@@ -118,6 +118,35 @@ export const projects: Project[] = [
   },
 
   {
+  slug: "eryilmaz-apartmani",
+  title: "Eryılmaz Apartmanı",
+  category: "Apartman Projesi",
+  location: "Sancaktepe / İstanbul",
+  year: "2026",
+
+  description:
+    "Eryılmaz Apartmanı, çağdaş mimari anlayışıyla estetik ve işlevselliği bir araya getiren butik bir konut projesidir. Cephe tasarımında modern çizgiler, doğal malzeme dokuları ve dengeli kütle kompozisyonu ön plana çıkarılırken; yaşam konforunu artıran ferah balkonlar ve gün ışığından maksimum fayda sağlayan planlama anlayışı benimsenmiştir. Proje, bulunduğu çevreyle uyum sağlayan mimari dili ve kullanıcı odaklı yaklaşımıyla nitelikli bir yaşam alanı sunmayı hedeflemektedir.",
+
+  coverImage: "/images/eryilmaz-apartmani/cover.png",
+
+  images: [
+    {
+      src: "/images/eryilmaz-apartmani/01.png",
+      alt: "Eryılmaz Apartmanı Gece Renderı",
+    },
+    {
+      src: "/images/eryilmaz-apartmani/02.png",
+      alt: "Eryılmaz Apartmanı Ön Cephe Gece Renderı",
+    },
+    {
+      src: "/images/eryilmaz-apartmani/03.png",
+      alt: "Eryılmaz Apartmanı Gündüz Renderı",
+    },
+  ],
+},
+
+
+  {
     slug: "ozger-apartmani",
     title: "ÖZGER APARTMANI",
     titleLines: ["ÖZGER", "APARTMANI"],
