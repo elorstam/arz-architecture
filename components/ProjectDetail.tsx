@@ -224,7 +224,7 @@ export default function ProjectDetail({
               ref={scrollRef}
               className="mt-10 text-[9px] uppercase tracking-[0.35em] text-white/55"
             >
-              {locale === "en" ? "Explore Project ↓" : "Projeyi Keşfet ↓"}
+              {locale !== "tr" ? "Explore Project ↓" : "Projeyi Keşfet ↓"}
             </p>
           </div>
         </div>
@@ -234,13 +234,13 @@ export default function ProjectDetail({
         <div className="mx-auto grid max-w-[1800px] gap-16 lg:grid-cols-[0.75fr_1.25fr] lg:gap-28">
           <div data-reveal>
             <p className="text-[10px] uppercase tracking-[0.4em] text-white/35">
-              {locale === "en" ? "Project Information" : "Proje Bilgileri"}
+              {locale !== "tr" ? "Project Information" : "Proje Bilgileri"}
             </p>
 
             <dl className="mt-10 border-t border-white/15">
               <div className="flex items-center justify-between gap-8 border-b border-white/15 py-5">
                 <dt className="text-[10px] uppercase tracking-[0.22em] text-white/35">
-                  {locale === "en" ? "Project" : "Proje"}
+                  {locale !== "tr" ? "Project" : "Proje"}
                 </dt>
 
                 <dd className="text-right text-sm text-white/75">
@@ -250,7 +250,7 @@ export default function ProjectDetail({
 
               <div className="flex items-center justify-between gap-8 border-b border-white/15 py-5">
                 <dt className="text-[10px] uppercase tracking-[0.22em] text-white/35">
-                  {locale === "en" ? "Category" : "Kategori"}
+                  {locale !== "tr" ? "Category" : "Kategori"}
                 </dt>
 
                 <dd className="text-right text-sm text-white/75">
@@ -260,7 +260,7 @@ export default function ProjectDetail({
 
               <div className="flex items-center justify-between gap-8 border-b border-white/15 py-5">
                 <dt className="text-[10px] uppercase tracking-[0.22em] text-white/35">
-                  {locale === "en" ? "Location" : "Konum"}
+                  {locale !== "tr" ? "Location" : "Konum"}
                 </dt>
 
                 <dd className="text-right text-sm text-white/75">
@@ -270,7 +270,7 @@ export default function ProjectDetail({
 
               <div className="flex items-center justify-between gap-8 border-b border-white/15 py-5">
                 <dt className="text-[10px] uppercase tracking-[0.22em] text-white/35">
-                  {locale === "en" ? "Year" : "Yıl"}
+                  {locale !== "tr" ? "Year" : "Yıl"}
                 </dt>
 
                 <dd className="text-right text-sm text-white/75">
@@ -280,7 +280,7 @@ export default function ProjectDetail({
 
               <div className="flex items-center justify-between gap-8 border-b border-white/15 py-5">
                 <dt className="text-[10px] uppercase tracking-[0.22em] text-white/35">
-                  {locale === "en" ? "Services" : "Hizmet"}
+                  {locale !== "tr" ? "Services" : "Hizmet"}
                 </dt>
 
                 <dd className="text-right text-sm leading-6 text-white/75">
@@ -318,16 +318,16 @@ export default function ProjectDetail({
           <div data-reveal className="mb-12 flex items-end justify-between">
             <div>
               <p className="text-[10px] uppercase tracking-[0.4em] text-white/35">
-                {locale === "en" ? "Gallery" : "Galeri"}
+                {locale !== "tr" ? "Gallery" : "Galeri"}
               </p>
 
               <h2 className="mt-5 text-[clamp(3rem,6vw,7rem)] font-light leading-none tracking-[-0.06em]">
-                {locale === "en" ? "Images" : "Görseller"}
+                {locale !== "tr" ? "Images" : "Görseller"}
               </h2>
             </div>
 
             <p className="hidden text-[10px] uppercase tracking-[0.25em] text-white/30 md:block">
-              {String(localizedProject.images.length).padStart(2, "0")} {locale === "en" ? "Images" : "Görsel"}
+              {String(localizedProject.images.length).padStart(2, "0")} {locale !== "tr" ? "Images" : "Görsel"}
             </p>
           </div>
 
@@ -377,11 +377,11 @@ export default function ProjectDetail({
         >
           <div>
             <p className="text-[10px] uppercase tracking-[0.4em] text-white/35">
-              {locale === "en" ? "Projects" : "Projeler"}
+              {locale !== "tr" ? "Projects" : "Projeler"}
             </p>
 
             <h2 className="mt-7 text-[clamp(3.5rem,7vw,8rem)] font-light leading-[0.88] tracking-[-0.065em]">
-              {locale === "en" ? <>Discover more<br />projects.</> : <>Diğer projeleri<br />keşfedin.</>}
+              {locale !== "tr" ? <>Discover more<br />projects.</> : <>Diğer projeleri<br />keşfedin.</>}
             </h2>
           </div>
 
@@ -389,7 +389,7 @@ export default function ProjectDetail({
             href={`/${locale}/${locale === "tr" ? "projeler" : "projects"}`}
             className="group inline-flex w-fit items-center gap-5 border-b border-white/30 pb-3 text-[10px] uppercase tracking-[0.3em] transition-colors duration-300 hover:border-white"
           >
-            {locale === "en" ? "Back to All Projects" : "Tüm Projelere Dön"}
+            {locale !== "tr" ? "Back to All Projects" : "Tüm Projelere Dön"}
 
             <span className="text-lg transition-transform duration-300 group-hover:translate-x-2">
               →

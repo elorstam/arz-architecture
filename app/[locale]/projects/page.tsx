@@ -5,7 +5,7 @@ import {getLocalizedStoreProjects} from "@/lib/project-store";
 
 export async function generateMetadata({params}: {params: Promise<{locale: string}>}): Promise<Metadata> {
   const {locale} = await params;
-  const en = locale === "en";
+  const en = locale !== "tr";
   return {
     title: en ? "Projects" : "Projeler",
     description: en ? "Explore selected architectural projects designed by ARZ Architecture." : "ARZ Mimarlık tarafından tasarlanan seçili mimari projeleri inceleyin.",
@@ -17,7 +17,7 @@ export async function generateMetadata({params}: {params: Promise<{locale: strin
 
 export default async function ProjectsPage({params}: {params: Promise<{locale: string}>}) {
   const {locale} = await params;
-  const en = locale === "en";
+  const en = locale !== "tr";
   const projects = await getLocalizedStoreProjects(locale);
   return (
     <main className="min-h-screen bg-[#090909] text-white">

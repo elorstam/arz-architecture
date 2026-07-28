@@ -3,7 +3,7 @@ import AboutPage from "@/components/AboutPage";
 
 export async function generateMetadata({params}: {params: Promise<{locale: string}>}): Promise<Metadata> {
   const {locale} = await params;
-  const en = locale === "en";
+  const en = locale !== "tr";
   return {
     title: en ? "About" : "Hakkımızda",
     description: en

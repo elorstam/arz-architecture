@@ -4,6 +4,7 @@ import "./globals.css";
 import Navbar from "@/components/Navbar";
 import ScrollToTop from "@/components/ScrollToTop";
 import LocalePreference from "@/components/LocalePreference";
+import AutoTranslate from "@/components/AutoTranslate";
 import { GoogleAnalytics } from "@next/third-parties/google";
 import { NextIntlClientProvider } from "next-intl";
 import { getLocale, getMessages } from "next-intl/server";
@@ -184,6 +185,7 @@ export default async function RootLayout({
         <NextIntlClientProvider messages={messages}>
           <ScrollToTop />
           <LocalePreference />
+          <AutoTranslate />
           <Navbar />
 
           <main>{children}</main>

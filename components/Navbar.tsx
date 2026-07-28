@@ -6,8 +6,8 @@ import { Manrope } from "next/font/google";
 import { usePathname } from "next/navigation";
 import { useEffect, useState } from "react";
 import { useLocale, useTranslations } from "next-intl";
-import {getProjectBySlug, getProjectSlug} from "@/data/projects";
 import ThemeToggle from "@/components/ThemeToggle";
+import LanguageSwitcher from "@/components/LanguageSwitcher";
 
 const manrope = Manrope({
   subsets: ["latin", "latin-ext"],
@@ -43,30 +43,14 @@ export default function Navbar() {
   const t = useTranslations("Navbar");
 
   const localizedHomeHref = `/${locale}`;
-  const alternateLocale = locale === "en" ? "tr" : "en";
-  const alternateLocaleLabel = alternateLocale.toUpperCase();
-  const pathWithoutLocale = pathname.replace(/^\/(tr|en)(?=\/|$)/, "") || "/";
-  const routePairs: Record<string, string> = {"/hakkimizda":"/about","/about":"/hakkimizda","/projeler":"/projects","/projects":"/projeler","/iletisim":"/contact","/contact":"/iletisim"};
-  const segments = pathWithoutLocale.split("/");
-  const base = `/${segments[1] || ""}`;
-  const mappedBase = routePairs[base] ?? base;
-  const tailSegments = segments.slice(2);
-  if ((base === "/projeler" || base === "/projects") && tailSegments[0]) {
-    const project = getProjectBySlug(tailSegments[0]);
-    if (project) tailSegments[0] = getProjectSlug(project, alternateLocale);
-  }
-  const mappedPath = [mappedBase, ...tailSegments].join("/").replace(/\/+/g, "/");
-  const alternateLocaleHref = `/${alternateLocale}${mappedPath === "/" ? "" : mappedPath}`;
+  const pathWithoutLocale = pathname.replace(/^\/(tr|en|de|fr|es|nl|ja|zh|ko|ar)(?=\/|$)/, "") || "/";
   const isHomePage = pathWithoutLocale === "/";
   const usesDarkHeaderOverlay = isHomePage;
 
   const [menuOpen, setMenuOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
 
-  const saveLocalePreference = () => {
-    window.localStorage.setItem("arz-locale", alternateLocale);
-    document.cookie = `arz-locale=${alternateLocale}; Path=/; Max-Age=31536000; SameSite=Lax`;
-  };
+
 
   useEffect(() => {
     const handleScroll = () => {
@@ -98,11 +82,10 @@ export default function Navbar() {
 
   const getHref = (href: string) => {
     if (href === "/") return localizedHomeHref;
-    const routes: Record<string, Record<string, string>> = {
-      tr: {"/about": "/hakkimizda", "/projects": "/projeler", "/contact": "/iletisim"},
-      en: {"/about": "/about", "/projects": "/projects", "/contact": "/contact"}
-    };
-    return `/${locale}${routes[locale]?.[href] ?? href}`;
+    const routes = locale === "tr"
+      ? {"/about": "/hakkimizda", "/projects": "/projeler", "/contact": "/iletisim"}
+      : {"/about": "/about", "/projects": "/projects", "/contact": "/contact"};
+    return `/${locale}${routes[href as keyof typeof routes] ?? href}`;
   };
 
   const isActive = (href: string) => {
@@ -178,18 +161,7 @@ export default function Navbar() {
 
           <div className="ml-auto hidden items-center gap-5 lg:flex">
             <ThemeToggle />
-
-            <a
-              href={alternateLocaleHref}
-              hrefLang={alternateLocale}
-              onClick={saveLocalePreference}
-              aria-label={t("switchLanguageAriaLabel", {
-                language: alternateLocaleLabel,
-              })}
-              className={`${manrope.className} flex h-10 min-w-10 items-center justify-center border border-white/18 px-3 text-[10px] font-normal uppercase tracking-[0.18em] text-white/65 transition-[border-color,color,transform] duration-500 ease-[cubic-bezier(0.22,1,0.36,1)] hover:-translate-y-px hover:border-white/45 hover:text-white`}
-            >
-              {alternateLocaleLabel}
-            </a>
+            <LanguageSwitcher />
 
             <a
               href={instagramUrl}
@@ -367,18 +339,7 @@ export default function Navbar() {
 
             <div className="mt-5 flex flex-wrap items-center gap-8">
               <ThemeToggle className="mr-1" />
-
-              <a
-                href={alternateLocaleHref}
-                hrefLang={alternateLocale}
-                onClick={() => {
-                  saveLocalePreference();
-                  setMenuOpen(false);
-                }}
-                className="border border-white/18 px-4 py-2 text-[10px] font-normal uppercase tracking-[0.18em] text-white/65 transition-colors duration-500 hover:border-white/45 hover:text-white"
-              >
-                {t("languageSwitch", {language: alternateLocaleLabel})}
-              </a>
+              <LanguageSwitcher mobile onNavigate={() => setMenuOpen(false)} />
 
               <a
                 href={instagramUrl}

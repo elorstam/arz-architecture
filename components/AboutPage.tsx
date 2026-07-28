@@ -35,7 +35,7 @@ const servicesEn = [
 export default function AboutPage() {
   const pageRef = useRef<HTMLElement | null>(null);
   const locale = useLocale();
-  const en = locale === "en";
+  const en = locale !== "tr";
   const services = en ? servicesEn : servicesTr;
 
   useLayoutEffect(() => {

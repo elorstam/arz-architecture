@@ -293,7 +293,7 @@ export default function ProjectsGrid({projects}: {projects: Project[]}) {
             <Link
               href={`/${locale}/${locale === "tr" ? "projeler" : "projects"}/${project.slug}`}
               className="block"
-              aria-label={locale === "en" ? `Explore ${project.title}` : `${project.title} projesini incele`}
+              aria-label={locale !== "tr" ? `Explore ${project.title}` : `${project.title} projesini incele`}
               onClick={(event) =>
                 handleProjectClick(event, project)
               }
@@ -315,7 +315,7 @@ export default function ProjectsGrid({projects}: {projects: Project[]}) {
 
                 <div className="absolute inset-x-0 bottom-0 flex translate-y-5 items-center justify-between px-5 pb-5 opacity-0 transition-all duration-500 ease-out group-hover:translate-y-0 group-hover:opacity-100 md:px-7 md:pb-7">
                   <span className="text-[9px] uppercase tracking-[0.3em] text-white">
-                    {locale === "en" ? "View Project" : "Projeyi İncele"}
+                    {locale !== "tr" ? "View Project" : "Projeyi İncele"}
                   </span>
 
                   <span className="text-2xl font-light text-white transition-transform duration-500 group-hover:translate-x-1">

@@ -24,7 +24,7 @@ type FormStatus = "idle" | "sending" | "success" | "error";
 export default function ContactPage() {
   const pageRef = useRef<HTMLElement | null>(null);
   const locale = useLocale();
-  const en = locale === "en";
+  const en = locale !== "tr";
   const formRef = useRef<HTMLFormElement | null>(null);
 
   const [formStatus, setFormStatus] = useState<FormStatus>("idle");
