@@ -1,5 +1,27 @@
 This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
 
+## ZIP 3 proje migration ve merkezi çeviri düzeltmesi
+
+1. `.env.local` içinde `NEXT_PUBLIC_SUPABASE_URL` ve `SUPABASE_SERVICE_ROLE_KEY` değerlerini tanımlayın.
+2. Supabase SQL Editor içinde güncel `supabase/schema.sql` dosyasını çalıştırın. Şema idempotenttir ve mevcut veriyi silmez.
+3. Eski `data/projects.ts` kaynağındaki bütün projeleri bir kez aktarmak için `npm run migrate:projects` çalıştırın.
+4. Migration `slug_tr` alanına göre upsert yapar; tekrar çalıştırılması aynı projeleri çoğaltmaz. Görsel yolları, galeri, çeviriler, SEO, kategori, yıl, konum, öne çıkarma ve yayın durumu korunur.
+5. Admin panelindeki **Site Çevirileri** ekranında **Eksik sabit metinleri seed et** düğmesini kullanın. Seed mevcut çevirileri değiştirmez ve tekrar çalıştırılabilir.
+
+Her locale rotası sunucu tarafında merkezi çeviri verisini okur. Eksik tekil anahtarlarda ve eksik proje/blog çevirilerinde Türkçe kaynak içerik gösterilir.
+
+## ARZ CMS ZIP 3 kurulumu
+
+1. `.env.example` dosyasını `.env.local` olarak kopyalayın.
+2. Supabase SQL Editor içinde güncel `supabase/schema.sql` dosyasını çalıştırın. Migration idempotenttir ve mevcut proje verilerini silmez.
+3. `NEXT_PUBLIC_SUPABASE_URL`, `SUPABASE_SERVICE_ROLE_KEY`, `OPENAI_API_KEY` değerlerini tanımlayın.
+4. Medya kütüphanesi için `media` bucket şema tarafından otomatik oluşturulur.
+5. AI Kullanımı paneli için normal proje anahtarından ayrı bir organization Admin API Key oluşturup `OPENAI_ADMIN_KEY` olarak tanımlayın.
+6. Başlangıç kredisi tahmini için `OPENAI_INITIAL_CREDIT_USD` değerini girin. Panelde kaydedilen bütçe ayarı bu başlangıç değerinin yerini alır.
+7. `npm ci` ve `npm run build` çalıştırın.
+
+ZIP 3; blog, ortak Supabase medya kütüphanesi, görsel analizli AI alt metin, merkezi site çevirileri ve admin-only OpenAI kullanım/bütçe paneli içerir. Google Website Translator tamamen kaldırılmıştır; uygulama yalnızca gerçek locale rotaları ve sunucu tarafı içerikleri kullanır. Kullanım maliyetleri OpenAI organization Costs API verisidir; “tahmini kalan bakiye” başlangıç kredisi eksi bu ayın maliyeti olarak hesaplanır ve kesin fatura bakiyesi değildir.
+
 ## Getting Started
 
 First, run the development server:
@@ -37,6 +59,15 @@ Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/bui
 
 ## Admin paneli
 
+### 5 dakikalık hareketsizlik zaman aşımı
+
+Yönetici oturumu yalnız admin panelinde izlenir. Fare, klavye, kaydırma veya
+dokunma etkileşimi olmadan 5 dakika geçtiğinde HttpOnly oturum çerezi sunucu
+logout endpoint'i üzerinden temizlenir ve kullanıcı
+`/admin/login?reason=idle` adresine yönlendirilir. Aktivite zamanlayıcıyı
+sıfırlar; diğer açık admin sekmeleri BroadcastChannel ve localStorage
+olaylarıyla aynı anda oturumdan çıkarılır. Public sayfalar etkilenmez.
+
 1. `.env.example` dosyasını `.env.local` adıyla kopyalayın.
 2. `ADMIN_PASSWORD` ve `ADMIN_SECRET` değerlerini değiştirin.
 3. Uygulamayı yeniden başlatın ve `/admin` adresine gidin.
@@ -59,3 +90,32 @@ Admin panelinde **Yedek indir** düğmesi proje kayıtlarını, `public/uploads/
 4. Uygulamanın verdiği 6 haneli kodu girerek kurulumu tamamlayın.
 
 Sonraki girişlerde hem yönetici şifresi hem de 6 haneli Authenticator kodu gerekir. Telefon kaybolursa sunucudaki `data/admin-security.json` dosyasını silip uygulamayı yeniden başlatarak 2FA kurulumunu yeniden başlatabilirsiniz. Bu işlemden önce yedek alınması önerilir.
+
+## ARZ CMS: Supabase + AI + Çoklu Dil + SEO
+
+Bu sürüm iki modda çalışır:
+
+- Supabase değişkenleri yoksa mevcut `data/admin-projects.json` dosya sistemi kullanılmaya devam eder.
+- Supabase değişkenleri tanımlıysa proje kayıtları `public.projects`, görseller `project-images` bucket'ında saklanır.
+
+### Supabase kurulumu
+
+1. Supabase projesi oluşturun.
+2. SQL Editor içinde `supabase/schema.sql` dosyasını çalıştırın.
+3. `.env.example` dosyasını `.env.local` olarak kopyalayın.
+4. `NEXT_PUBLIC_SUPABASE_URL` ve `SUPABASE_SERVICE_ROLE_KEY` değerlerini girin.
+5. Uygulamayı yeniden başlatın.
+
+Service role anahtarını hiçbir zaman tarayıcı koduna veya GitHub'a koymayın. Bu projede yalnızca sunucu tarafında kullanılır.
+
+### AI çeviri
+
+`OPENAI_API_KEY` ve isteğe bağlı `OPENAI_TRANSLATION_MODEL` tanımlandığında `/api/ai/translate` admin-korumalı çeviri uç noktası aktif olur. Uç nokta proje nesnesinin yapısını, görsel yollarını ve yılları koruyarak desteklenen 10 dile JSON çeviri üretir.
+
+### Çoklu dil veri modeli
+
+Supabase'deki `translations` alanı JSONB'dir. `tr`, `en`, `de`, `fr`, `es`, `nl`, `ja`, `zh`, `ko`, `ar` anahtarları altında tam proje nesneleri saklanabilir. Bir dil henüz üretilmemişse sistem İngilizce içeriğe geri döner.
+
+### SEO
+
+Sitemap artık CMS'teki yayınlanmış projelerden dinamik oluşturulur. Her proje için canonical, hreflang, Open Graph ve Twitter metadata üretilir. Site URL'si `NEXT_PUBLIC_SITE_URL` üzerinden yönetilir.

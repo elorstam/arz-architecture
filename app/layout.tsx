@@ -3,13 +3,12 @@ import "./globals.css";
 
 import Navbar from "@/components/Navbar";
 import ScrollToTop from "@/components/ScrollToTop";
-import LocalePreference from "@/components/LocalePreference";
-import AutoTranslate from "@/components/AutoTranslate";
 import { GoogleAnalytics } from "@next/third-parties/google";
 import { NextIntlClientProvider } from "next-intl";
 import { getLocale, getMessages } from "next-intl/server";
+import Script from "next/script";
 
-const siteUrl = "https://arzmimarlik.net";
+const siteUrl = (process.env.NEXT_PUBLIC_SITE_URL || "https://arzmimarlik.net").replace(/\/$/, "");
 
 const themeScript = `
   try {
@@ -173,7 +172,11 @@ export default async function RootLayout({
   return (
     <html lang={locale} data-theme="dark" suppressHydrationWarning>
       <body>
-        <script dangerouslySetInnerHTML={{__html: themeScript}} />
+        <Script
+          id="theme-init"
+          strategy="beforeInteractive"
+          dangerouslySetInnerHTML={{__html: themeScript}}
+        />
 
         <script
           type="application/ld+json"
@@ -184,8 +187,6 @@ export default async function RootLayout({
 
         <NextIntlClientProvider messages={messages}>
           <ScrollToTop />
-          <LocalePreference />
-          <AutoTranslate />
           <Navbar />
 
           <main>{children}</main>

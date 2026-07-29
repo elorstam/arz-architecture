@@ -9,7 +9,8 @@ const linkedinUrl = "https://www.linkedin.com/company/90222590";
 const pageLinks = [
   {key: "home", href: "/"},
   {key: "about", href: "/about"},
-  {key: "projects", href: "/projects"},
+    {key: "projects", href: "/projects"},
+    {key: "blog", href: "/blog"},
   {key: "contact", href: "/contact"},
 ] as const;
 

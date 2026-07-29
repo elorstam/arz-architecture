@@ -1,12 +1,5 @@
-import type { Metadata } from "next";
-import AboutPage from "@/components/AboutPage";
-
-export const metadata: Metadata = {
-  title: "Hakkımızda",
-  description:
-    "ARZ Mimarlık, Şubat 2023'te İstanbul'da kurulan mimarlık ve iç mimarlık ofisidir.",
-};
+import { redirect } from "next/navigation";
 
 export default function AboutRoute() {
-  return <AboutPage />;
+  redirect("/tr/hakkimizda");
 }

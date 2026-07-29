@@ -1,5 +1,6 @@
 import {NextResponse} from 'next/server';
 import {isAdmin} from '@/lib/admin-auth';
+import {isSupabaseConfigured, supabaseUpload} from '@/lib/supabase-rest';
 import fs from 'node:fs/promises';
 import path from 'node:path';
 
@@ -21,11 +22,16 @@ export async function POST(req: Request) {
   if (file.size > 25 * 1024 * 1024) return NextResponse.json({error: 'Görsel 25 MB sınırını aşıyor'}, {status: 400});
 
   const ext = (file.name.split('.').pop() || 'jpg').replace(/[^a-z0-9]/gi, '').toLowerCase() || 'jpg';
+  const name = `${Date.now()}-${crypto.randomUUID().slice(0, 8)}.${ext}`;
+
+  if (isSupabaseConfigured()) {
+    const bucket = process.env.SUPABASE_PROJECT_IMAGES_BUCKET || 'project-images';
+    const url = await supabaseUpload(bucket, `${slug}/${name}`, file);
+    return NextResponse.json({url, storage: 'supabase'});
+  }
+
   const dir = path.join(process.cwd(), 'public', 'images', slug);
   await fs.mkdir(dir, {recursive: true});
-
-  const name = `${Date.now()}.${ext}`;
   await fs.writeFile(path.join(dir, name), Buffer.from(await file.arrayBuffer()));
-
-  return NextResponse.json({url: `/images/${slug}/${name}`});
+  return NextResponse.json({url: `/images/${slug}/${name}`, storage: 'local'});
 }

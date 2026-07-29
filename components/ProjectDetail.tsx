@@ -2,7 +2,7 @@
 
 import Image from "next/image";
 import Link from "next/link";
-import { useLocale } from "next-intl";
+import { useLocale, useTranslations } from "next-intl";
 import { useLayoutEffect, useRef } from "react";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
@@ -17,6 +17,7 @@ export default function ProjectDetail({
   project,
 }: ProjectDetailProps) {
   const locale = useLocale();
+  const t = useTranslations("CMS");
   const localizedProject = project;
   const pageRef = useRef<HTMLElement | null>(null);
   const imageRef = useRef<HTMLDivElement | null>(null);
@@ -224,7 +225,7 @@ export default function ProjectDetail({
               ref={scrollRef}
               className="mt-10 text-[9px] uppercase tracking-[0.35em] text-white/55"
             >
-              {locale !== "tr" ? "Explore Project ↓" : "Projeyi Keşfet ↓"}
+              {t('project.info')} ↓
             </p>
           </div>
         </div>
@@ -234,13 +235,13 @@ export default function ProjectDetail({
         <div className="mx-auto grid max-w-[1800px] gap-16 lg:grid-cols-[0.75fr_1.25fr] lg:gap-28">
           <div data-reveal>
             <p className="text-[10px] uppercase tracking-[0.4em] text-white/35">
-              {locale !== "tr" ? "Project Information" : "Proje Bilgileri"}
+              {t('project.info')}
             </p>
 
             <dl className="mt-10 border-t border-white/15">
               <div className="flex items-center justify-between gap-8 border-b border-white/15 py-5">
                 <dt className="text-[10px] uppercase tracking-[0.22em] text-white/35">
-                  {locale !== "tr" ? "Project" : "Proje"}
+                  {t('projects.title')}
                 </dt>
 
                 <dd className="text-right text-sm text-white/75">
@@ -250,7 +251,7 @@ export default function ProjectDetail({
 
               <div className="flex items-center justify-between gap-8 border-b border-white/15 py-5">
                 <dt className="text-[10px] uppercase tracking-[0.22em] text-white/35">
-                  {locale !== "tr" ? "Category" : "Kategori"}
+                  {t('project.category')}
                 </dt>
 
                 <dd className="text-right text-sm text-white/75">
@@ -260,7 +261,7 @@ export default function ProjectDetail({
 
               <div className="flex items-center justify-between gap-8 border-b border-white/15 py-5">
                 <dt className="text-[10px] uppercase tracking-[0.22em] text-white/35">
-                  {locale !== "tr" ? "Location" : "Konum"}
+                  {t('project.location')}
                 </dt>
 
                 <dd className="text-right text-sm text-white/75">
@@ -270,7 +271,7 @@ export default function ProjectDetail({
 
               <div className="flex items-center justify-between gap-8 border-b border-white/15 py-5">
                 <dt className="text-[10px] uppercase tracking-[0.22em] text-white/35">
-                  {locale !== "tr" ? "Year" : "Yıl"}
+                  {t('project.year')}
                 </dt>
 
                 <dd className="text-right text-sm text-white/75">
@@ -280,7 +281,7 @@ export default function ProjectDetail({
 
               <div className="flex items-center justify-between gap-8 border-b border-white/15 py-5">
                 <dt className="text-[10px] uppercase tracking-[0.22em] text-white/35">
-                  {locale !== "tr" ? "Services" : "Hizmet"}
+                  {t('project.services')}
                 </dt>
 
                 <dd className="text-right text-sm leading-6 text-white/75">
@@ -318,16 +319,16 @@ export default function ProjectDetail({
           <div data-reveal className="mb-12 flex items-end justify-between">
             <div>
               <p className="text-[10px] uppercase tracking-[0.4em] text-white/35">
-                {locale !== "tr" ? "Gallery" : "Galeri"}
+                {t('project.gallery')}
               </p>
 
               <h2 className="mt-5 text-[clamp(3rem,6vw,7rem)] font-light leading-none tracking-[-0.06em]">
-                {locale !== "tr" ? "Images" : "Görseller"}
+                {t('project.gallery')}
               </h2>
             </div>
 
             <p className="hidden text-[10px] uppercase tracking-[0.25em] text-white/30 md:block">
-              {String(localizedProject.images.length).padStart(2, "0")} {locale !== "tr" ? "Images" : "Görsel"}
+              {String(localizedProject.images.length).padStart(2, "0")} {t('project.gallery')}
             </p>
           </div>
 
@@ -377,11 +378,11 @@ export default function ProjectDetail({
         >
           <div>
             <p className="text-[10px] uppercase tracking-[0.4em] text-white/35">
-              {locale !== "tr" ? "Projects" : "Projeler"}
+              {t('projects.title')}
             </p>
 
             <h2 className="mt-7 text-[clamp(3.5rem,7vw,8rem)] font-light leading-[0.88] tracking-[-0.065em]">
-              {locale !== "tr" ? <>Discover more<br />projects.</> : <>Diğer projeleri<br />keşfedin.</>}
+              {t('projects.eyebrow')}
             </h2>
           </div>
 
@@ -389,7 +390,7 @@ export default function ProjectDetail({
             href={`/${locale}/${locale === "tr" ? "projeler" : "projects"}`}
             className="group inline-flex w-fit items-center gap-5 border-b border-white/30 pb-3 text-[10px] uppercase tracking-[0.3em] transition-colors duration-300 hover:border-white"
           >
-            {locale !== "tr" ? "Back to All Projects" : "Tüm Projelere Dön"}
+            {t('project.back')}
 
             <span className="text-lg transition-transform duration-300 group-hover:translate-x-2">
               →

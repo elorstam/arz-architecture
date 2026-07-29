@@ -1,6 +1,8 @@
 "use client";
 
 import {useEffect, useState} from "react";
+import {useTranslations} from "next-intl";
+import {navControlClasses} from "@/lib/nav-control";
 
 type Theme = "light" | "dark";
 
@@ -12,11 +14,14 @@ function getInitialTheme(): Theme {
 }
 
 export default function ThemeToggle({className = ""}: {className?: string}) {
+  const t=useTranslations("CMS");
   const [theme, setTheme] = useState<Theme>("dark");
   const [mounted, setMounted] = useState(false);
 
   useEffect(() => {
     const initialTheme = getInitialTheme();
+    // Hydration is the first point at which persisted browser theme state is available.
+    // eslint-disable-next-line react-hooks/set-state-in-effect
     setTheme(initialTheme);
     document.documentElement.dataset.theme = initialTheme;
     document.documentElement.style.colorScheme = initialTheme;
@@ -37,9 +42,9 @@ export default function ThemeToggle({className = ""}: {className?: string}) {
     <button
       type="button"
       onClick={toggleTheme}
-      aria-label={isDark ? "Aydınlık moda geç" : "Karanlık moda geç"}
-      title={isDark ? "Aydınlık mod" : "Karanlık mod"}
-      className={`theme-toggle inline-flex h-10 w-10 shrink-0 items-center justify-center border border-white/18 text-white/65 transition-[border-color,color,transform] duration-500 hover:-translate-y-px hover:border-white/45 hover:text-white ${className}`}
+      aria-label={isDark ? t('theme.light') : t('theme.dark')}
+      title={isDark ? t('theme.light') : t('theme.dark')}
+      className={navControlClasses(`theme-toggle w-10 ${className}`)}
     >
       {isDark ? (
         <svg viewBox="0 0 24 24" fill="none" className="h-[18px] w-[18px]" aria-hidden="true">

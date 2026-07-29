@@ -5,6 +5,7 @@ import Link from "next/link";
 import { useEffect, useRef } from "react";
 import { useLocale, useTranslations } from "next-intl";
 import PremiumFooter from "@/components/PremiumFooter";
+import { localizeProject, projects } from "@/data/projects";
 
 const valueKeys = ["modern", "functionality", "solutions"] as const;
 
@@ -23,8 +24,10 @@ export default function Hero() {
   const pageRef = useRef<HTMLElement | null>(null);
   const locale = useLocale();
   const t = useTranslations("Hero");
+  const cms = useTranslations("CMS");
+  const featuredProject = localizeProject(projects[0], locale);
 
-  const projectsHref = `/${locale}/${locale === "tr" ? "projeler" : "projects"}/vespera-port`;
+  const projectsHref = `/${locale}/${locale === "tr" ? "projeler" : "projects"}/${featuredProject.slug}`;
   const contactHref = `/${locale}/${locale === "tr" ? "iletisim" : "contact"}`;
 
   useEffect(() => {
@@ -200,7 +203,7 @@ export default function Hero() {
                     <h2
                       className="mt-5 text-[clamp(2rem,3vw,3.25rem)] font-light leading-none tracking-[-0.06em] text-white transition-transform duration-500 ease-out group-hover:translate-x-2"
                     >
-                      VESPERA PORT
+                      {featuredProject.title}
                     </h2>
                   </div>
 
@@ -214,31 +217,31 @@ export default function Hero() {
                 <div className="mt-7 grid grid-cols-3 border-t border-white/25 pt-4">
                   <div>
                     <p className="text-[7px] uppercase tracking-[0.28em] text-white/55">
-                      Tip
+                      {cms("project.category")}
                     </p>
 
                     <p className="mt-2 text-[9px] uppercase tracking-[0.22em] text-white/85">
-                      Commercial
+                      {t("featuredProject.typeValue")}
                     </p>
                   </div>
 
                   <div>
                     <p className="text-[7px] uppercase tracking-[0.28em] text-white/55">
-                      Konum
+                      {cms("project.location")}
                     </p>
 
                     <p className="mt-2 text-[9px] uppercase tracking-[0.22em] text-white/85">
-                      Ankara
+                      {featuredProject.location}
                     </p>
                   </div>
 
                   <div className="text-right">
                     <p className="text-[7px] uppercase tracking-[0.28em] text-white/55">
-                      Yıl
+                      {cms("project.year")}
                     </p>
 
                     <p className="mt-2 text-[9px] uppercase tracking-[0.22em] text-white/85">
-                      2026–2027
+                      {featuredProject.year}
                     </p>
                   </div>
                 </div>

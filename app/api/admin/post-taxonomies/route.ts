@@ -1,0 +1,4 @@
+import {NextResponse} from 'next/server';import {isAdmin} from '@/lib/admin-auth';import {supabaseSelect,supabaseUpsert} from '@/lib/supabase-rest';
+type Term={id:string;slug:string;translations:Record<string,string>};
+export async function GET(){if(!await isAdmin())return NextResponse.json({error:'Yetkisiz'},{status:401});try{const[categories,tags]=await Promise.all([supabaseSelect<Term>('post_categories','select=*&order=slug.asc'),supabaseSelect<Term>('post_tags','select=*&order=slug.asc')]);return NextResponse.json({categories,tags});}catch{return NextResponse.json({categories:[],tags:[]});}}
+export async function POST(r:Request){if(!await isAdmin())return NextResponse.json({error:'Yetkisiz'},{status:401});const{type,term}=await r.json() as{type:'category'|'tag';term:Term};await supabaseUpsert(type==='category'?'post_categories':'post_tags',term);return NextResponse.json(term);}

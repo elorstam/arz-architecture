@@ -3,7 +3,7 @@ import {useState} from 'react';
 
 type Step = 'password' | 'setup' | 'code';
 
-export default function AdminLogin() {
+export default function AdminLogin({idle = false}: {idle?: boolean}) {
   const [password, setPassword] = useState('');
   const [code, setCode] = useState('');
   const [step, setStep] = useState<Step>('password');
@@ -36,6 +36,7 @@ export default function AdminLogin() {
     <form onSubmit={submit} className="w-full max-w-md border border-white/15 bg-white/[.03] p-8">
       <p className="text-[10px] uppercase tracking-[.35em] text-white/40">ARZ Mimarlık</p>
       <h1 className="mt-4 text-4xl font-light">Admin Paneli</h1>
+      {idle && <p className="mt-6 border border-amber-300/30 bg-amber-300/10 p-4 text-sm text-amber-100">5 dakika işlem yapılmadığı için oturumunuz kapatıldı.</p>}
 
       {step === 'password' ? <>
         <input type="password" value={password} onChange={e => setPassword(e.target.value)} placeholder="Yönetici şifresi" autoFocus className="mt-10 w-full border border-white/20 bg-transparent px-4 py-3 outline-none focus:border-white/60"/>

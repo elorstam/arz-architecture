@@ -2,18 +2,12 @@
 
 import Image from "next/image";
 import Link from "next/link";
-import { Manrope } from "next/font/google";
 import { usePathname } from "next/navigation";
 import { useEffect, useState } from "react";
 import { useLocale, useTranslations } from "next-intl";
 import ThemeToggle from "@/components/ThemeToggle";
 import LanguageSwitcher from "@/components/LanguageSwitcher";
-
-const manrope = Manrope({
-  subsets: ["latin", "latin-ext"],
-  weight: ["400"],
-  display: "swap",
-});
+import {getNavbarSurfaceState, navbarSurfaceData} from "@/lib/navbar-surface";
 
 const navigationItems = [
   {
@@ -27,6 +21,10 @@ const navigationItems = [
   {
     key: "projects",
     href: "/projects",
+  },
+  {
+    key: "blog",
+    href: "/blog",
   },
   {
     key: "contact",
@@ -49,8 +47,8 @@ export default function Navbar() {
 
   const [menuOpen, setMenuOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
-
-
+  const surfaceState = getNavbarSurfaceState(scrolled, isHomePage);
+  const mobileSurfaceState = getNavbarSurfaceState(scrolled, isHomePage, true);
 
   useEffect(() => {
     const handleScroll = () => {
@@ -77,6 +75,8 @@ export default function Navbar() {
   }, [menuOpen]);
 
   useEffect(() => {
+    // Route changes close the mobile menu by design.
+    // eslint-disable-next-line react-hooks/set-state-in-effect
     setMenuOpen(false);
   }, [pathname]);
 
@@ -103,13 +103,9 @@ export default function Navbar() {
   return (
     <>
       <header
-        data-scrolled={scrolled ? "true" : "false"}
         data-overlay={usesDarkHeaderOverlay && !scrolled ? "true" : "false"}
-        className={`site-header fixed left-0 top-0 z-50 w-full transition-[background-color,backdrop-filter,box-shadow] duration-700 ease-[cubic-bezier(0.22,1,0.36,1)] ${
-          scrolled
-            ? "bg-black/60 shadow-[0_12px_40px_rgba(0,0,0,0.14)] backdrop-blur-md"
-            : "bg-transparent shadow-none"
-        }`}
+        {...navbarSurfaceData(surfaceState)}
+        className="site-header fixed left-0 top-0 z-50 w-full"
       >
         <div className="relative mx-auto flex h-[72px] w-full max-w-[1920px] items-center px-5 sm:px-8 md:h-[80px] md:px-10 lg:px-14 xl:px-16">
           <Link
@@ -129,7 +125,7 @@ export default function Navbar() {
           </Link>
 
           <nav
-            className={`${manrope.className} absolute left-1/2 hidden -translate-x-1/2 items-center gap-11 lg:flex xl:gap-16`}
+            className="absolute left-1/2 hidden -translate-x-1/2 items-center gap-11 font-sans lg:flex xl:gap-16"
           >
             {navigationItems.map((item) => {
               const active = isActive(item.href);
@@ -161,7 +157,7 @@ export default function Navbar() {
 
           <div className="ml-auto hidden items-center gap-5 lg:flex">
             <ThemeToggle />
-            <LanguageSwitcher />
+            <LanguageSwitcher surfaceState={surfaceState} />
 
             <a
               href={instagramUrl}
@@ -294,7 +290,7 @@ export default function Navbar() {
         }`}
       >
         <div
-          className={`${manrope.className} flex min-h-screen flex-col px-6 pb-8 pt-[105px] sm:px-8`}
+          className="flex min-h-screen flex-col px-6 pb-8 pt-[105px] font-sans sm:px-8"
         >
           <nav className="flex flex-col border-t border-white/12">
             {navigationItems.map((item, index) => {
@@ -339,7 +335,11 @@ export default function Navbar() {
 
             <div className="mt-5 flex flex-wrap items-center gap-8">
               <ThemeToggle className="mr-1" />
-              <LanguageSwitcher mobile onNavigate={() => setMenuOpen(false)} />
+              <LanguageSwitcher
+                mobile
+                surfaceState={mobileSurfaceState}
+                onNavigate={() => setMenuOpen(false)}
+              />
 
               <a
                 href={instagramUrl}

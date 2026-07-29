@@ -12,8 +12,6 @@ type ContactRequest = {
   website?: unknown;
 };
 
-const resend = new Resend(process.env.RESEND_API_KEY);
-
 const CONTACT_EMAIL = "info@arzmimarlik.net";
 const FROM_EMAIL = "ARZ Mimarlık <form@arzmimarlik.net>";
 
@@ -55,6 +53,7 @@ export async function POST(request: Request) {
         { status: 500 },
       );
     }
+    const resend = new Resend(process.env.RESEND_API_KEY);
 
     let body: ContactRequest;
 

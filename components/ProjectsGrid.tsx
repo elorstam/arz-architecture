@@ -13,7 +13,7 @@ import { useRouter } from "next/navigation";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import type {Project} from "@/data/projects";
-import { useLocale } from "next-intl";
+import { useLocale, useTranslations } from "next-intl";
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -31,6 +31,7 @@ type TransitionState = {
 export default function ProjectsGrid({projects}: {projects: Project[]}) {
   const router = useRouter();
   const locale = useLocale();
+  const t = useTranslations("CMS");
   const localizedProjects = projects;
 
   const gridRef = useRef<HTMLDivElement | null>(null);
@@ -46,7 +47,7 @@ export default function ProjectsGrid({projects}: {projects: Project[]}) {
     localizedProjects.forEach((project) => {
       router.prefetch(`/${locale}/${locale === "tr" ? "projeler" : "projects"}/${project.slug}`);
     });
-  }, [locale, router]);
+  }, [locale, localizedProjects, router]);
 
   /*
    * Proje kartlarının sayfa açılış animasyonu
@@ -293,7 +294,7 @@ export default function ProjectsGrid({projects}: {projects: Project[]}) {
             <Link
               href={`/${locale}/${locale === "tr" ? "projeler" : "projects"}/${project.slug}`}
               className="block"
-              aria-label={locale !== "tr" ? `Explore ${project.title}` : `${project.title} projesini incele`}
+              aria-label={`${project.title} — ${t('projects.title')}`}
               onClick={(event) =>
                 handleProjectClick(event, project)
               }
@@ -315,7 +316,7 @@ export default function ProjectsGrid({projects}: {projects: Project[]}) {
 
                 <div className="absolute inset-x-0 bottom-0 flex translate-y-5 items-center justify-between px-5 pb-5 opacity-0 transition-all duration-500 ease-out group-hover:translate-y-0 group-hover:opacity-100 md:px-7 md:pb-7">
                   <span className="text-[9px] uppercase tracking-[0.3em] text-white">
-                    {locale !== "tr" ? "View Project" : "Projeyi İncele"}
+                    {t('project.info')}
                   </span>
 
                   <span className="text-2xl font-light text-white transition-transform duration-500 group-hover:translate-x-1">
