@@ -7,7 +7,10 @@ import { useEffect, useState } from "react";
 import { useLocale, useTranslations } from "next-intl";
 import ThemeToggle from "@/components/ThemeToggle";
 import LanguageSwitcher from "@/components/LanguageSwitcher";
-import {getNavbarSurfaceState, navbarSurfaceData} from "@/lib/navbar-surface";
+import {
+  getNavbarSurfaceState,
+  navbarSurfaceData,
+} from "@/lib/navbar-surface";
 
 const navigationItems = [
   {
@@ -41,14 +44,26 @@ export default function Navbar() {
   const t = useTranslations("Navbar");
 
   const localizedHomeHref = `/${locale}`;
-  const pathWithoutLocale = pathname.replace(/^\/(tr|en|de|fr|es|nl|ja|zh|ko|ar)(?=\/|$)/, "") || "/";
+
+  const pathWithoutLocale =
+    pathname.replace(
+      /^\/(tr|en|de|fr|es|nl|ja|zh|ko|ar)(?=\/|$)/,
+      "",
+    ) || "/";
+
   const isHomePage = pathWithoutLocale === "/";
   const usesDarkHeaderOverlay = isHomePage;
 
   const [menuOpen, setMenuOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
+
   const surfaceState = getNavbarSurfaceState(scrolled, isHomePage);
-  const mobileSurfaceState = getNavbarSurfaceState(scrolled, isHomePage, true);
+
+  const mobileSurfaceState = getNavbarSurfaceState(
+    scrolled,
+    isHomePage,
+    true,
+  );
 
   useEffect(() => {
     const handleScroll = () => {
@@ -67,7 +82,12 @@ export default function Navbar() {
   }, []);
 
   useEffect(() => {
-    document.body.style.overflow = menuOpen ? "hidden" : "";
+    if (!menuOpen) {
+      document.body.style.overflow = "";
+      return;
+    }
+
+    document.body.style.overflow = "hidden";
 
     return () => {
       document.body.style.overflow = "";
@@ -75,16 +95,41 @@ export default function Navbar() {
   }, [menuOpen]);
 
   useEffect(() => {
-    // Route changes close the mobile menu by design.
-    // eslint-disable-next-line react-hooks/set-state-in-effect
     setMenuOpen(false);
   }, [pathname]);
 
+  useEffect(() => {
+    const handleEscape = (event: KeyboardEvent) => {
+      if (event.key === "Escape") {
+        setMenuOpen(false);
+      }
+    };
+
+    window.addEventListener("keydown", handleEscape);
+
+    return () => {
+      window.removeEventListener("keydown", handleEscape);
+    };
+  }, []);
+
   const getHref = (href: string) => {
-    if (href === "/") return localizedHomeHref;
-    const routes = locale === "tr"
-      ? {"/about": "/hakkimizda", "/projects": "/projeler", "/contact": "/iletisim"}
-      : {"/about": "/about", "/projects": "/projects", "/contact": "/contact"};
+    if (href === "/") {
+      return localizedHomeHref;
+    }
+
+    const routes =
+      locale === "tr"
+        ? {
+            "/about": "/hakkimizda",
+            "/projects": "/projeler",
+            "/contact": "/iletisim",
+          }
+        : {
+            "/about": "/about",
+            "/projects": "/projects",
+            "/contact": "/contact",
+          };
+
     return `/${locale}${routes[href as keyof typeof routes] ?? href}`;
   };
 
@@ -95,19 +140,26 @@ export default function Navbar() {
       return pathname === resolvedHref || pathname === "/";
     }
 
-    return pathname === resolvedHref || pathname.startsWith(`${resolvedHref}/`);
+    return (
+      pathname === resolvedHref ||
+      pathname.startsWith(`${resolvedHref}/`)
+    );
   };
 
-  if (pathname.startsWith("/admin")) return null;
+  if (pathname.startsWith("/admin")) {
+    return null;
+  }
 
   return (
     <>
       <header
-        data-overlay={usesDarkHeaderOverlay && !scrolled ? "true" : "false"}
+        data-overlay={
+          usesDarkHeaderOverlay && !scrolled ? "true" : "false"
+        }
         {...navbarSurfaceData(surfaceState)}
         className="site-header fixed left-0 top-0 z-50 w-full"
       >
-        <div className="relative mx-auto flex h-[72px] w-full max-w-[1920px] items-center px-5 sm:px-8 md:h-[80px] md:px-10 lg:px-14 xl:px-16">
+        <div className="relative mx-auto flex h-[72px] w-full max-w-[1920px] items-center px-5 sm:px-8 md:h-[80px] md:px-10 xl:px-12 2xl:px-16">
           <Link
             href={localizedHomeHref}
             scroll
@@ -124,9 +176,7 @@ export default function Navbar() {
             />
           </Link>
 
-          <nav
-            className="absolute left-1/2 hidden -translate-x-1/2 items-center gap-11 font-sans lg:flex xl:gap-16"
-          >
+          <nav className="absolute left-1/2 hidden -translate-x-1/2 items-center gap-8 font-sans xl:flex 2xl:gap-14">
             {navigationItems.map((item) => {
               const active = isActive(item.href);
 
@@ -135,13 +185,15 @@ export default function Navbar() {
                   key={item.key}
                   href={getHref(item.href)}
                   scroll
-                  className={`group relative py-3 text-[13px] font-normal uppercase tracking-[0.13em] transition-[color,transform] duration-500 ease-[cubic-bezier(0.22,1,0.36,1)] xl:text-[14px] ${
+                  className={`group relative py-3 text-[12px] font-normal uppercase tracking-[0.11em] transition-[color,transform] duration-500 ease-[cubic-bezier(0.22,1,0.36,1)] 2xl:text-[14px] 2xl:tracking-[0.13em] ${
                     active
                       ? "text-white/90"
                       : "text-white/62 hover:-translate-y-px hover:text-white/90"
                   }`}
                 >
-                  <span className="block whitespace-nowrap">{t(`items.${item.key}`)}</span>
+                  <span className="block whitespace-nowrap">
+                    {t(`items.${item.key}`)}
+                  </span>
 
                   <span
                     className={`absolute bottom-[2px] left-1/2 h-px -translate-x-1/2 bg-white/80 transition-[width,opacity] duration-500 ease-[cubic-bezier(0.22,1,0.36,1)] ${
@@ -155,8 +207,9 @@ export default function Navbar() {
             })}
           </nav>
 
-          <div className="ml-auto hidden items-center gap-5 lg:flex">
+          <div className="ml-auto hidden items-center gap-3 xl:flex 2xl:gap-5">
             <ThemeToggle />
+
             <LanguageSwitcher surfaceState={surfaceState} />
 
             <a
@@ -191,7 +244,12 @@ export default function Navbar() {
                   strokeWidth="1.45"
                 />
 
-                <circle cx="17.3" cy="6.8" r="1" fill="currentColor" />
+                <circle
+                  cx="17.3"
+                  cy="6.8"
+                  r="1"
+                  fill="currentColor"
+                />
               </svg>
             </a>
 
@@ -252,13 +310,18 @@ export default function Navbar() {
 
           <button
             type="button"
-            onClick={() => setMenuOpen((current) => !current)}
-            aria-label={menuOpen ? t("closeMenu") : t("openMenu")}
+            onClick={() => {
+              setMenuOpen((current) => !current);
+            }}
+            aria-label={
+              menuOpen ? t("closeMenu") : t("openMenu")
+            }
             aria-expanded={menuOpen}
-            className="relative z-[70] ml-auto flex h-11 w-11 flex-col items-end justify-center gap-[6px] lg:hidden"
+            aria-controls="mobile-navigation"
+            className="relative z-[70] ml-auto flex h-11 w-11 flex-col items-end justify-center gap-[6px] xl:hidden"
           >
             <span
-              className={`block h-px bg-white/85 transition-all duration-500 ease-[cubic-bezier(0.22,1,0.36,1)] ${
+              className={`mobile-menu-line block h-px transition-all duration-500 ease-[cubic-bezier(0.22,1,0.36,1)] ${
                 menuOpen
                   ? "w-8 translate-y-[7px] rotate-45"
                   : "w-8 translate-y-0 rotate-0"
@@ -266,13 +329,15 @@ export default function Navbar() {
             />
 
             <span
-              className={`block h-px bg-white/85 transition-all duration-500 ease-[cubic-bezier(0.22,1,0.36,1)] ${
-                menuOpen ? "w-0 opacity-0" : "w-6 opacity-100"
+              className={`mobile-menu-line block h-px transition-all duration-500 ease-[cubic-bezier(0.22,1,0.36,1)] ${
+                menuOpen
+                  ? "w-0 opacity-0"
+                  : "w-6 opacity-100"
               }`}
             />
 
             <span
-              className={`block h-px bg-white/85 transition-all duration-500 ease-[cubic-bezier(0.22,1,0.36,1)] ${
+              className={`mobile-menu-line block h-px transition-all duration-500 ease-[cubic-bezier(0.22,1,0.36,1)] ${
                 menuOpen
                   ? "w-8 -translate-y-[7px] -rotate-45"
                   : "w-8 translate-y-0 rotate-0"
@@ -283,16 +348,20 @@ export default function Navbar() {
       </header>
 
       <div
-        className={`theme-dark-surface fixed inset-0 z-40 bg-[#080b10] transition-[opacity,visibility] duration-500 ease-[cubic-bezier(0.22,1,0.36,1)] lg:hidden ${
+        id="mobile-navigation"
+        aria-hidden={!menuOpen}
+        {...navbarSurfaceData(mobileSurfaceState)}
+        className={`mobile-menu-surface fixed inset-0 z-40 overflow-y-auto overscroll-y-contain transition-[opacity,visibility] duration-500 ease-[cubic-bezier(0.22,1,0.36,1)] xl:hidden ${
           menuOpen
             ? "pointer-events-auto visible opacity-100"
             : "pointer-events-none invisible opacity-0"
         }`}
+        style={{
+          WebkitOverflowScrolling: "touch",
+        }}
       >
-        <div
-          className="flex min-h-screen flex-col px-6 pb-8 pt-[105px] font-sans sm:px-8"
-        >
-          <nav className="flex flex-col border-t border-white/12">
+        <div className="flex min-h-[100dvh] flex-col px-6 pb-[calc(2rem+env(safe-area-inset-bottom))] pt-[105px] font-sans sm:px-8 md:px-10">
+          <nav className="mobile-menu-border flex flex-col border-t">
             {navigationItems.map((item, index) => {
               const active = isActive(item.href);
 
@@ -302,25 +371,25 @@ export default function Navbar() {
                   href={getHref(item.href)}
                   scroll
                   onClick={() => setMenuOpen(false)}
-                  className="group flex items-center justify-between border-b border-white/12 py-7"
+                  className="mobile-menu-border group flex min-h-[108px] items-center justify-between border-b py-7 md:min-h-[120px]"
                 >
-                  <div className="flex items-center gap-5">
-                    <span className="text-[9px] font-normal tracking-[0.28em] text-white/28">
+                  <div className="flex min-w-0 items-center gap-5 md:gap-8">
+                    <span className="mobile-menu-muted shrink-0 text-[9px] font-normal tracking-[0.28em] md:text-[10px]">
                       {String(index + 1).padStart(2, "0")}
                     </span>
 
                     <span
-                      className={`text-[clamp(2.1rem,9vw,3.7rem)] font-normal leading-none tracking-[-0.025em] transition-[color,transform] duration-500 ease-[cubic-bezier(0.22,1,0.36,1)] ${
+                      className={`min-w-0 text-[clamp(2.1rem,9vw,3.7rem)] font-normal leading-none tracking-[-0.025em] transition-[color,transform,opacity] duration-500 ease-[cubic-bezier(0.22,1,0.36,1)] md:text-[clamp(3rem,7vw,5rem)] ${
                         active
-                          ? "text-white/92"
-                          : "text-white/58 group-hover:translate-x-2 group-hover:text-white/90"
+                          ? "opacity-95"
+                          : "opacity-60 group-hover:translate-x-2 group-hover:opacity-90"
                       }`}
                     >
                       {t(`items.${item.key}`)}
                     </span>
                   </div>
 
-                  <span className="text-xl text-white/30 transition-transform duration-500 ease-[cubic-bezier(0.22,1,0.36,1)] group-hover:translate-x-2">
+                  <span className="mobile-menu-muted ml-4 shrink-0 text-xl transition-transform duration-500 ease-[cubic-bezier(0.22,1,0.36,1)] group-hover:translate-x-2 md:text-2xl">
                     →
                   </span>
                 </Link>
@@ -328,45 +397,103 @@ export default function Navbar() {
             })}
           </nav>
 
-          <div className="mt-auto border-t border-white/12 pt-7">
-            <p className="text-[9px] font-normal uppercase tracking-[0.28em] text-white/28">
+          <div className="mobile-menu-border mt-10 border-t pt-7">
+            <p className="mobile-menu-muted text-[9px] font-normal uppercase tracking-[0.28em]">
               {t("socialMedia")}
             </p>
 
-            <div className="mt-5 flex flex-wrap items-center gap-8">
-              <ThemeToggle className="mr-1" />
-              <LanguageSwitcher
-                mobile
-                surfaceState={mobileSurfaceState}
-                onNavigate={() => setMenuOpen(false)}
-              />
+            <div className="mt-5 flex flex-col gap-6">
+              <div className="flex flex-wrap items-center gap-5 md:gap-8">
+                <ThemeToggle className="mr-1" />
 
-              <a
-                href={instagramUrl}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="text-[12px] font-normal uppercase tracking-[0.12em] text-white/55 transition-colors duration-500 hover:text-white/90"
-              >
-                Instagram
-              </a>
+                <a
+                  href={instagramUrl}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="mobile-menu-secondary text-[12px] font-normal uppercase tracking-[0.12em] transition-opacity duration-500 hover:opacity-100"
+                >
+                  Instagram
+                </a>
 
-              <a
-                href={linkedinUrl}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="text-[12px] font-normal uppercase tracking-[0.12em] text-white/55 transition-colors duration-500 hover:text-white/90"
-              >
-                LinkedIn
-              </a>
+                <a
+                  href={linkedinUrl}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="mobile-menu-secondary text-[12px] font-normal uppercase tracking-[0.12em] transition-opacity duration-500 hover:opacity-100"
+                >
+                  LinkedIn
+                </a>
+              </div>
+
+              <div className="relative z-[60] w-full">
+                <LanguageSwitcher
+                  mobile
+                  surfaceState={mobileSurfaceState}
+                  onNavigate={() => setMenuOpen(false)}
+                />
+              </div>
             </div>
 
-            <div className="mt-9 flex items-center justify-between text-[9px] font-normal uppercase tracking-[0.18em] text-white/22">
+            <div className="mobile-menu-muted mt-9 flex items-center justify-between text-[9px] font-normal uppercase tracking-[0.18em]">
               <span>{t("brand")}</span>
               <span>{t("city")}</span>
             </div>
           </div>
         </div>
       </div>
+
+      <style jsx global>{`
+        .mobile-menu-surface {
+          background: #f3f2ee;
+          color: #111318;
+        }
+
+        .mobile-menu-border {
+          border-color: rgba(17, 19, 24, 0.14);
+        }
+
+        .mobile-menu-muted {
+          color: rgba(17, 19, 24, 0.38);
+        }
+
+        .mobile-menu-secondary {
+          color: rgba(17, 19, 24, 0.62);
+        }
+
+        .mobile-menu-line {
+          background: rgba(255, 255, 255, 0.88);
+        }
+
+        html[data-theme="light"] .mobile-menu-line {
+          background: rgba(17, 19, 24, 0.85);
+        }
+
+        html[data-theme="dark"] .mobile-menu-surface,
+        html.dark .mobile-menu-surface {
+          background: #080b10;
+          color: rgba(255, 255, 255, 0.95);
+        }
+
+        html[data-theme="dark"] .mobile-menu-border,
+        html.dark .mobile-menu-border {
+          border-color: rgba(255, 255, 255, 0.12);
+        }
+
+        html[data-theme="dark"] .mobile-menu-muted,
+        html.dark .mobile-menu-muted {
+          color: rgba(255, 255, 255, 0.3);
+        }
+
+        html[data-theme="dark"] .mobile-menu-secondary,
+        html.dark .mobile-menu-secondary {
+          color: rgba(255, 255, 255, 0.58);
+        }
+
+        html[data-theme="dark"] .mobile-menu-line,
+        html.dark .mobile-menu-line {
+          background: rgba(255, 255, 255, 0.88);
+        }
+      `}</style>
     </>
   );
 }
