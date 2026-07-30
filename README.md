@@ -1,5 +1,38 @@
 This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
 
+## ARZ Studio Core: temel kurulum
+
+Studio, mevcut uygulama içinde `/studio` altında çalışır. Public site ve mevcut
+CMS oturum sistemi değişmeden kalır; Studio oturumları Supabase Auth çerezleri,
+JWT ve PostgreSQL RLS ile korunur.
+
+1. `.env.example` dosyasını `.env.local` olarak kopyalayın ve Studio
+   değişkenlerini doldurun.
+2. `supabase/migrations/001_studio_core_foundation.sql` dosyasını Supabase SQL
+   Editor veya mevcut migration aracınızla uygulayın.
+3. Supabase Authentication ayarlarında **public signup** özelliğini kapatın.
+4. Authentication yöntemi olarak email/password kullanın. İlk owner bootstrap
+   scripti kullanıcıyı doğrulanmış olarak oluşturur. İleride eklenecek davetli
+   kullanıcılar için email confirmation açık tutulması önerilir.
+5. Supabase Redirect URLs listesine geliştirme için
+   `http://localhost:3000/studio/auth/callback`, production için
+   `https://arzmimarlik.net/studio/auth/callback` adresini ekleyin.
+6. İlk organizasyonu ve owner hesabını yalnız sunucuda oluşturun:
+
+```bash
+npm run studio:bootstrap-owner
+```
+
+Bootstrap, sistemde aktif bir owner varsa veritabanı seviyesinde reddedilir.
+Komut tamamlandıktan sonra `STUDIO_OWNER_PASSWORD` değerini deployment
+ortamından kaldırın. Password reset arayüzü bu ilk dilime dahil değildir ve
+sonraki auth/davet aşamasına bırakılmıştır.
+
+Geri dönüş için önce bu sürümde oluşan Studio verilerini yedekleyin, ardından
+`supabase/migrations/001_studio_core_foundation.rollback.sql` dosyasını kontrollü
+olarak çalıştırın. Rollback yalnız yeni Studio tablolarını hedefler; CMS
+tablolarına dokunmaz.
+
 ## ZIP 3 proje migration ve merkezi çeviri düzeltmesi
 
 1. `.env.local` içinde `NEXT_PUBLIC_SUPABASE_URL` ve `SUPABASE_SERVICE_ROLE_KEY` değerlerini tanımlayın.
