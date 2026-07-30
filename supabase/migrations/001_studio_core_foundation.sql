@@ -165,8 +165,39 @@ drop policy if exists studio_members_select on public.organization_members;
 create policy studio_members_select on public.organization_members for select to authenticated using(public.studio_is_organization_member(organization_id));
 drop policy if exists studio_members_insert_admin on public.organization_members;
 create policy studio_members_insert_admin on public.organization_members for insert to authenticated with check(public.studio_has_organization_role(organization_id,array['owner']) or(public.studio_has_organization_role(organization_id,array['admin']) and role in('team_member','client')));
-drop policy if exists studio_members_update_admin on public.organization_members;
-create policy studio_members_update_admin on public.organization_members for update to authenticated using(public.studio_has_organization_role(organization_id,array['owner','admin'])) with check(public.studio_has_organization_role(organization_id,array['owner']) or(public.studio_has_organization_role(organization_id,array['admin']) and role in('team_member','client')));
+drop policy if exists studio_members_update_admin
+on public.organization_members;
+
+create policy studio_members_update_admin
+on public.organization_members
+for update
+to authenticated
+using (
+  public.studio_has_organization_role(
+    organization_id,
+    array['owner']
+  )
+  or (
+    public.studio_has_organization_role(
+      organization_id,
+      array['admin']
+    )
+    and role in ('team_member', 'client')
+  )
+)
+with check (
+  public.studio_has_organization_role(
+    organization_id,
+    array['owner']
+  )
+  or (
+    public.studio_has_organization_role(
+      organization_id,
+      array['admin']
+    )
+    and role in ('team_member', 'client')
+  )
+);
 drop policy if exists studio_members_delete_admin on public.organization_members;
 create policy studio_members_delete_admin on public.organization_members for delete to authenticated using(public.studio_has_organization_role(organization_id,array['owner']) or(public.studio_has_organization_role(organization_id,array['admin']) and role in('team_member','client')));
 drop policy if exists studio_activity_select on public.activity_events;
