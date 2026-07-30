@@ -7,17 +7,22 @@
     "build": "next build",
     "start": "next start",
     "lint": "eslint",
-    "migrate:projects": "node --experimental-strip-types scripts/migrate-projects-to-supabase.ts"
+    "migrate:projects": "node --experimental-strip-types scripts/migrate-projects-to-supabase.ts",
+    "studio:bootstrap-owner": "node --experimental-strip-types scripts/bootstrap-studio-owner.ts",
+    "test:studio": "node --test tests/studio/*.test.mjs"
   },
   "dependencies": {
     "@gsap/react": "^2.1.2",
     "@next/third-parties": "^16.2.12",
+    "@supabase/ssr": "^0.12.4",
+    "@supabase/supabase-js": "^2.111.0",
     "gsap": "^3.15.0",
     "next": "16.2.12",
     "next-intl": "^4.13.4",
     "react": "19.2.4",
     "react-dom": "19.2.4",
-    "resend": "^6.18.0"
+    "resend": "^6.18.0",
+    "zod": "^4.4.3"
   },
   "devDependencies": {
     "@tailwindcss/postcss": "^4",

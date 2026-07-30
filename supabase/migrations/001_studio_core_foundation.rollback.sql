@@ -1,0 +1,15 @@
+begin;
+drop function if exists public.studio_bootstrap_owner(uuid,text,text,text,text);
+drop function if exists public.studio_record_activity(uuid,text,uuid,text,text,jsonb);
+drop trigger if exists organization_members_protect_last_owner on public.organization_members;
+drop function if exists public.studio_protect_last_owner();
+drop function if exists public.studio_has_organization_role(uuid,text[]);
+drop function if exists public.studio_is_organization_member(uuid);
+drop table if exists public.activity_events;
+drop table if exists public.organization_members;
+drop table if exists public.organizations;
+drop table if exists public.profiles;
+drop function if exists public.studio_protect_profile_controlled_fields();
+drop function if exists public.studio_set_updated_at();
+notify pgrst,'reload schema';
+commit;
