@@ -1,5 +1,6 @@
 export const STUDIO_FILES_BUCKET="studio-files" as const;
-export const STUDIO_FILE_MAX_BYTES=6*1024*1024;
+export const STUDIO_FILE_MAX_BYTES=5*1024*1024*1024;
+export const STUDIO_FILE_LIMITS={image:250*1024*1024,document:250*1024*1024,drawing:2*1024*1024*1024,model:2*1024*1024*1024,render:2*1024*1024*1024,archive:2*1024*1024*1024,video:5*1024*1024*1024,general:250*1024*1024,spreadsheet:250*1024*1024,other:250*1024*1024} as const;
 export const STUDIO_FILE_SIGNED_URL_SECONDS=60;
 export const STUDIO_FILE_CATEGORIES=["general","drawing","model","document","image","render","video","archive","spreadsheet","other"] as const;
 export const STUDIO_FILE_EXTENSIONS=["skp","dwg","dxf","pdf","doc","docx","xls","xlsx","ppt","pptx","txt","csv","jpg","jpeg","png","webp","tif","tiff","psd","ifc","rvt","3dm","obj","fbx","glb","gltf","zip","rar","7z","mp4","mov","avi"] as const;
