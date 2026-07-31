@@ -1,6 +1,7 @@
 import Link from "next/link";
 import {LEAD_SERVICE_TYPES,LEAD_STAGES,LEAD_STATUSES} from "@/lib/studio/crm/lead-constants";
 import type {LeadQueryFilters,StudioLeadMember} from "@/lib/studio/crm/lead-types";
+import {studioButtonClass} from "@/components/studio/StudioButton";
 
 export default function StudioCrmFilters({filters,members}:{filters:LeadQueryFilters;members:StudioLeadMember[]}){
  const field="h-10 min-w-0 rounded-lg border border-[#dcd8cf] bg-white px-3 text-[10px] text-[#4f5657] outline-none focus:border-[#a58a56] focus:ring-2 focus:ring-[#a58a56]/15";
@@ -11,6 +12,6 @@ export default function StudioCrmFilters({filters,members}:{filters:LeadQueryFil
   <label><span className="sr-only">Hizmet tipi</span><select className={`${field} w-full`} name="serviceType" defaultValue={filters.serviceType??""}><option value="">Tüm hizmetler</option>{LEAD_SERVICE_TYPES.map(value=><option key={value}>{value}</option>)}</select></label>
   <label><span className="sr-only">Sorumlu</span><select className={`${field} w-full`} name="assignedUserId" defaultValue={filters.assignedUserId??""}><option value="">Tüm sorumlular</option>{members.map(member=><option key={member.id} value={member.id}>{member.name}</option>)}</select></label>
   <label><span className="sr-only">Arşiv görünümü</span><select className={`${field} w-full`} name="archive" defaultValue={filters.archive??"active"}><option value="active">Aktif Leadler</option><option value="archived">Arşiv</option><option value="all">Tümü</option></select></label>
-  <div className="flex gap-2 lg:col-span-5 lg:justify-end"><Link href="/studio/crm" className="grid h-10 place-items-center rounded-lg border border-[#dcd8cf] px-4 text-[10px] text-[#686d6a] outline-none hover:bg-[#f7f5f0] focus-visible:ring-2 focus-visible:ring-[#a58a56]/25">Temizle</Link><button className="h-10 rounded-lg bg-[#18222d] px-5 text-[10px] font-semibold text-white outline-none focus-visible:ring-2 focus-visible:ring-[#a58a56]/35">Filtrele</button></div>
+  <div className="flex flex-wrap gap-2 lg:col-span-5 lg:justify-end"><Link href="/studio/crm" className={studioButtonClass("outline", "sm")}>Temizle</Link><button className={studioButtonClass("primary", "sm")}>Filtrele</button></div>
  </form>;
 }

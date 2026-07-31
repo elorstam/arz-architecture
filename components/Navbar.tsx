@@ -95,7 +95,7 @@ export default function Navbar() {
   }, [menuOpen]);
 
   useEffect(() => {
-    setMenuOpen(false);
+    queueMicrotask(() => setMenuOpen(false));
   }, [pathname]);
 
   useEffect(() => {

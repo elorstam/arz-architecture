@@ -1,5 +1,6 @@
 "use client";
 
+import Image from "next/image";
 import Link from "next/link";
 import {usePathname} from "next/navigation";
 import {StudioIcon, type StudioIconName} from "@/components/studio/StudioIcons";
@@ -38,12 +39,12 @@ export default function StudioSidebar({open, onClose, organizationName, userName
         className={`fixed inset-y-0 left-0 z-50 flex w-[282px] flex-col border-r border-white/[.07] bg-[#111923] text-white shadow-2xl transition-transform duration-300 lg:translate-x-0 ${
           open ? "translate-x-0" : "-translate-x-full"
         }`}>
-        <div className="flex h-[82px] items-center justify-between border-b border-white/[.07] px-6">
-          <Link href="/studio" onClick={onClose} className="flex items-center gap-3">
-            <span className="grid h-9 w-9 place-items-center border border-[#bda16a]/60 text-[11px] font-semibold tracking-[.12em] text-[#d6bd87]">ARZ</span>
-            <span>
-              <span className="block text-[15px] font-semibold tracking-[.08em]">STUDIO</span>
-              <span className="mt-0.5 block max-w-[150px] truncate text-[9px] uppercase tracking-[.18em] text-white/35">{organizationName}</span>
+        <div className="flex min-h-[104px] items-center justify-between border-b border-white/[.07] px-6 py-4">
+          <Link href="/studio" onClick={onClose} aria-label="ARZ Studio dashboard" className="group flex min-w-0 items-center gap-3 rounded-md outline-none focus-visible:ring-2 focus-visible:ring-[#d4b777]/70">
+            <Image src="/arz-logo-final.png" alt="ARZ" width={1254} height={1254} priority className="h-12 w-12 shrink-0 object-contain transition-opacity group-hover:opacity-85" />
+            <span className="min-w-0 border-l border-white/15 pl-3">
+              <span className="block text-[13px] font-semibold tracking-[.18em] text-white">ARZ STUDIO</span>
+              <span className="mt-1 block max-w-[145px] truncate text-[9px] font-medium uppercase tracking-[.16em] text-white/45">{organizationName || "ARZ MİMARLIK"}</span>
             </span>
           </Link>
           <button type="button" onClick={onClose} aria-label="Menüyü kapat"
@@ -51,7 +52,7 @@ export default function StudioSidebar({open, onClose, organizationName, userName
             <StudioIcon name="close" className="h-5 w-5" />
           </button>
         </div>
-        <nav className="flex-1 overflow-y-auto px-4 py-6">
+        <nav className="flex-1 overflow-y-auto px-4 py-7">
           <p className="mb-2 px-3 text-[9px] font-semibold uppercase tracking-[.2em] text-white/25">Çalışma Alanı</p>
           {navigation.map((item) => (
             <div key={item.label}>
@@ -75,7 +76,7 @@ export default function StudioSidebar({open, onClose, organizationName, userName
                   className="group mb-1 flex h-11 w-full cursor-not-allowed items-center gap-3 rounded-lg px-3 text-left text-[13px] text-white/42">
                   <StudioIcon name={item.icon} className="h-[18px] w-[18px] text-white/38 group-hover:text-white/65" />
                   <span>{item.label}</span>
-                  <span className="ml-auto text-[7px] uppercase tracking-[.08em] text-white/20">Yakında</span>
+                  <span className="ml-auto rounded-full border border-white/10 bg-white/[.04] px-2 py-1 text-[7px] font-semibold uppercase tracking-[.08em] text-white/38">Yakında</span>
                 </button>
               )}
             </div>

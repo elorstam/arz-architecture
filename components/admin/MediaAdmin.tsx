@@ -50,7 +50,8 @@ export default function MediaAdmin() {
   }
 
   useEffect(() => {
-    void load();
+    const task = window.setTimeout(() => void load(), 0);
+    return () => window.clearTimeout(task);
   }, []);
 
   async function upload(file: File) {
@@ -78,7 +79,7 @@ export default function MediaAdmin() {
           body: JSON.stringify({url: item.url}),
         }),
       );
-      let nextAltTexts = {...item.altTexts, tr: generated.alt};
+      const nextAltTexts = {...item.altTexts, tr: generated.alt};
       setItems((current) =>
         current.map((value) =>
           value.id === item.id ? {...value, altTexts: nextAltTexts} : value,
@@ -101,10 +102,9 @@ export default function MediaAdmin() {
               .filter((locale) => data[locale]?.alt)
               .map((locale) => [locale, data[locale].alt]),
           );
-          nextAltTexts = {...nextAltTexts, ...translated};
           setItems((current) =>
             current.map((value) =>
-              value.id === item.id ? {...value, altTexts: nextAltTexts} : value,
+              value.id === item.id ? {...value, altTexts: {...value.altTexts, ...translated}} : value,
             ),
           );
         } catch {

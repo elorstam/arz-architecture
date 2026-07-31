@@ -5,6 +5,7 @@ import {useActionState} from "react";
 
 import {PROJECT_STAGES,PROJECT_STATUSES} from "@/lib/studio/projects/project-constants";
 import type {ProjectFormState,ProjectFormValues,StudioProjectMember} from "@/lib/studio/projects/project-types";
+import {StudioPendingLabel,studioButtonClass} from "@/components/studio/StudioButton";
 
 type Action=(state:ProjectFormState,formData:FormData)=>Promise<ProjectFormState>;
 const emptyValues:ProjectFormValues={name:"",code:"",category:"",location:"",projectYear:String(new Date().getFullYear()),
@@ -59,8 +60,8 @@ export default function StudioProjectForm({action,initialValues,members,mode,pro
    <div className="mt-5 grid gap-5 lg:grid-cols-2"><TextArea name="summary" label="Proje Özeti" state={state}/><TextArea name="currentPhase" label="Mevcut Faz Açıklaması" state={state}/><Field name="nextMilestone" label="Sonraki Kilometre Taşı" state={state}/><Field name="nextMilestoneDate" label="Kilometre Taşı Tarihi" state={state} type="date"/></div>
   </section>
   <div className="flex flex-col-reverse gap-3 border-t border-[#dcd7cd] pt-5 sm:flex-row sm:justify-end">
-   <Link href={projectId?`/studio/projects/${projectId}`:"/studio/projects"} className="grid h-11 place-items-center rounded-lg border border-[#d5d0c6] px-5 text-[10px] font-medium text-[#646967] outline-none hover:bg-white focus-visible:ring-2 focus-visible:ring-[#9e8452]/30">Vazgeç</Link>
-   <button type="submit" disabled={pending} className="h-11 rounded-lg bg-[#18222d] px-6 text-[10px] font-semibold text-white outline-none disabled:cursor-wait disabled:opacity-60 focus-visible:ring-2 focus-visible:ring-[#9e8452]/40">{pending?(mode==="create"?"Proje Oluşturuluyor...":"Değişiklikler Kaydediliyor..."):(mode==="create"?"Proje Oluştur":"Değişiklikleri Kaydet")}</button>
+   <Link href={projectId?`/studio/projects/${projectId}`:"/studio/projects"} className={studioButtonClass("outline")}>Vazgeç</Link>
+   <button type="submit" disabled={pending} aria-busy={pending} className={studioButtonClass("primary")}><StudioPendingLabel pending={pending} pendingLabel={mode==="create"?"Proje Oluşturuluyor...":"Değişiklikler Kaydediliyor..."}>{mode==="create"?"Proje Oluştur":"Değişiklikleri Kaydet"}</StudioPendingLabel></button>
   </div>
  </form>;
 }

@@ -75,7 +75,8 @@ export default function BlogAdmin() {
   }
 
   useEffect(() => {
-    void load();
+    const task = window.setTimeout(() => void load(), 0);
+    return () => window.clearTimeout(task);
   }, []);
 
   const translation = post?.translations[language] || blankTranslation();

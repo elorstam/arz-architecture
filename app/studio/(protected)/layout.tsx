@@ -1,10 +1,21 @@
 import {redirect} from "next/navigation";
+import localFont from "next/font/local";
 
 import StudioShell from "@/components/studio/StudioShell";
 import {getStudioContext, type StudioRole} from "@/lib/studio/auth/get-studio-context";
 import {createStudioServerClient} from "@/lib/studio/supabase/server";
 
 export const dynamic = "force-dynamic";
+
+const studioFont = localFont({
+  src: [
+    {path: "../../../public/fonts/CenturyGothic.woff2", weight: "400", style: "normal"},
+    {path: "../../../public/fonts/CenturyGothic.woff", weight: "600", style: "normal"},
+  ],
+  display: "swap",
+  fallback: ["Arial", "Helvetica", "sans-serif"],
+  variable: "--font-studio",
+});
 
 const roleLabels: Record<StudioRole, string> = {
   owner: "Studio Sahibi",
@@ -44,6 +55,7 @@ export default async function StudioProtectedLayout({children}: {children: React
   const userName = profile?.full_name || context.user.email || "ARZ Studio Kullanıcısı";
 
   return (
+    <div className={`${studioFont.variable} ${studioFont.className}`}>
     <StudioShell
       organizationName={organization?.name || "ARZ Mimarlık"}
       userName={userName}
@@ -51,5 +63,6 @@ export default async function StudioProtectedLayout({children}: {children: React
     >
       {children}
     </StudioShell>
+    </div>
   );
 }

@@ -1,6 +1,7 @@
 import {StudioIcon} from "@/components/studio/StudioIcons";
 import {projectStages, projectStatuses} from "@/components/studio/projects/StudioProjectData";
 import type {ProjectArchiveFilter} from "@/lib/studio/projects/project-types";
+import {studioButtonClass} from "@/components/studio/StudioButton";
 
 export type ProjectFilters = {query?: string; status?: string; stage?: string;archive?:ProjectArchiveFilter};
 
@@ -28,7 +29,7 @@ export default function StudioProjectsFilters({filters}: {filters: ProjectFilter
           {projectStages.map((stage) => <option key={stage} value={stage}>{stage}</option>)}
         </select>
       </label>
-      <button type="submit" className="h-10 rounded-lg border border-[#26323c] bg-[#26323c] px-4 text-[10px] font-medium text-white outline-none transition-colors hover:bg-[#1b252e] focus-visible:ring-2 focus-visible:ring-[#9e8452]/35">Filtrele</button>
+      <button type="submit" className={studioButtonClass("primary", "sm")}>Filtrele</button>
     </form>
   );
 }

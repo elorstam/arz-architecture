@@ -3,6 +3,7 @@ import StudioProjectCard from "@/components/studio/projects/StudioProjectCard";
 import type {StudioProject} from "@/components/studio/projects/StudioProjectData";
 import StudioProjectsHeader from "@/components/studio/projects/StudioProjectsHeader";
 import StudioProjectsFilters, {type ProjectFilters} from "@/components/studio/projects/StudioProjectsFilters";
+import {studioButtonClass} from "@/components/studio/StudioButton";
 
 export default function StudioProjectsPage({projects, totalCount, filters,canManage}: {
   projects: StudioProject[];
@@ -26,7 +27,7 @@ export default function StudioProjectsPage({projects, totalCount, filters,canMan
         <div className="mt-3 rounded-xl border border-dashed border-[#d7d1c6] bg-white/55 px-6 py-16 text-center">
           <h2 className="text-[16px] font-semibold text-[#3f474c]">{totalCount===0?"Henüz bir proje oluşturulmadı.":"Eşleşen proje bulunamadı"}</h2>
           <p className="mx-auto mt-2 max-w-md text-[10px] leading-5 text-[#92938e]">{totalCount===0?"İlk projenizi oluşturarak proje süreçlerini ARZ Studio üzerinden takip etmeye başlayın.":"Arama ifadesini veya filtreleri değiştirerek yeniden deneyin."}</p>
-          {totalCount===0&&canManage?<Link href="/studio/projects/new" className="mt-5 inline-flex h-10 items-center rounded-lg bg-[#18222d] px-5 text-[10px] font-medium text-white">İlk Projeyi Oluştur</Link>:null}
+          {totalCount===0&&canManage?<Link href="/studio/projects/new" className={studioButtonClass("primary", "md", "mt-5")}>İlk Projeyi Oluştur</Link>:null}
         </div>
       )}
     </section>

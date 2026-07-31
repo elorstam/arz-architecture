@@ -329,6 +329,60 @@ html[data-theme="light"] .language-switcher-trigger {
   border-color: rgb(20 20 18 / .18);
 }
 
+/* ARZ Studio visual system --------------------------------------------- */
+.studio-root {
+  --studio-bg: #f3f1ec;
+  --studio-surface: #fff;
+  --studio-surface-soft: #faf8f4;
+  --studio-text: #222b31;
+  --studio-text-muted: #68706f;
+  --studio-border: #ddd8ce;
+  --studio-border-strong: #cbc3b5;
+  --studio-gold: #9b7f4d;
+  --studio-danger: #8b5141;
+  min-width: 0;
+  color-scheme: light;
+  background: var(--studio-bg);
+  color: var(--studio-text);
+  font-family: var(--font-studio), Arial, Helvetica, sans-serif;
+  font-variant-numeric: tabular-nums;
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+}
+.studio-root :where(button, a, input, select, textarea):focus-visible { outline: 2px solid #b89a62; outline-offset: 2px; }
+.studio-root :where(input, select, textarea) { color: var(--studio-text); font: inherit; }
+.studio-root :where(input, select, textarea)::placeholder { color: #8e918d; opacity: 1; }
+.studio-root :where(input, select, textarea):disabled { cursor: not-allowed; background: #eeece7; color: #777b78; opacity: 1; }
+.studio-root :where(input, select, textarea)[aria-invalid="true"] { border-color: #b46c57 !important; box-shadow: 0 0 0 3px rgb(180 108 87 / .12); }
+.studio-root :where(section, article, aside, form) { min-width: 0; }
+.studio-root :where(h1, h2, h3, p) { text-wrap: pretty; }
+.studio-root a[target="_blank"] { border-color:var(--studio-border-strong); background:#fff; color:#424c51; }
+.studio-root a[target="_blank"]:hover { border-color:#a99d88; background:#faf8f4; color:#202a30; }
+
+.studio-button { display:inline-flex; flex-shrink:0; align-items:center; justify-content:center; gap:.5rem; border:1px solid transparent; border-radius:.625rem; font-size:.75rem; font-weight:650; line-height:1; letter-spacing:.005em; white-space:nowrap; transition:border-color 160ms ease,background-color 160ms ease,color 160ms ease,box-shadow 160ms ease,transform 160ms ease; }
+.studio-button--sm { min-height:2.5rem; padding:.625rem 1rem; }
+.studio-button--md { min-height:2.75rem; padding:.75rem 1.25rem; }
+.studio-button--primary { background:#17232e; color:#fff; box-shadow:0 6px 18px rgb(23 35 46/.14); }
+.studio-button--primary:hover { background:#22313d; transform:translateY(-1px); }
+.studio-button--secondary { border-color:#d5c7a9; background:#f7f1e6; color:#655333; }
+.studio-button--secondary:hover { border-color:#bca574; background:#f1e7d5; }
+.studio-button--outline { border-color:var(--studio-border-strong); background:#fff; color:#424c51; }
+.studio-button--outline:hover { border-color:#a99d88; background:#faf8f4; color:#202a30; }
+.studio-button--ghost { background:transparent; color:#596164; }
+.studio-button--ghost:hover { background:rgb(23 35 46/.055); color:#202a30; }
+.studio-button--danger { border-color:#dcc7be; background:#fff; color:var(--studio-danger); }
+.studio-button--danger:hover { border-color:#bd8c7a; background:#faf1ed; }
+.studio-button--destructive { background:#884b3c; color:#fff; }
+.studio-button--destructive:hover { background:#733d31; }
+.studio-button--icon { width:2.75rem; min-height:2.75rem; padding:0; border-color:var(--studio-border); background:#fff; color:#475157; }
+.studio-button--icon:hover { border-color:var(--studio-border-strong); background:#faf8f4; color:#1e282e; }
+.studio-button:active:not(:disabled) { transform:translateY(0); box-shadow:none; }
+.studio-button:disabled,.studio-button[aria-disabled="true"] { cursor:not-allowed; transform:none; box-shadow:none; opacity:.52; }
+.studio-button__spinner { width:.875rem; height:.875rem; flex:none; border:2px solid currentColor; border-right-color:transparent; border-radius:999px; animation:studio-spin .7s linear infinite; }
+@keyframes studio-spin { to { transform:rotate(360deg); } }
+@media (max-width:639px) { .studio-root .studio-button { max-width:100%; } .studio-root input,.studio-root select,.studio-root textarea { font-size:1rem; } }
+@media (prefers-reduced-motion:reduce) { .studio-button { transition:none; } .studio-button__spinner { animation-duration:1.4s; } }
+
 html[data-theme="light"] .site-header[data-overlay="true"] .language-switcher-menu {
   background: rgb(244 243 239 / .98) !important;
 }

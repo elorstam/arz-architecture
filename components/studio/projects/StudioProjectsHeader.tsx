@@ -1,5 +1,6 @@
 import {StudioIcon} from "@/components/studio/StudioIcons";
 import Link from "next/link";
+import {studioButtonClass} from "@/components/studio/StudioButton";
 
 export default function StudioProjectsHeader({count,canManage}: {count: number;canManage:boolean}) {
   return (
@@ -9,7 +10,7 @@ export default function StudioProjectsHeader({count,canManage}: {count: number;c
         <h1 className="mt-2.5 text-[28px] font-semibold tracking-[-.04em] text-[#1e272f] sm:text-[32px]">Projeler</h1>
         <p className="mt-2 max-w-2xl text-[12px] leading-5 text-[#747875]">Tasarım kararlarını, proje aşamalarını ve yaklaşan teslimleri tek bir çalışma görünümünde izleyin.</p>
       </div>
-      {canManage?<Link href="/studio/projects/new" className="flex h-10 w-fit items-center gap-2 rounded-lg bg-[#18222d] px-4 text-[11px] font-medium text-white outline-none hover:bg-[#222e3a] focus-visible:ring-2 focus-visible:ring-[#9e8452]/40"><StudioIcon name="plus" className="h-4 w-4 text-[#d6bd87]"/>Yeni Proje</Link>:null}
+      {canManage?<Link href="/studio/projects/new" className={studioButtonClass("primary")}><StudioIcon name="plus" className="h-4 w-4 text-[#d6bd87]"/>Yeni Proje</Link>:null}
     </header>
   );
 }
