@@ -16,4 +16,8 @@ alter table public.studio_project_folders drop column if exists sync_status;
 alter table public.studio_project_folders drop column if exists external_parent_folder_id;
 alter table public.studio_project_folders drop column if exists external_folder_id;
 alter table public.studio_project_folders drop column if exists storage_provider;
+alter table public.studio_projects drop column if exists storage_last_synced_at;
+alter table public.studio_projects drop column if exists storage_sync_status;
+alter table public.studio_projects drop column if exists external_project_folder_id;
+alter table public.studio_projects drop column if exists storage_provider;
 commit;

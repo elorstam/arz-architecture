@@ -5,6 +5,8 @@ import {z} from "zod";
 import {StudioFileError} from "@/lib/studio/files/file-errors";
 import {createStudioProjectFolder,finalizeStudioProjectFile,markStudioProjectFileFailed,moveStudioProjectFolder,renameStudioProjectFolder,reserveStudioProjectFile,setStudioProjectFileArchived,setStudioProjectFolderArchived,updateStudioProjectFileMetadata} from "@/lib/studio/files/file-repository";
 import {fileMetadataSchema,folderSchema,validateUploadFile} from "@/lib/studio/files/file-validation";
+import {initializeStudioProjectDriveStorage} from "@/lib/studio/files/storage/google-drive-mapping";
+export async function initializeProjectDriveStorageAction(projectId:string){await initializeStudioProjectDriveStorage(projectId);revalidatePath(`/studio/projects/${projectId}/files`);}
 type State={success:boolean;message?:string};
 function message(error:unknown){return error instanceof StudioFileError?error.message:"Dosya işlemi tamamlanamadı. Lütfen yeniden deneyin.";}
 export async function createFolderAction(projectId:string,_state:State,formData:FormData):Promise<State>{const parsed=folderSchema.safeParse({name:String(formData.get("name")??""),parentFolderId:String(formData.get("parentFolderId")??"")});if(!parsed.success)return{success:false,message:z.flattenError(parsed.error).formErrors[0]??Object.values(z.flattenError(parsed.error).fieldErrors)[0]?.[0]};try{await createStudioProjectFolder(projectId,parsed.data);revalidatePath(`/studio/projects/${projectId}/files`);return{success:true,message:"Klasör oluşturuldu."};}catch(error){return{success:false,message:message(error)};}}

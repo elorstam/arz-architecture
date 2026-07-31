@@ -7,6 +7,11 @@ alter table public.studio_project_folders add column if not exists external_fold
 alter table public.studio_project_folders add column if not exists external_parent_folder_id text;
 alter table public.studio_project_folders add column if not exists sync_status text not null default 'pending' check(sync_status in ('pending','synced','error'));
 alter table public.studio_project_folders add column if not exists last_synced_at timestamptz;
+alter table public.studio_projects add column if not exists storage_provider text not null default 'supabase' check(storage_provider in ('supabase','google_drive'));
+alter table public.studio_projects add column if not exists external_project_folder_id text;
+alter table public.studio_projects add column if not exists storage_sync_status text not null default 'pending' check(storage_sync_status in ('pending','synced','error'));
+alter table public.studio_projects add column if not exists storage_last_synced_at timestamptz;
+alter table public.studio_storage_connections add column if not exists projects_folder_id text;
 alter table public.studio_project_files add column if not exists storage_provider text not null default 'supabase' check(storage_provider in ('supabase','google_drive'));
 alter table public.studio_project_files add column if not exists external_file_id text;
 alter table public.studio_project_files add column if not exists external_parent_folder_id text;
@@ -18,6 +23,7 @@ alter table public.studio_project_files add column if not exists last_synced_at 
 create index if not exists studio_storage_connections_org_idx on public.studio_storage_connections(organization_id,status);
 create index if not exists studio_project_files_provider_idx on public.studio_project_files(organization_id,storage_provider,external_file_id);
 create index if not exists studio_project_folders_provider_idx on public.studio_project_folders(organization_id,storage_provider,external_folder_id);
+create index if not exists studio_projects_provider_idx on public.studio_projects(organization_id,storage_provider,external_project_folder_id);
 alter table public.studio_storage_connections enable row level security;
 create policy studio_storage_connection_read on public.studio_storage_connections for select to authenticated using(public.studio_is_organization_member(organization_id));
 create policy studio_storage_connection_owner_write on public.studio_storage_connections for insert to authenticated with check(public.studio_has_organization_role(organization_id,array['owner']) and created_by=auth.uid());
