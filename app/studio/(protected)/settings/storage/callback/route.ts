@@ -1,0 +1,4 @@
+import {NextResponse} from "next/server";
+import {cookies} from "next/headers";
+import {saveGoogleConnection} from "../actions";
+export async function GET(request:Request){const url=new URL(request.url);const state=url.searchParams.get("state");const code=url.searchParams.get("code");const jar=await cookies();const expected=jar.get("studio_google_oauth_state")?.value;jar.delete("studio_google_oauth_state");if(!state||!expected||state!==expected)return new NextResponse("Yetkilendirme isteği geçersiz.",{status:400});if(!code)return new NextResponse("Google yetkilendirmesi başarısız.",{status:400});try{await saveGoogleConnection(code);return NextResponse.redirect(new URL("/studio/settings/storage",request.url));}catch{return NextResponse.redirect(new URL("/studio/settings/storage?error=google_connection",request.url));}}
