@@ -1,0 +1,6 @@
+import {getStudioContext} from "@/lib/studio/auth/get-studio-context";
+import {generateQuotePdf,quotePdfFileName} from "@/lib/studio/quotes/quote-pdf";
+import {getStudioQuote} from "@/lib/studio/quotes/quote-repository";
+export const runtime="nodejs";export const dynamic="force-dynamic";
+export async function GET(_request:Request,{params}:{params:Promise<{quoteId:string}>}){const{quoteId}=await params;const[quote,context]=await Promise.all([getStudioQuote(quoteId),getStudioContext()]);if(!quote||!context?.membership)return new Response("Bulunamadı",{status:404,headers:{"Cache-Control":"private, no-store"}});
+ const organization=Array.isArray(context.membership.organizations)?context.membership.organizations[0]:context.membership.organizations;try{const pdf=await generateQuotePdf(quote,organization?.name||"ARZ Mimarlık");return new Response(new Uint8Array(pdf),{headers:{"Content-Type":"application/pdf","Content-Disposition":`inline; filename="${quotePdfFileName(quote.quoteNumber)}"`,"Cache-Control":"private, no-store","X-Content-Type-Options":"nosniff"}});}catch(error){console.error("Quote PDF generation failed.",error);return new Response("PDF oluşturulamadı.",{status:500,headers:{"Cache-Control":"private, no-store"}});}}

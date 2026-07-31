@@ -25,9 +25,10 @@ const schema=z.object({
   STUDIO_ORGANIZATION_NAME:z.string().min(2),
   STUDIO_ORGANIZATION_SLUG:z.string().regex(/^[a-z0-9]+(?:-[a-z0-9]+)*$/),
 });
-const parsed=schema.safeParse(process.env);
-if(!parsed.success){
-  console.error("Studio bootstrap environment is invalid:",parsed.error.issues.map(issue=>issue.path.join(".")).join(", "));
+const parsed = schema.safeParse(process.env);
+
+if (!parsed.success) {
+  console.log(parsed.error.issues);
   process.exit(1);
 }
 const env=parsed.data;
@@ -44,19 +45,69 @@ async function findUserByEmail(email:string){
   throw new Error("Owner search exceeded the safe page limit.");
 }
 
-async function main(){
-  let user=await findUserByEmail(env.STUDIO_OWNER_EMAIL);
-  let created=false;
-  if(!user){
-    const{data,error}=await supabase.auth.admin.createUser({email:env.STUDIO_OWNER_EMAIL,password:env.STUDIO_OWNER_PASSWORD,email_confirm:true,user_metadata:{full_name:env.STUDIO_OWNER_FULL_NAME}});
-    if(error||!data.user)throw error||new Error("Owner auth user could not be created.");
-    user=data.user;created=true;
+async function main() {
+  let user = await findUserByEmail(env.STUDIO_OWNER_EMAIL);
+  let created = false;
+
+  if (!user) {
+    const { data, error } = await supabase.auth.admin.createUser({
+      email: env.STUDIO_OWNER_EMAIL,
+      password: env.STUDIO_OWNER_PASSWORD,
+      email_confirm: true,
+      user_metadata: {
+        full_name: env.STUDIO_OWNER_FULL_NAME,
+      },
+    });
+
+    if (error || !data.user) {
+      throw error || new Error("Owner auth user could not be created.");
+    }
+
+    user = data.user;
+    created = true;
+  } else {
+    const { data, error } = await supabase.auth.admin.updateUserById(user.id, {
+      password: env.STUDIO_OWNER_PASSWORD,
+      user_metadata: {
+        full_name: env.STUDIO_OWNER_FULL_NAME,
+      },
+    });
+
+    if (error || !data.user) {
+      throw error || new Error("Owner password could not be updated.");
+    }
+
+    user = data.user;
   }
-  const{data:organizationId,error}=await supabase.rpc("studio_bootstrap_owner",{owner_user_id:user.id,owner_email:env.STUDIO_OWNER_EMAIL,owner_full_name:env.STUDIO_OWNER_FULL_NAME,organization_name:env.STUDIO_ORGANIZATION_NAME,organization_slug:env.STUDIO_ORGANIZATION_SLUG});
-  if(error){
-    if(created)await supabase.auth.admin.deleteUser(user.id).catch(()=>null);
+
+  const { data: organizationId, error } = await supabase.rpc(
+    "studio_bootstrap_owner",
+    {
+      owner_user_id: user.id,
+      owner_email: env.STUDIO_OWNER_EMAIL,
+      owner_full_name: env.STUDIO_OWNER_FULL_NAME,
+      organization_name: env.STUDIO_ORGANIZATION_NAME,
+      organization_slug: env.STUDIO_ORGANIZATION_SLUG,
+    },
+  );
+
+  if (error) {
+    if (created) {
+      await supabase.auth.admin.deleteUser(user.id).catch(() => null);
+    }
+
     throw error;
   }
-  console.log(`Studio owner bootstrap completed. Organization: ${organizationId}`);
+
+  console.log(
+    `Studio owner bootstrap completed. Organization: ${organizationId}`,
+  );
 }
-main().catch(error=>{console.error("Studio owner bootstrap failed:",error instanceof Error?error.message:error);process.exit(1);});
+
+main().catch((error) => {
+  console.error(
+    "Studio owner bootstrap failed:",
+    error instanceof Error ? error.message : error,
+  );
+  process.exit(1);
+});

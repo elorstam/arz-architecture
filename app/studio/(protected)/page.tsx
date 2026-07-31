@@ -1,3 +1,37 @@
-import{redirect}from"next/navigation";import{getStudioContext}from"@/lib/studio/auth/get-studio-context";
-export const dynamic="force-dynamic";
-export default async function StudioDashboardPage(){const context=await getStudioContext();if(!context?.membership)redirect("/studio/login");const organization=Array.isArray(context.membership.organizations)?context.membership.organizations[0]:context.membership.organizations;const profile=Array.isArray(context.membership.profiles)?context.membership.profiles[0]:context.membership.profiles;return <section className="mx-auto max-w-7xl px-6 py-14"><p className="text-[10px] uppercase tracking-[.28em] text-white/35">Temel dashboard</p><h1 className="mt-5 text-[clamp(2.8rem,7vw,6rem)] font-light tracking-[-.055em]">Hoş geldiniz.</h1><div className="mt-12 grid gap-4 md:grid-cols-3"><article className="border border-white/12 p-6"><p className="text-xs text-white/40">Organizasyon</p><p className="mt-3 text-xl">{organization?.name||"—"}</p></article><article className="border border-white/12 p-6"><p className="text-xs text-white/40">Kullanıcı</p><p className="mt-3 text-xl">{profile?.full_name||context.user.email||"—"}</p></article><article className="border border-white/12 p-6"><p className="text-xs text-white/40">Rol</p><p className="mt-3 text-xl">{context.membership.role}</p></article></div><div className="mt-10 border border-dashed border-white/15 p-8 text-sm leading-7 text-white/45">Studio temeli hazır. Firma, müşteri, operasyonel proje ve portal modülleri sonraki aşamalarda eklenecek.</div></section>}
+import {redirect} from "next/navigation";
+
+import StudioDashboard from "@/components/studio/StudioDashboard";
+import {getStudioContext} from "@/lib/studio/auth/get-studio-context";
+import {getStudioLeadSummary} from "@/lib/studio/crm/lead-repository";
+import {getStudioQuoteSummary} from "@/lib/studio/quotes/quote-repository";
+
+export const dynamic = "force-dynamic";
+
+export default async function StudioDashboardPage() {
+  const [context, crmSummary, quoteSummary] = await Promise.all([getStudioContext(), getStudioLeadSummary(), getStudioQuoteSummary()]);
+  if (!context?.membership) redirect("/studio/login");
+
+  const organization = Array.isArray(context.membership.organizations)
+    ? context.membership.organizations[0]
+    : context.membership.organizations;
+  const profile = Array.isArray(context.membership.profiles)
+    ? context.membership.profiles[0]
+    : context.membership.profiles;
+  const dateLabel = new Intl.DateTimeFormat("tr-TR", {
+    weekday: "long",
+    day: "numeric",
+    month: "long",
+    year: "numeric",
+    timeZone: "Europe/Istanbul",
+  }).format(new Date());
+
+  return (
+    <StudioDashboard
+      userName={profile?.full_name || context.user.email || "ARZ Studio Kullanıcısı"}
+      organizationName={organization?.name || "ARZ Mimarlık"}
+      dateLabel={dateLabel}
+      crmSummary={crmSummary}
+      quoteSummary={quoteSummary}
+    />
+  );
+}

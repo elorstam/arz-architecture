@@ -1,0 +1,24 @@
+import {QUOTE_CURRENCIES,QUOTE_DISCOUNT_TYPES,QUOTE_STATUSES,QUOTE_UNITS} from "./quote-constants.ts";
+export type QuoteStatus=(typeof QUOTE_STATUSES)[number];
+export type QuoteCurrency=(typeof QUOTE_CURRENCIES)[number];
+export type QuoteDiscountType=(typeof QUOTE_DISCOUNT_TYPES)[number];
+export type QuoteUnit=(typeof QUOTE_UNITS)[number];
+export type QuoteArchiveFilter="active"|"archived"|"all";
+export type StudioQuoteItem={id:string;sortOrder:number;serviceName:string;description:string;quantity:string;unit:QuoteUnit;unitPrice:string;lineTotal:string};
+export type StudioQuoteLead={id:string;name:string;company:string;email:string;phone:string;city:string;district:string;isArchived:boolean;assignedUserId:string};
+export type StudioQuoteProject={id:string;name:string;code:string}|null;
+export type StudioQuote={
+ id:string;leadId:string;quoteNumber:string;title:string;status:QuoteStatus;currency:QuoteCurrency;
+ subtotal:string;discountType:QuoteDiscountType;discountValue:string;discountTotal:string;taxRate:string;taxTotal:string;grandTotal:string;
+ validUntil:string;validUntilLabel:string;notes:string;paymentTerms:string;client:Omit<StudioQuoteLead,"id"|"isArchived"|"assignedUserId">;
+ items:StudioQuoteItem[];isArchived:boolean;sentAt:string;approvedAt:string;createdAt:string;updatedAt:string;
+ createdAtLabel:string;updatedAtLabel:string;project:StudioQuoteProject;canManage:boolean;isPastValidity:boolean;
+};
+export type StudioQuoteInput={leadId:string;title:string;currency:QuoteCurrency;discountType:QuoteDiscountType;discountValue:string;taxRate:string;validUntil:string;notes:string;paymentTerms:string;items:Array<Omit<StudioQuoteItem,"id"|"sortOrder"|"lineTotal">>};
+export type QuoteFormValues={leadId:string;title:string;currency:string;discountType:string;discountValue:string;taxRate:string;validUntil:string;notes:string;paymentTerms:string;items:string};
+export type QuoteFormState={success:boolean;message?:string;fieldErrors?:Partial<Record<keyof QuoteFormValues,string[]>>;values?:QuoteFormValues};
+export type QuoteQueryFilters={query?:string;status?:QuoteStatus;currency?:QuoteCurrency;leadId?:string;archive?:QuoteArchiveFilter;createdFrom?:string;createdTo?:string;validFrom?:string;validTo?:string};
+export type QuoteTotals={subtotal:string;discountTotal:string;taxTotal:string;grandTotal:string;lineTotals:string[]};
+export type StudioQuoteSummary={draft:number;sent:number;awaitingApproval:number;approved:number;approvedThisMonth:Record<QuoteCurrency,string>};
+export type QuoteConversionInput={name:string;code:string;category:string;stage:string;status:string;progress:number;startDate:string;targetDate:string;currentPhase:string;responsibleUserId:string};
+export type QuoteConversionState={success:boolean;message?:string;fieldErrors?:Record<string,string[]>};

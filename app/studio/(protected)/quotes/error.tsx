@@ -1,0 +1,2 @@
+"use client";
+export default function QuotesError({unstable_retry}:{error:Error&{digest?:string};unstable_retry:()=>void}){return <section className="mx-auto max-w-xl px-4 py-20 text-center"><h1 className="text-[20px] font-semibold text-[#293238]">Teklif alanı yüklenemedi.</h1><p className="mt-3 text-[10px] text-[#777b78]">Teknik ayrıntılar paylaşılmadan güvenli biçimde durduruldu.</p><button type="button" onClick={unstable_retry} className="mt-6 h-10 rounded-lg bg-[#18222d] px-5 text-[10px] font-semibold text-white">Yeniden Dene</button></section>;}

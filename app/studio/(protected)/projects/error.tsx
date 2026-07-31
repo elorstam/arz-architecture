@@ -1,0 +1,4 @@
+"use client";
+export default function ProjectsError({unstable_retry}:{error:Error&{digest?:string};unstable_retry:()=>void}){
+ return <section className="mx-auto max-w-2xl px-4 py-16 text-center"><p className="text-[9px] uppercase tracking-[.16em] text-[#9a8253]">Studio Projeler</p><h1 className="mt-3 text-[22px] font-semibold text-[#283138]">Projeler şu anda yüklenemiyor.</h1><p className="mt-3 text-[11px] leading-5 text-[#777b78]">Bağlantıyı kontrol edip yeniden deneyin. Sorun devam ederse Studio yöneticinize başvurun.</p><button type="button" onClick={unstable_retry} className="mt-6 h-10 rounded-lg bg-[#18222d] px-5 text-[10px] font-medium text-white outline-none focus-visible:ring-2 focus-visible:ring-[#9e8452]/40">Yeniden Dene</button></section>;
+}

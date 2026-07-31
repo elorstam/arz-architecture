@@ -1,0 +1,4 @@
+import Link from "next/link";
+export default function StudioLeadEmptyState({filtered,canManage}:{filtered:boolean;canManage:boolean}){
+ return <div className="mt-5 rounded-xl border border-dashed border-[#d3cbbc] bg-white/60 px-6 py-16 text-center"><p className="text-[10px] font-semibold uppercase tracking-[.15em] text-[#9a8253]">CRM</p><h2 className="mt-3 text-[18px] font-semibold text-[#2c353b]">{filtered?"Bu filtrelere uygun lead bulunamadı.":"Henüz CRM kaydı bulunmuyor."}</h2>{!filtered?<p className="mx-auto mt-3 max-w-md text-[10px] leading-5 text-[#777b78]">İlk müşterinizi oluşturarak satış sürecini ARZ Studio üzerinden yönetmeye başlayın.</p>:null}{canManage&&!filtered?<Link href="/studio/crm/new" className="mt-6 inline-grid h-11 place-items-center rounded-lg bg-[#18222d] px-5 text-[10px] font-semibold text-white outline-none focus-visible:ring-2 focus-visible:ring-[#a58a56]/35">İlk Lead’i Oluştur</Link>:null}</div>;
+}
