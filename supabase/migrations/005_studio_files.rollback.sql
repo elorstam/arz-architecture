@@ -1,0 +1,12 @@
+begin;
+drop policy if exists studio_files_storage_cleanup on storage.objects;
+drop policy if exists studio_files_storage_insert on storage.objects;
+drop policy if exists studio_files_storage_select on storage.objects;
+drop function if exists public.studio_initialize_project_folders(uuid);
+drop table if exists public.studio_project_files;
+drop table if exists public.studio_project_folders;
+drop function if exists public.studio_validate_project_file();
+drop function if exists public.studio_validate_project_folder();
+delete from storage.buckets where id='studio-files' and not exists(select 1 from storage.objects where bucket_id='studio-files');
+notify pgrst,'reload schema';
+commit;

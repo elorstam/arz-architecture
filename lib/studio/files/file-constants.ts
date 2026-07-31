@@ -1,0 +1,8 @@
+export const STUDIO_FILES_BUCKET="studio-files" as const;
+export const STUDIO_FILE_MAX_BYTES=6*1024*1024;
+export const STUDIO_FILE_SIGNED_URL_SECONDS=60;
+export const STUDIO_FILE_CATEGORIES=["general","drawing","model","document","image","render","video","archive","spreadsheet","other"] as const;
+export const STUDIO_FILE_EXTENSIONS=["skp","dwg","dxf","pdf","doc","docx","xls","xlsx","ppt","pptx","txt","csv","jpg","jpeg","png","webp","tif","tiff","psd","ifc","rvt","3dm","obj","fbx","glb","gltf","zip","rar","7z","mp4","mov","avi"] as const;
+export const STUDIO_DANGEROUS_EXTENSIONS=["exe","dll","bat","cmd","ps1","sh","js","mjs","cjs","html","htm","php","jar","scr","msi","com","vbs"] as const;
+export const STUDIO_DEFAULT_FOLDERS=["01 Proje","02 Çizimler","03 Modeller","04 Dokümanlar","05 Görseller","06 Renderlar","07 Sunumlar","08 Arşiv"] as const;
+export const STUDIO_CATEGORY_LABELS={general:"Genel",drawing:"Çizim",model:"Model / BIM",document:"Doküman",image:"Görsel",render:"Render",video:"Video",archive:"Arşiv",spreadsheet:"Tablo",other:"Diğer"} as const;

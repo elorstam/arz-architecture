@@ -1,0 +1,3 @@
+"use client";
+import {studioButtonClass} from "@/components/studio/StudioButton";
+export default function FilesError({unstable_retry}:{error:Error&{digest?:string};unstable_retry:()=>void}){return <section className="mx-auto max-w-xl px-4 py-20 text-center"><p className="text-[10px] uppercase tracking-[.15em] text-[#9a8253]">Proje Dosyaları</p><h1 className="mt-3 text-xl font-semibold text-[#293238]">Dosya alanı yüklenemedi.</h1><p className="mt-3 text-sm text-[#6d7473]">Bağlantıyı kontrol edip güvenle yeniden deneyin.</p><button type="button" onClick={unstable_retry} className={studioButtonClass("primary","md","mt-6")}>Yeniden Dene</button></section>;}

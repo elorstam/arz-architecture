@@ -1,0 +1,14 @@
+import {STUDIO_FILE_CATEGORIES} from "./file-constants.ts";
+export type StudioFileCategory=(typeof STUDIO_FILE_CATEGORIES)[number];
+export type StudioFileArchiveFilter="active"|"archived"|"all";
+export type StudioFileStatus="uploading"|"ready"|"failed"|"quarantined";
+export type StudioProjectFolder={id:string;projectId:string;parentFolderId:string;name:string;sortOrder:number;isSystem:boolean;isArchived:boolean;createdAt:string;updatedAt:string;canManage:boolean};
+export type StudioProjectFile={id:string;projectId:string;folderId:string;displayName:string;originalFileName:string;extension:string;mimeType:string;fileSize:number;fileSizeLabel:string;description:string;category:StudioFileCategory;status:StudioFileStatus;isArchived:boolean;uploadedBy:{id:string;name:string};createdAt:string;createdAtLabel:string;updatedAt:string;canManage:boolean};
+export type StudioFileSummary={fileCount:number;folderCount:number;storageBytes:number;storageLabel:string};
+export type StudioFileWorkspace={project:{id:string;code:string;name:string};folders:StudioProjectFolder[];availableFolders:StudioProjectFolder[];files:StudioProjectFile[];currentFolder:StudioProjectFolder|null;breadcrumbs:StudioProjectFolder[];summary:StudioFileSummary;canManage:boolean};
+export type StudioFileQuery={folderId?:string;query?:string;category?:StudioFileCategory;extension?:string;archive?:StudioFileArchiveFilter};
+export type FolderInput={name:string;parentFolderId:string};
+export type FileReservationInput={projectId:string;folderId:string;originalFileName:string;mimeType:string;fileSize:number;category:StudioFileCategory};
+export type FileMetadataInput={displayName:string;description:string;category:StudioFileCategory;folderId:string};
+export type FolderFormState={success:boolean;message?:string;fieldErrors?:Record<string,string[]>};
+export type FileFormState=FolderFormState;
