@@ -13,7 +13,8 @@ create index if not exists studio_ai_usage_module_operation_idx on public.studio
 create index if not exists studio_ai_usage_model_idx on public.studio_ai_usage_events(model,created_at desc);
 alter table public.studio_ai_usage_events enable row level security;
 do $$ begin if not exists(select 1 from pg_policies where schemaname='public' and tablename='studio_ai_usage_events' and policyname='studio_ai_usage_owner_insert') then create policy studio_ai_usage_owner_insert on public.studio_ai_usage_events for insert to authenticated with check(user_id=auth.uid() and public.studio_has_organization_role(organization_id,array['owner']));end if;end $$;
-grant insert on public.studio_ai_usage_events to authenticated;
+do $$ begin if not exists(select 1 from pg_policies where schemaname='public' and tablename='studio_ai_usage_events' and policyname='studio_ai_usage_scoped_select') then create policy studio_ai_usage_scoped_select on public.studio_ai_usage_events for select to authenticated using(public.studio_is_organization_member(organization_id) and (user_id=auth.uid() or public.studio_has_organization_role(organization_id,array['owner'])));end if;end $$;
+grant select,insert on public.studio_ai_usage_events to authenticated;
 grant select,insert on public.studio_ai_usage_events to service_role;
 revoke delete,update on public.studio_ai_usage_events from anon,authenticated;
 notify pgrst,'reload schema';

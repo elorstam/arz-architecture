@@ -11,6 +11,7 @@ const navigation: Array<{label: string; icon: StudioIconName; href?: string; div
   {label: "Projeler", icon: "folder", href: "/studio/projects"},
   {label: "CRM", icon: "clients", href: "/studio/crm"},
   {label: "Teklifler", icon: "money", href: "/studio/quotes", divider: true},
+  {label: "AI Kullanımı", icon: "chart", href: "/studio/ai-usage"},
   {label: "Takvim", icon: "calendar"},
   {label: "Dosyalar", icon: "files"},
   {label: "Finans", icon: "payments"},
