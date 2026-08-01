@@ -1,3 +1,3 @@
-export type StudioFileErrorCode="unauthorized"|"forbidden"|"not_found"|"duplicate"|"invalid_folder"|"invalid_file"|"storage"|"database";
+export type StudioFileErrorCode="unauthorized"|"forbidden"|"not_found"|"duplicate"|"invalid_folder"|"invalid_file"|"storage"|"database"|"reauthorization_required"|"partial_sync";
 export class StudioFileError extends Error{constructor(readonly code:StudioFileErrorCode,message:string){super(message);this.name="StudioFileError";}}
 export function normalizeFileError(error:unknown){const value=error as{code?:string;message?:string}|null;if(value?.code==="23505")return new StudioFileError("duplicate","Bu klasörde aynı ada sahip bir kayıt bulunuyor.");if(value?.message?.includes("cycle"))return new StudioFileError("invalid_folder","Klasör kendi alt klasörüne taşınamaz.");return error instanceof StudioFileError?error:new StudioFileError("database","Dosya işlemi şu anda tamamlanamadı.");}
