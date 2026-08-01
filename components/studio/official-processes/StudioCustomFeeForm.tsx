@@ -1,4 +1,13 @@
 "use client";
-import{useActionState}from"react";import{studioButtonClass}from"@/components/studio/StudioButton";import{createCustomFeeAction,type ProcessActionState}from"@/app/studio/(protected)/projects/[projectId]/official-processes/actions";
-const initial:ProcessActionState={success:false,message:""};
-export default function StudioCustomFeeForm({projectId}:{projectId:string}){const[state,action,pending]=useActionState(createCustomFeeAction.bind(null,projectId),initial);return <form action={action} className="flex flex-wrap items-end gap-3 rounded-xl border bg-white p-4"><label className="min-w-56 flex-1 text-sm font-medium">Özel harç adı<input required maxLength={160} name="title" className="mt-1 h-11 w-full rounded-lg border px-3 text-sm"/></label><button disabled={pending} className={studioButtonClass("primary")}>{pending?"Ekleniyor…":"Özel Harç Ekle"}</button>{state.message?<p role="status" className="w-full text-sm">{state.message}</p>:null}</form>}
+
+import { useActionState, useEffect, useRef } from "react";
+import { createCustomFeeAction, type ProcessActionState } from "@/app/studio/(protected)/projects/[projectId]/official-processes/actions";
+import { studioButtonClass } from "@/components/studio/StudioButton";
+
+const initial: ProcessActionState = { success: false, message: "" };
+
+export default function StudioCustomFeeForm({ projectId }: { projectId: string }) {
+  const [state,action,pending]=useActionState(createCustomFeeAction.bind(null,projectId),initial);const formRef=useRef<HTMLFormElement>(null);
+  useEffect(()=>{if(state.success)formRef.current?.reset();},[state.success]);
+  return <form ref={formRef} action={action} className="grid min-w-0 gap-3 rounded-xl border border-[#dedad1] bg-[#faf8f3] p-4 sm:grid-cols-[minmax(0,1fr)_auto] sm:items-end"><label className="min-w-0 text-sm font-semibold">Özel Harç Ekle<input required maxLength={160} name="title" placeholder="Harç adı" className="mt-2 h-11 w-full min-w-0 rounded-lg border bg-white px-3 text-[15px]"/></label><button disabled={pending} className={studioButtonClass("primary")}>{pending?"Oluşturuluyor…":"Oluştur"}</button>{state.message?<p role={state.success?"status":"alert"} className="text-sm sm:col-span-2">{state.message}</p>:null}</form>;
+}

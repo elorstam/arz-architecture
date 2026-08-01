@@ -1,0 +1,5 @@
+import Link from "next/link";
+
+export default function StudioOfficialProcessDocumentStatus({ label, file, projectId, canManage, onConnect }: { label: string; file?: { id: string; name: string }; projectId: string; canManage: boolean; onConnect: () => void }) {
+  return <div className="min-w-0 rounded-lg border border-[#e5e0d6] bg-[#fbfaf7] p-3"><div className="flex min-w-0 items-center justify-between gap-2"><p className="truncate text-sm font-semibold">{label}</p><span className="shrink-0 text-xs font-semibold">{file ? "✓ Var" : "— Yok"}</span></div>{file?<><p title={file.name} className="mt-1 truncate text-xs text-[#737873]">{file.name}</p><Link aria-label={`${label} dosyasını gör`} href={`/studio/projects/${projectId}/files/${file.id}`} className="mt-2 inline-block text-xs font-semibold text-[#80662f] underline">Dosyayı Gör</Link></>:canManage?<button type="button" onClick={onConnect} className="mt-2 text-xs font-semibold text-[#80662f] underline focus-visible:outline-2 focus-visible:outline-offset-2">Dosya Bağla</button>:<p className="mt-2 text-xs text-[#7a7e7a]">Belge yok</p>}</div>;
+}
