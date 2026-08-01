@@ -1,0 +1,1 @@
+import type{StudioTag,StudioTagColor}from"./tag-types";export type TagRow={id:string;name:string;color:string;description:string|null;is_archived:boolean};export function mapTag(row:TagRow,usageCount=0):StudioTag{return{id:row.id,name:row.name,color:row.color as StudioTagColor,description:row.description??"",isArchived:row.is_archived,usageCount};}

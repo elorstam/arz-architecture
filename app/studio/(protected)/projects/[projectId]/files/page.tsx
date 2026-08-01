@@ -1,6 +1,8 @@
 import Link from "next/link";
 import {notFound} from "next/navigation";
 import StudioProjectFilesPage from "@/components/studio/files/StudioProjectFilesPage";
+import StudioEntityTags from "@/components/studio/tags/StudioEntityTags";
+import StudioTagFilterForm from "@/components/studio/tags/StudioTagFilterForm";import{filterEntityIdsByTags}from"@/lib/studio/tags/tag-assignment-repository";
 import {STUDIO_FILE_CATEGORIES} from "@/lib/studio/files/file-constants";
 import {getStudioProjectFileWorkspace} from "@/lib/studio/files/file-repository";
 import type {StudioFileArchiveFilter} from "@/lib/studio/files/file-types";
@@ -9,12 +11,12 @@ import {initializeProjectDriveStorageAction} from "./actions";
 
 export const dynamic="force-dynamic";
 
-export default async function ProjectFilesPage({params,searchParams}:{params:Promise<{projectId:string}>;searchParams:Promise<{folder?:string;q?:string;category?:string;extension?:string;archive?:string;error?:string}>}){
+export default async function ProjectFilesPage({params,searchParams}:{params:Promise<{projectId:string}>;searchParams:Promise<{folder?:string;q?:string;category?:string;extension?:string;archive?:string;error?:string;tags?:string|string[];tagMode?:string}>}){
  const{projectId}=await params;const query=await searchParams;
  const status=await getStudioGoogleDriveStatus(projectId).catch(()=>notFound());
  if(!status.connected||status.needsReauth||!status.initialized)return <DriveBlockingState projectId={projectId} status={status} error={query.error}/>;
  const workspace=await getStudioProjectFileWorkspace(projectId,{folderId:query.folder,query:query.q?.trim().slice(0,120),category:STUDIO_FILE_CATEGORIES.find(value=>value===query.category),extension:query.extension?.toLowerCase().replace(/[^a-z0-9]/g,"").slice(0,10),archive:(["active","archived","all"].includes(query.archive??"")?query.archive:"active") as StudioFileArchiveFilter}).catch(()=>notFound());
- return <StudioProjectFilesPage workspace={workspace}/>;
+ const tagIds=(Array.isArray(query.tags)?query.tags:(query.tags??"").split(",")).filter(Boolean);const tagMode=query.tagMode==="all"?"all":"any";const matched=await filterEntityIdsByTags("file",tagIds,tagMode);const filtered=matched?{...workspace,files:workspace.files.filter(file=>matched.has(file.id))}:workspace;return <><StudioTagFilterForm selected={tagIds} mode={tagMode}/><StudioProjectFilesPage workspace={filtered}/>{workspace.currentFolder?<div className="mx-auto max-w-[1540px] px-4 sm:px-6 lg:px-8"><StudioEntityTags entityType="folder" entityId={workspace.currentFolder.id} title="Klasör Etiketleri"/></div>:null}</>;
 }
 
 function DriveBlockingState({projectId,status,error}:{projectId:string;status:Awaited<ReturnType<typeof getStudioGoogleDriveStatus>>;error?:string}){
