@@ -1,12 +1,45 @@
 "use server";
-import{revalidatePath}from"next/cache";
-import{archiveCustomFee,createCustomFee,notifyOfficialProcess,updateOfficialProcess}from"@/lib/studio/official-processes/official-process-repository";
-import{recordOfficialProcessNotification}from"@/lib/studio/notifications/notification-repository";
-export type ProcessActionState={success:boolean;message:string};
-const value=(form:FormData,key:string)=>String(form.get(key)??"");const file=(form:FormData,key:string)=>value(form,key)||null;
-export async function updateOfficialProcessAction(id:string,_state:ProcessActionState,form:FormData):Promise<ProcessActionState>{try{const projectId=await updateOfficialProcess(id,{status:value(form,"status"),amount:value(form,"amount"),dueDate:value(form,"dueDate"),responsibleParty:value(form,"responsibleParty"),description:value(form,"description"),isClientVisible:form.get("isClientVisible")==="on",assessmentFileId:file(form,"assessmentFileId"),receiptFileId:file(form,"receiptFileId"),receivedDocumentFileId:file(form,"receivedDocumentFileId")});revalidatePath(`/studio/projects/${projectId}/official-processes`);return{success:true,message:"Süreç güncellendi."};}catch(error){if(error instanceof Error&&error.message==="document_required")return{success:false,message:"Evrak Alındı durumuna geçmeden önce alınan evrakı yükleyin."};return{success:false,message:"Resmî süreç şu anda güncellenemedi."};}}
-export async function createCustomFeeAction(projectId:string,_state:ProcessActionState,form:FormData):Promise<ProcessActionState>{try{await createCustomFee(projectId,value(form,"title"));revalidatePath(`/studio/projects/${projectId}/official-processes`);return{success:true,message:"Özel harç oluşturuldu."};}catch{return{success:false,message:"Özel harç oluşturulamadı."};}}
-export async function notifyOfficialProcessAction(id:string){await recordOfficialProcessNotification(id);const projectId=await notifyOfficialProcess(id);revalidatePath(`/studio/projects/${projectId}/official-processes`);}
-export async function archiveCustomFeeAction(id:string){const projectId=await archiveCustomFee(id);revalidatePath(`/studio/projects/${projectId}/official-processes`);}
+import { revalidatePath } from "next/cache";
+import { archiveCustomFee, createCustomFee, notifyOfficialProcess, updateOfficialProcess } from "@/lib/studio/official-processes/official-process-repository";
+import { recordOfficialProcessNotification } from "@/lib/studio/notifications/notification-repository";
 
-export async function sendFeeAssessmentWhatsAppAction(id:string){try{const{sendFeeAssessmentWhatsApp}=await import('@/lib/studio/notifications/fee-whatsapp-service');await sendFeeAssessmentWhatsApp(id);return{success:true,message:'Tahakkuk WhatsApp ile g�nderildi.'}}catch(error){const code=error instanceof Error?error.message:'';const messages:Record<string,string>={assessment_required:'Tahakkuk belgesi bagli degil.',customer_phone_missing:'M�steri telefon numarasi bulunmuyor.',crm_customer_missing:'CRM m�sterisi bulunmuyor.',whatsapp_opt_in_required:'WhatsApp bildirim izni bulunmuyor.',whatsapp_not_configured:'WhatsApp hen�z yapilandirilmadi.'};return{success:false,message:messages[code]??'Tahakkuk WhatsApp ile g�nderilemedi.'}}}
+export type ProcessActionState = { success: boolean; message: string };
+const value = (form: FormData, key: string) => String(form.get(key) ?? "");
+const file = (form: FormData, key: string) => value(form, key) || null;
+
+export async function updateOfficialProcessAction(id: string, _state: ProcessActionState, form: FormData): Promise<ProcessActionState> {
+  try {
+    const projectId = await updateOfficialProcess(id, { status: value(form, "status"), amount: value(form, "amount"), dueDate: value(form, "dueDate"), responsibleParty: value(form, "responsibleParty"), description: value(form, "description"), isClientVisible: form.get("isClientVisible") === "on", assessmentFileId: file(form, "assessmentFileId"), receiptFileId: file(form, "receiptFileId"), receivedDocumentFileId: file(form, "receivedDocumentFileId") });
+    revalidatePath(`/studio/projects/${projectId}/official-processes`);
+    return { success: true, message: "Süreç güncellendi." };
+  } catch (error) {
+    if (error instanceof Error && error.message === "document_required") return { success: false, message: "Evrak Alındı durumuna geçmeden önce alınan evrakı yükleyin." };
+    if (error instanceof Error && error.message === "amount_invalid") return { success: false, message: "Manuel harç tutarı pozitif bir değer olmalıdır." };
+    return { success: false, message: "Resmî süreç şu anda güncellenemedi." };
+  }
+}
+
+export async function createCustomFeeAction(projectId: string, _state: ProcessActionState, form: FormData): Promise<ProcessActionState> {
+  try { await createCustomFee(projectId, value(form, "title")); revalidatePath(`/studio/projects/${projectId}/official-processes`); return { success: true, message: "Özel harç oluşturuldu." }; }
+  catch { return { success: false, message: "Özel harç oluşturulamadı." }; }
+}
+
+export async function notifyOfficialProcessAction(id: string) { await recordOfficialProcessNotification(id); const projectId = await notifyOfficialProcess(id); revalidatePath(`/studio/projects/${projectId}/official-processes`); }
+export async function archiveCustomFeeAction(id: string) { const projectId = await archiveCustomFee(id); revalidatePath(`/studio/projects/${projectId}/official-processes`); }
+
+export async function generateFeeWhatsAppMessageAction(id: string) {
+  try { const { generateAiFeeWhatsAppMessage } = await import("@/lib/studio/notifications/fee-ai-message-service"); return { success: true, ...(await generateAiFeeWhatsAppMessage(id)) }; }
+  catch (error) { const code = error instanceof Error ? error.message : ""; return { success: false, message: "", generatedBy: "template" as const, error: code === "fee_amount_required" ? "Manuel harç tutarını girin." : "AI mesajı şu anda oluşturulamadı." }; }
+}
+
+export async function sendFeeAssessmentWhatsAppAction(id: string, message: string) {
+  try {
+    const { sendFeeAssessmentWhatsApp } = await import("@/lib/studio/notifications/fee-whatsapp-service");
+    await sendFeeAssessmentWhatsApp(id, message);
+    return { success: true, message: "Tahakkuk WhatsApp ile gönderildi." };
+  } catch (error) {
+    const code = error instanceof Error ? error.message : "";
+    const messages: Record<string, string> = { assessment_required: "Tahakkuk belgesi bağlı değil.", fee_amount_required: "Manuel harç tutarını girin.", fee_message_invalid: "Mesaj metni geçersiz.", customer_phone_missing: "Müşteri telefon numarası bulunmuyor.", crm_customer_missing: "CRM müşterisi bulunmuyor.", whatsapp_opt_in_required: "WhatsApp bildirim izni bulunmuyor.", whatsapp_not_configured: "WhatsApp henüz yapılandırılmadı." };
+    return { success: false, message: messages[code] ?? "Tahakkuk WhatsApp ile gönderilemedi." };
+  }
+}

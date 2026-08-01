@@ -3,7 +3,7 @@ import {createStudioServerClient} from "@/lib/studio/supabase/server";
 import {getStudioContext} from "@/lib/studio/auth/get-studio-context";
 import {StudioFileError} from "../file-errors";
 import {createDriveFolder,findDriveFolder,getDriveFileMetadata} from "./google-drive-provider";
-const SYSTEM=["01 Proje","02 Çizimler","03 Modeller","04 Dokümanlar","05 Görseller","06 Renderlar","07 Sunumlar","08 Arşiv"] as const;
+const SYSTEM=["01 Proje","02 Statik","03 Mekanik-Elektrik","04 Zemin Etüd","05 Numarataj","06 İSKİ","07 Harçlar","08 Dilekçeler","09 Yapı Denetim","10 Ruhsat Evrakları","11 3D Görseller","08 Arşiv"] as const;
 function safeName(value:string){return value.replace(/[\\/:*?"<>|]/g,"-").replace(/\s+/g," ").trim().slice(0,180);}
 async function ownerContext(){const ctx=await getStudioContext();if(!ctx?.membership)throw new StudioFileError("unauthorized","Oturum gerekli.");if(ctx.membership.role!=="owner")throw new StudioFileError("forbidden","Bu işlem yalnızca Studio sahibi tarafından yapılabilir.");return ctx;}
 async function ensureFolder(org:string,parentId:string|undefined,name:string,props:Record<string,string>){const existing=parentId?await findDriveFolder(org,parentId,props):null;if(existing)return existing;return createDriveFolder(org,name,parentId,props);}
