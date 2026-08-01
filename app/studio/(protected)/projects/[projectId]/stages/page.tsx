@@ -1,0 +1,9 @@
+import { notFound } from "next/navigation";
+import StudioProjectStages from "@/components/studio/notifications/StudioProjectStages";
+import StudioProjectTabs from "@/components/studio/projects/StudioProjectTabs";
+import { initializeProjectStages, listProjectNotifications, listProjectStages } from "@/lib/studio/notifications/notification-repository";
+import { isWhatsAppConfigured } from "@/lib/studio/notifications/whatsapp-adapter";
+import type { StudioNotification, StudioProjectStage } from "@/lib/studio/notifications/notification-types";
+import { getStudioProjectAccess, getStudioProjectById } from "@/lib/studio/projects/project-repository";
+export const dynamic="force-dynamic";
+export default async function Page({params}:{params:Promise<{projectId:string}>}){const{projectId}=await params;const[project,access]=await Promise.all([getStudioProjectById(projectId),getStudioProjectAccess()]);if(!project)notFound();let stages:StudioProjectStage[]|null=null;let notifications:StudioNotification[]=[];try{if(access.canManage)await initializeProjectStages(projectId);[stages,notifications]=await Promise.all([listProjectStages(projectId),listProjectNotifications(projectId)])}catch{stages=null}return <main className="mx-auto max-w-[1540px] px-4 py-6 sm:px-6"><p className="text-sm font-semibold text-[#9a7b40]">{project.code}</p><h1 className="mt-1 text-3xl font-semibold">Proje Aşamaları</h1><p className="mt-2 text-[15px] text-[#68716f]">{project.name} için süreç ve müşteri bilgilendirme merkezi.</p><StudioProjectTabs projectId={projectId} active="stages"/>{stages?<StudioProjectStages projectId={projectId} stages={stages} notifications={notifications} canManage={access.canManage} configured={isWhatsAppConfigured()}/>:<p role="status" className="mt-6 rounded-xl border border-dashed p-6">Modül henüz hazırlanmadı. Migration 016 uygulandıktan sonra aşamalar burada görünecek.</p>}</main>}
