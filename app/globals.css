@@ -340,6 +340,11 @@ html[data-theme="light"] .language-switcher-trigger {
   --studio-border-strong: #cbc3b5;
   --studio-gold: #9b7f4d;
   --studio-danger: #8b5141;
+  --studio-font-helper: .8125rem;
+  --studio-font-label: .875rem;
+  --studio-font-content: .9375rem;
+  --studio-font-section-title: 1.125rem;
+  --studio-font-card-title: 1.25rem;
   min-width: 0;
   color-scheme: light;
   background: var(--studio-bg);
@@ -348,36 +353,106 @@ html[data-theme="light"] .language-switcher-trigger {
   font-variant-numeric: tabular-nums;
   -webkit-font-smoothing: antialiased;
   text-rendering: optimizeLegibility;
+  font-size: .9375rem;
+  line-height: 1.6;
+}
+.studio-root [class~="text-[7px]"],
+.studio-root [class~="text-[8px]"],
+.studio-root [class~="text-[9px]"],
+.studio-root [class~="text-[10px]"] {
+  font-size: var(--studio-font-helper);
+  line-height: 1.5;
+}
+.studio-root [class~="text-[11px]"],
+.studio-root [class~="text-[12px]"],
+.studio-root .text-xs {
+  font-size: .875rem;
+  line-height: 1.55;
+}
+.studio-root [class~="text-[13px]"],
+.studio-root .text-sm {
+  font-size: .9375rem;
+  line-height: 1.6;
+}
+.studio-root :where(h1) {
+  font-size: clamp(1.75rem, 1.5rem + .8vw, 2rem);
+  line-height: 1.16;
+  letter-spacing: -.035em;
+}
+.studio-root :where(h2) {
+  font-size: var(--studio-font-section-title);
+  font-weight: 600;
+  line-height: 1.35;
+  letter-spacing: -.012em;
+}
+.studio-root :where(h3) {
+  font-size: 1.0625rem;
+  font-weight: 600;
+  line-height: 1.4;
+  letter-spacing: -.008em;
+}
+.studio-root :where(label) {
+  font-size: var(--studio-font-label);
+  line-height: 1.5;
+}
+.studio-root :where(input, select, textarea) {
+  font-size: var(--studio-font-content);
+  line-height: 1.5;
+}
+.studio-root :where(option) {
+  font-size: var(--studio-font-content);
+}
+.studio-root :where(th) {
+  font-size: var(--studio-font-label);
+  font-weight: 600;
+  line-height: 1.5;
+}
+.studio-root :where(td) {
+  font-size: var(--studio-font-content);
+  line-height: 1.6;
 }
 .studio-root :where(button, a, input, select, textarea):focus-visible { outline: 2px solid #b89a62; outline-offset: 2px; }
 .studio-root :where(input, select, textarea) { color: var(--studio-text); font: inherit; }
 .studio-root :where(input, select, textarea)::placeholder { color: #8e918d; opacity: 1; }
 .studio-root :where(input, select, textarea):disabled { cursor: not-allowed; background: #eeece7; color: #777b78; opacity: 1; }
 .studio-root :where(input, select, textarea)[aria-invalid="true"] { border-color: #b46c57 !important; box-shadow: 0 0 0 3px rgb(180 108 87 / .12); }
+.studio-root :where(input:not([type="checkbox"]):not([type="radio"]):not([type="hidden"]), select) { min-height:2.875rem; }
+.studio-root :where(label) > :where(span:not(.sr-only)) { font-size:var(--studio-font-label); line-height:1.5; }
+.studio-root label > [class~="text-[9px]"] { font-size:var(--studio-font-label); }
 .studio-root :where(section, article, aside, form) { min-width: 0; }
 .studio-root :where(h1, h2, h3, p) { text-wrap: pretty; }
 .studio-root a[target="_blank"] { border-color:var(--studio-border-strong); background:#fff; color:#424c51; }
 .studio-root a[target="_blank"]:hover { border-color:#a99d88; background:#faf8f4; color:#202a30; }
 
-.studio-button { display:inline-flex; flex-shrink:0; align-items:center; justify-content:center; gap:.5rem; border:1px solid transparent; border-radius:.625rem; font-size:.75rem; font-weight:650; line-height:1; letter-spacing:.005em; white-space:nowrap; transition:border-color 160ms ease,background-color 160ms ease,color 160ms ease,box-shadow 160ms ease,transform 160ms ease; }
-.studio-button--sm { min-height:2.5rem; padding:.625rem 1rem; }
-.studio-button--md { min-height:2.75rem; padding:.75rem 1.25rem; }
-.studio-button--primary { background:#17232e; color:#fff; box-shadow:0 6px 18px rgb(23 35 46/.14); }
-.studio-button--primary:hover { background:#22313d; transform:translateY(-1px); }
+.studio-card { border:1px solid var(--studio-border); border-radius:.875rem; background:var(--studio-surface); padding:1.5rem; box-shadow:0 5px 24px rgb(30 38 45/.04); }
+.studio-card__title { font-size:var(--studio-font-card-title); font-weight:600; line-height:1.35; letter-spacing:-.015em; color:#293239; }
+.studio-section-title { font-size:var(--studio-font-section-title); font-weight:600; line-height:1.4; letter-spacing:-.01em; color:#2d353b; }
+.studio-root .studio-meta-label,.studio-root .studio-form-label { font-size:var(--studio-font-label); font-weight:600; line-height:1.5; letter-spacing:.08em; text-transform:uppercase; color:#777b78; }
+.studio-meta-value { font-size:1rem; font-weight:500; line-height:1.65; color:#3b454a; }
+.studio-helper-text { font-size:var(--studio-font-helper); line-height:1.6; color:var(--studio-text-muted); }
+.studio-field,.studio-filter-control { min-height:2.875rem; font-size:var(--studio-font-content); line-height:1.5; }
+.studio-empty-state { padding:3.5rem 1.5rem; text-align:center; }
+
+.studio-button { display:inline-flex; min-height:2.875rem; flex-shrink:0; align-items:center; justify-content:center; gap:.5rem; border:1px solid transparent; border-radius:.625rem; font-size:.9375rem; font-weight:650; line-height:1.2; letter-spacing:.002em; white-space:nowrap; transition:border-color 180ms ease,background-color 180ms ease,color 180ms ease,box-shadow 180ms ease,transform 180ms ease; }
+.studio-button--sm { min-height:2.875rem; padding:.75rem 1.125rem; }
+.studio-button--md { min-height:3rem; padding:.8125rem 1.375rem; }
+.studio-root .studio-button--primary { background:#17232e; color:#fff !important; box-shadow:0 7px 20px rgb(23 35 46/.18); }
+.studio-root .studio-button--primary:hover { background:#243542; color:#fff !important; box-shadow:0 10px 24px rgb(23 35 46/.22); transform:translateY(-1px); }
 .studio-button--secondary { border-color:#d5c7a9; background:#f7f1e6; color:#655333; }
 .studio-button--secondary:hover { border-color:#bca574; background:#f1e7d5; }
 .studio-button--outline { border-color:var(--studio-border-strong); background:#fff; color:#424c51; }
-.studio-button--outline:hover { border-color:#a99d88; background:#faf8f4; color:#202a30; }
+.studio-button--outline:hover { border-color:#a99d88; background:#f7f4ee; color:#202a30; box-shadow:0 6px 16px rgb(32 40 46/.08); transform:translateY(-1px); }
 .studio-button--ghost { background:transparent; color:#596164; }
 .studio-button--ghost:hover { background:rgb(23 35 46/.055); color:#202a30; }
-.studio-button--danger { border-color:#dcc7be; background:#fff; color:var(--studio-danger); }
-.studio-button--danger:hover { border-color:#bd8c7a; background:#faf1ed; }
-.studio-button--destructive { background:#884b3c; color:#fff; }
+.studio-button--danger { border-color:#d6b9ad; background:#fff; color:#7c4032; }
+.studio-button--danger:hover { border-color:#b77c68; background:#faf0ec; color:#6f382c; box-shadow:0 6px 16px rgb(139 81 65/.1); transform:translateY(-1px); }
+.studio-root .studio-button--destructive { background:#884b3c; color:#fff !important; }
 .studio-button--destructive:hover { background:#733d31; }
-.studio-button--icon { width:2.75rem; min-height:2.75rem; padding:0; border-color:var(--studio-border); background:#fff; color:#475157; }
+.studio-button--icon { width:2.875rem; min-height:2.875rem; padding:0; border-color:var(--studio-border); background:#fff; color:#475157; }
 .studio-button--icon:hover { border-color:var(--studio-border-strong); background:#faf8f4; color:#1e282e; }
 .studio-button:active:not(:disabled) { transform:translateY(0); box-shadow:none; }
 .studio-button:disabled,.studio-button[aria-disabled="true"] { cursor:not-allowed; transform:none; box-shadow:none; opacity:.52; }
+.studio-root .studio-button:focus-visible { outline:2px solid #9b7f4d; outline-offset:3px; box-shadow:0 0 0 4px rgb(155 127 77/.16); }
 .studio-button__spinner { width:.875rem; height:.875rem; flex:none; border:2px solid currentColor; border-right-color:transparent; border-radius:999px; animation:studio-spin .7s linear infinite; }
 @keyframes studio-spin { to { transform:rotate(360deg); } }
 @media (max-width:639px) { .studio-root .studio-button { max-width:100%; } .studio-root input,.studio-root select,.studio-root textarea { font-size:1rem; } }

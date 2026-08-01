@@ -1,4 +1,52 @@
-import {NextResponse} from "next/server";
 import {cookies} from "next/headers";
-import {saveGoogleConnection} from "../actions";
-export async function GET(request:Request){const url=new URL(request.url);const state=url.searchParams.get("state");const code=url.searchParams.get("code");const jar=await cookies();const expected=jar.get("studio_google_oauth_state")?.value;jar.delete("studio_google_oauth_state");if(!state||!expected||state!==expected)return new NextResponse("Yetkilendirme isteği geçersiz.",{status:400});if(!code)return new NextResponse("Google yetkilendirmesi başarısız.",{status:400});try{await saveGoogleConnection(code);return NextResponse.redirect(new URL("/studio/settings/storage",request.url));}catch{return NextResponse.redirect(new URL("/studio/settings/storage?error=google_connection",request.url));}}
+import {NextResponse} from "next/server";
+
+import {saveGoogleConnection, type GoogleDriveCallbackErrorCode} from "../actions";
+
+const storageSettingsPath = "/studio/settings/storage";
+
+function redirectWithResult(request: Request, key: "connected" | "error", value: string) {
+  const destination = new URL(storageSettingsPath, request.url);
+  destination.searchParams.set(key, value);
+  return NextResponse.redirect(destination);
+}
+
+function reportError(code: GoogleDriveCallbackErrorCode) {
+  if (process.env.NODE_ENV === "development") {
+    console.error(`GOOGLE_DRIVE_CALLBACK_ERROR: ${code}`);
+  }
+}
+
+export async function GET(request: Request) {
+  const url = new URL(request.url);
+  const state = url.searchParams.get("state");
+  const code = url.searchParams.get("code");
+  const jar = await cookies();
+  const expectedState = jar.get("studio_google_oauth_state")?.value;
+  jar.delete("studio_google_oauth_state");
+
+  if (!state || !expectedState || state !== expectedState) {
+    const error = "invalid_oauth_state";
+    reportError(error);
+    return redirectWithResult(request, "error", error);
+  }
+
+  if (!code) {
+    const error = "authorization_code_missing";
+    reportError(error);
+    return redirectWithResult(request, "error", error);
+  }
+
+  try {
+    const result = await saveGoogleConnection(code);
+    if (!result.ok) {
+      reportError(result.error);
+      return redirectWithResult(request, "error", result.error);
+    }
+    return redirectWithResult(request, "connected", "1");
+  } catch {
+    const error = "unexpected_callback_error";
+    reportError(error);
+    return redirectWithResult(request, "error", error);
+  }
+}

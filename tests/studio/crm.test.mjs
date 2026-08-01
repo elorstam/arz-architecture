@@ -7,6 +7,7 @@ const rollback=await readFile(new URL("../../supabase/migrations/003_studio_lead
 const repository=await readFile(new URL("../../lib/studio/crm/lead-repository.ts",import.meta.url),"utf8");
 const actions=await readFile(new URL("../../app/studio/(protected)/crm/actions.ts",import.meta.url),"utf8");
 const mapper=await readFile(new URL("../../lib/studio/crm/lead-mappers.ts",import.meta.url),"utf8");
+const detail=await readFile(new URL("../../components/studio/crm/StudioLeadDetail.tsx",import.meta.url),"utf8");
 const{isStudioLeadId,studioLeadSchema}=await import("../../lib/studio/crm/lead-validation.ts");
 const{leadInputToRow,summarizeLeadStages}=await import("../../lib/studio/crm/lead-mappers.ts");
 
@@ -45,6 +46,16 @@ test("actions accept allowlisted validated fields only",()=>{
  assert.doesNotMatch(actions,/created_by|updated_by|is_archived/);
  const mutationMapper=mapper.match(/export function leadInputToRow[\s\S]*?\n}\n/)?.[0]??"";
  assert.match(mutationMapper,/first_name:input\.firstName/);assert.doesNotMatch(mutationMapper,/organization_id|created_by|updated_by|is_archived/);
+});
+test("CRM detail actions use shared readable button variants",()=>{
+ assert.match(detail,/studioButtonClass\("outline", "md"\)[\s\S]*Teklif Oluştur/);
+ assert.match(detail,/studioButtonClass\("primary", "md"\)[\s\S]*Düzenle/);
+ assert.doesNotMatch(detail,/bg-\[#18222d\][^\n]*Düzenle/);
+});
+test("CRM detail cards use shared premium typography tokens",()=>{
+ assert.match(detail,/studio-card__title/);assert.match(detail,/studio-section-title/);
+ assert.match(detail,/studio-meta-label/);assert.match(detail,/studio-meta-value/);
+ assert.match(detail,/studio-helper-text/);
 });
 test("valid lead and defaults-compatible input pass",()=>assert.equal(studioLeadSchema.safeParse(validLead).success,true));
 test("required name and phone are rejected",()=>{assert.equal(studioLeadSchema.safeParse({...validLead,firstName:" "}).success,false);assert.equal(studioLeadSchema.safeParse({...validLead,phone:" "}).success,false);});
