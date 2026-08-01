@@ -92,6 +92,8 @@ html[data-theme="light"] [class~="bg-[#080b10]"] {
 }
 
 html[data-theme="light"] [class~="text-white"] { color: rgb(var(--theme-fg)); }
+.studio-project-tab-active,
+html[data-theme="light"] .studio-project-tab-active { color:#fff !important; }
 html[data-theme="light"] [class~="text-white/95"] { color: rgb(var(--theme-fg) / .95); }
 html[data-theme="light"] [class~="text-white/92"] { color: rgb(var(--theme-fg) / .92); }
 html[data-theme="light"] [class~="text-white/90"] { color: rgb(var(--theme-fg) / .90); }
