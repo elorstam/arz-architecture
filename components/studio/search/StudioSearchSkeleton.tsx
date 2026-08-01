@@ -1,0 +1,1 @@
+export default function StudioSearchSkeleton(){return <div className="space-y-3 p-4" role="status" aria-live="polite"><span className="sr-only">Arama sonuçları yükleniyor</span>{[1,2,3].map(item=><div key={item} className="h-16 animate-pulse rounded-xl bg-[#ebe7df] dark:bg-white/10"/>)}</div>;}

@@ -1,0 +1,1 @@
+export default function StudioPreviewSkeleton(){return <div className="flex min-h-[360px] animate-pulse items-center justify-center rounded-xl bg-[#eeeae2] sm:min-h-[480px]" role="status" aria-live="polite"><span className="sr-only">Dosya önizlemesi yükleniyor</span><div className="h-10 w-10 rounded-full border-4 border-[#d7d0c4] border-t-[#a8874d]"/></div>;}

@@ -1,0 +1,4 @@
+"use client";
+/* eslint-disable react-hooks/immutability -- Offset is a render-local accumulator used only to flatten grouped option indices. */
+import type{StudioSearchResponse,StudioSearchResult}from"@/lib/studio/search/search-types";import StudioSearchGroup from"./StudioSearchGroup";
+export default function StudioSearchResults({response,query,activeIndex,onActivate,onSelect}:{response:StudioSearchResponse;query:string;activeIndex:number;onActivate:(index:number)=>void;onSelect:(result:StudioSearchResult)=>void}){let offset=0;return <div id="studio-search-results" role="listbox">{response.groups.map(group=>{const current=offset;offset+=group.results.length;return <StudioSearchGroup key={group.category} label={group.label} results={group.results} query={query} offset={current} activeIndex={activeIndex} onActivate={onActivate} onSelect={onSelect}/>;})}</div>;}

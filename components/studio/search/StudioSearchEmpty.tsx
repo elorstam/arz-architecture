@@ -1,0 +1,1 @@
+export default function StudioSearchEmpty({query}:{query:string}){return <div className="p-10 text-center" role="status"><h3 className="text-lg font-semibold">Sonuç bulunamadı.</h3><p className="mt-2 text-sm leading-6 text-[#707674] dark:text-[#aeb6b3]">“{query}” için proje kodu, müşteri adı, dosya adı veya teklif numarası deneyin.</p></div>;}

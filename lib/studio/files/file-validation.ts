@@ -1,12 +1,23 @@
 import {z} from "zod";
 import {STUDIO_DANGEROUS_EXTENSIONS,STUDIO_FILE_CATEGORIES,STUDIO_FILE_EXTENSIONS,STUDIO_FILE_LIMITS} from "./file-constants.ts";
+
 const uuid=z.string().uuid("Geçerli bir kayıt seçin.");
 export const folderSchema=z.object({name:z.string().trim().min(1,"Klasör adı zorunludur.").max(120).refine(v=>!/[\\/]/.test(v),"Klasör adında / veya \\ kullanılamaz.").refine(v=>!/^[.]+$/.test(v),"Bu klasör adı kullanılamaz."),parentFolderId:z.union([z.literal(""),uuid])});
 export const fileMetadataSchema=z.object({displayName:z.string().trim().min(1,"Dosya adı zorunludur.").max(240),description:z.string().trim().max(5000),category:z.enum(STUDIO_FILE_CATEGORIES),folderId:z.union([z.literal(""),uuid])});
 export const fileRenameSchema=z.object({name:z.string().trim().min(1,"Dosya adı zorunludur.").max(240)});
 export const fileMoveSchema=z.object({folderId:uuid});
 export function fileExtension(name:string){const value=name.trim();const index=value.lastIndexOf(".");return index>0?value.slice(index+1).toLocaleLowerCase("en-US"):"";}
-export function validateUploadFile(file:{name:string;type:string;size:number;category?:keyof typeof STUDIO_FILE_LIMITS}){const extension=fileExtension(file.name);if((STUDIO_DANGEROUS_EXTENSIONS as readonly string[]).includes(extension))return{success:false as const,message:"Bu dosya türüne güvenlik nedeniyle izin verilmiyor."};if(!(STUDIO_FILE_EXTENSIONS as readonly string[]).includes(extension))return{success:false as const,message:"Bu dosya türü desteklenmiyor."};if(file.size<=0)return{success:false as const,message:"Boş dosya yüklenemez."};const limit=STUDIO_FILE_LIMITS[file.category??"general"];if(file.size>limit)return{success:false as const,message:`Bu kategori için dosya boyutu en fazla ${Math.round(limit/1024/1024)} MB olabilir.`};if(/javascript|html|x-msdownload|x-executable|x-sh|x-dosexec/i.test(file.type))return{success:false as const,message:"Dosyanın içerik türü güvenli değil."};return{success:true as const,extension,mimeType:file.type||"application/octet-stream"};}
+export function validateUploadFile(file:{name:string;type:string;size:number;category?:keyof typeof STUDIO_FILE_LIMITS}){
+ const extension=fileExtension(file.name);
+ if(extension==="heic"||extension==="heif")return{success:false as const,message:"HEIC dosyaları şu anda desteklenmiyor. JPG, PNG veya WebP kullanın."};
+ if((STUDIO_DANGEROUS_EXTENSIONS as readonly string[]).includes(extension))return{success:false as const,message:"Bu dosya türüne güvenlik nedeniyle izin verilmiyor."};
+ if(!(STUDIO_FILE_EXTENSIONS as readonly string[]).includes(extension))return{success:false as const,message:"Bu dosya türü desteklenmiyor."};
+ if(file.size<=0)return{success:false as const,message:"Boş dosya yüklenemez."};
+ const limit=STUDIO_FILE_LIMITS[file.category??"general"];
+ if(file.size>limit)return{success:false as const,message:`Bu kategori için dosya boyutu en fazla ${Math.round(limit/1024/1024)} MB olabilir.`};
+ if(/javascript|html|x-msdownload|x-executable|x-sh|x-dosexec/i.test(file.type))return{success:false as const,message:"Dosyanın içerik türü güvenli değil."};
+ return{success:true as const,extension,mimeType:file.type||"application/octet-stream"};
+}
 export function isStudioFileId(value:string){return uuid.safeParse(value).success;}
 export function parseFolderForm(formData:FormData){const values={name:String(formData.get("name")??""),parentFolderId:String(formData.get("parentFolderId")??"")};const result=folderSchema.safeParse(values);return result.success?{success:true as const,input:result.data}:{success:false as const,fieldErrors:z.flattenError(result.error).fieldErrors};}
 export function parseFileMetadataForm(formData:FormData){const values={displayName:String(formData.get("displayName")??""),description:String(formData.get("description")??""),category:String(formData.get("category")??""),folderId:String(formData.get("folderId")??"")};const result=fileMetadataSchema.safeParse(values);return result.success?{success:true as const,input:result.data}:{success:false as const,fieldErrors:z.flattenError(result.error).fieldErrors};}
