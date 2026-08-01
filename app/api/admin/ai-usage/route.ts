@@ -3,12 +3,13 @@ import {NextResponse} from "next/server";
 import {isAdmin} from "@/lib/admin-auth";
 import {getUsage, saveBudget, type BudgetSettings} from "@/lib/openai-usage";
 
-export async function GET() {
+export async function GET(request:Request) {
   if (!(await isAdmin())) {
     return NextResponse.json({error: "Yetkisiz"}, {status: 401});
   }
   try {
-    return NextResponse.json(await getUsage());
+    const p=new URL(request.url).searchParams;const bool=(key:string)=>p.has(key)?p.get(key)==="true":undefined;
+    return NextResponse.json(await getUsage({from:p.get("from")||undefined,to:p.get("to")||undefined,module:p.get("module")||undefined,operation:p.get("operation")||undefined,model:p.get("model")||undefined,organizationId:p.get("organization")||undefined,userId:p.get("user")||undefined,status:p.get("status")||undefined,fallbackUsed:bool("fallback"),usageUnavailable:bool("usageUnavailable"),pricingUnknown:bool("pricingUnknown")}));
   } catch (error) {
     console.error("AI usage endpoint failed unexpectedly", error);
     return NextResponse.json(

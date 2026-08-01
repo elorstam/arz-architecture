@@ -8,6 +8,8 @@ const ui = readFileSync("components/studio/notifications/StudioProjectStages.tsx
 const actions = readFileSync("app/studio/(protected)/projects/[projectId]/stages/actions.ts", "utf8");
 const repository = readFileSync("lib/studio/notifications/stage-flex-repository.ts", "utf8");
 const aiService = readFileSync("lib/studio/notifications/stage-ai-description-service.ts", "utf8");
+const sharedAiService = readFileSync("lib/studio/ai/ai-writing-service.ts", "utf8");
+const sharedDialog = readFileSync("components/studio/ai/StudioAiWritingDialog.tsx", "utf8");
 
 test("both stage dates are optional independently and together", () => {
   const updateStageRepository = repository.slice(
@@ -41,20 +43,20 @@ test("AI generation is owner scoped, server-only and has safe fallback", () => {
   assert.match(aiService, /server-only/);
   assert.match(aiService, /membership\.role !== "owner"/);
   assert.match(aiService, /organization_id/);
-  assert.match(aiService, /api\.openai\.com\/v1\/responses/);
-  assert.match(aiService, /message: fallback|description: fallback/);
+  assert.match(aiService, /generateStudioAiText/);
+  assert.match(sharedAiService, /api\.openai\.com\/v1\/responses/);
+  assert.match(sharedAiService, /fallbackStudioAiText/);
   assert.doesNotMatch(ui, /OPENAI_API_KEY|Bearer/);
 });
 
 test("AI description dialog supports edit regenerate use and cancel without immediate form mutation", () => {
-  assert.match(ui, /✨ AI ile Oluştur/);
-  assert.match(ui, /role="dialog"/);
-  assert.match(ui, /Yeniden Oluştur/);
-  assert.match(ui, />Kullan</);
-  assert.match(ui, />İptal</);
-  assert.match(ui, /value=\{candidate\}/);
-  assert.match(ui, /setValue\(candidate\)/);
-  assert.match(ui, /Kullan.*ana forma aktarılmaz/);
+  assert.match(ui, /triggerLabel="AI ile Oluştur"/);
+  assert.match(ui, /StudioAiWritingDialog/);
+  assert.match(sharedDialog, /role="dialog"/);
+  assert.match(sharedDialog, /Yeniden Oluştur/);
+  assert.match(sharedDialog, />Kullan</);
+  assert.match(sharedDialog, />İptal</);
+  assert.match(sharedDialog, /onUse\(text\)/);
 });
 
 test("date errors are safe Turkish field messages", () => {

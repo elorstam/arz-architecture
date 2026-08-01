@@ -7,7 +7,6 @@ import {
   attachStageFileAction,
   createStageAction,
   duplicateStageAction,
-  generateStageDescriptionAction,
   removeStageFileAction,
   reorderStageAction,
   sendStageNotificationAction,
@@ -15,6 +14,7 @@ import {
   updateStageAction,
 } from "@/app/studio/(protected)/projects/[projectId]/stages/actions";
 import { studioButtonClass } from "@/components/studio/StudioButton";
+import StudioAiWritingDialog from "@/components/studio/ai/StudioAiWritingDialog";
 import {
   PROJECT_STAGE_STATUSES,
   PROJECT_STAGE_STATUS_LABELS,
@@ -96,26 +96,9 @@ function AttachmentList({ projectId, attachments, canManage, archived }: { proje
 
 function StageDescriptionField({ stageId, initialValue }: { stageId: string; initialValue: string }) {
   const [value, setValue] = useState(initialValue);
-  const [candidate, setCandidate] = useState("");
-  const [open, setOpen] = useState(false);
-  const [error, setError] = useState("");
-  const [generating, startGenerating] = useTransition();
-
-  function generate(seed = value) {
-    setError("");
-    startGenerating(async () => {
-      const response = await generateStageDescriptionAction(stageId, seed);
-      if (!response.success) { setError(response.message ?? "AI açıklaması oluşturulamadı."); return; }
-      setCandidate(response.description);
-      setOpen(true);
-    });
-  }
-
   return <div className="grid gap-2 md:col-span-2">
-    <div className="flex flex-wrap items-center justify-between gap-2"><label htmlFor={`stage-description-${stageId}`} className="text-sm font-semibold">Açıklama</label><button type="button" disabled={generating} onClick={() => generate()} className={studioButtonClass("outline", "sm")}>{generating ? "Oluşturuluyor…" : "✨ AI ile Oluştur"}</button></div>
+    <div className="flex flex-wrap items-center justify-between gap-2"><label htmlFor={`stage-description-${stageId}`} className="text-sm font-semibold">Açıklama</label><StudioAiWritingDialog operation="stage_ai_description" title="AI Aşama Açıklaması" triggerLabel="AI ile Oluştur" currentText={value} context={{sourceRecordId:stageId}} onUse={setValue}/></div>
     <textarea id={`stage-description-${stageId}`} name="description" value={value} onChange={(event) => setValue(event.target.value)} maxLength={1500} className="min-h-28 w-full rounded-lg border p-3 text-[15px] leading-6" />
-    {error && !open ? <p role="alert" className="text-sm text-red-700">{error}</p> : null}
-    {open ? <div role="dialog" aria-modal="true" aria-labelledby={`stage-ai-title-${stageId}`} className="fixed inset-0 z-50 grid place-items-center overflow-y-auto bg-black/50 p-4"><div className="w-full max-w-2xl rounded-xl bg-white p-5 shadow-xl sm:p-6"><h4 id={`stage-ai-title-${stageId}`} className="text-xl font-semibold">AI Aşama Açıklaması</h4><p className="mt-2 text-sm text-slate-600">Öneriyi düzenleyebilir veya yeniden oluşturabilirsiniz. “Kullan” seçilene kadar ana forma aktarılmaz.</p><label className="mt-4 grid gap-2 text-sm font-semibold">Oluşturulan açıklama<textarea value={candidate} onChange={(event) => setCandidate(event.target.value)} maxLength={1500} className="min-h-48 rounded-lg border p-3 text-[15px] font-normal leading-6" /></label>{error ? <p role="alert" className="mt-3 text-sm text-red-700">{error}</p> : null}<div className="mt-5 flex flex-wrap justify-end gap-2"><button type="button" onClick={() => setOpen(false)} className={studioButtonClass("ghost", "sm")}>İptal</button><button type="button" disabled={generating} onClick={() => generate(candidate)} className={studioButtonClass("outline", "sm")}>Yeniden Oluştur</button><button type="button" disabled={!candidate.trim()} onClick={() => { setValue(candidate); setOpen(false); }} className={studioButtonClass("primary", "sm")}>Kullan</button></div></div></div> : null}
   </div>;
 }
 

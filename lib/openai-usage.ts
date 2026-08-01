@@ -48,7 +48,14 @@ export type UsageResult = {
   usageError?: string;
   configurationWarning?: string;
   budgetWarning?: string;
+  studio?: StudioUsageSummary;
 };
+
+type StudioUsageRow={module:string;operation:string;model:string|null;input_tokens:number|null;output_tokens:number|null;total_tokens:number|null;estimated_cost_usd:number|null;status:string;fallback_used:boolean;usage_unavailable:boolean;pricing_unknown:boolean;organization_id:string;user_id:string;created_at:string};
+export type StudioUsageFilters={from?:string;to?:string;module?:string;operation?:string;model?:string;organizationId?:string;userId?:string;status?:string;fallbackUsed?:boolean;usageUnavailable?:boolean;pricingUnknown?:boolean};
+export type StudioUsageSummary={requests:number;todayRequests:number;successful:number;failed:number;fallback:number;usageUnavailable:number;pricingUnknown:number;totalTokens:number;estimatedCostUsd:number|null;byModule:Array<{module:string;requests:number;totalTokens:number}>;byOperation:Array<{operation:string;requests:number;totalTokens:number}>;byModel:Array<{model:string;requests:number;inputTokens:number;outputTokens:number;totalTokens:number;estimatedCostUsd:number|null}>};
+const studioGroup=<T extends string>(rows:StudioUsageRow[],key:(row:StudioUsageRow)=>T)=>Object.values(rows.reduce<Record<string,{key:T;requests:number;totalTokens:number}>>((all,row)=>{const value=key(row);all[value]??={key:value,requests:0,totalTokens:0};all[value].requests++;all[value].totalTokens+=Number(row.total_tokens||0);return all},{}));
+async function getStudioUsage(filters:StudioUsageFilters={}):Promise<StudioUsageSummary>{try{const clauses=["select=module,operation,model,input_tokens,output_tokens,total_tokens,estimated_cost_usd,status,fallback_used,usage_unavailable,pricing_unknown,organization_id,user_id,created_at","order=created_at.desc","limit=5000"];const eq=(column:string,value:unknown)=>{if(value!==undefined&&value!=="")clauses.push(`${column}=eq.${encodeURIComponent(String(value))}`)};eq("module",filters.module);eq("operation",filters.operation);eq("model",filters.model);eq("organization_id",filters.organizationId);eq("user_id",filters.userId);eq("status",filters.status);eq("fallback_used",filters.fallbackUsed);eq("usage_unavailable",filters.usageUnavailable);eq("pricing_unknown",filters.pricingUnknown);if(filters.from)clauses.push(`created_at=gte.${encodeURIComponent(filters.from)}`);if(filters.to)clauses.push(`created_at=lte.${encodeURIComponent(filters.to)}`);const rows=await supabaseSelect<StudioUsageRow>("studio_ai_usage_events",clauses.join("&"));const today=new Date().toISOString().slice(0,10);const costs=rows.map(row=>row.estimated_cost_usd).filter((value):value is number=>value!==null);const modules=studioGroup(rows,row=>row.module).map(item=>({module:item.key,requests:item.requests,totalTokens:item.totalTokens}));const operations=studioGroup(rows,row=>row.operation).map(item=>({operation:item.key,requests:item.requests,totalTokens:item.totalTokens}));const models=Object.values(rows.reduce<Record<string,StudioUsageSummary["byModel"][number]>>((all,row)=>{const key=row.model||"unknown";all[key]??={model:key,requests:0,inputTokens:0,outputTokens:0,totalTokens:0,estimatedCostUsd:null};const item=all[key];item.requests++;item.inputTokens+=Number(row.input_tokens||0);item.outputTokens+=Number(row.output_tokens||0);item.totalTokens+=Number(row.total_tokens||0);if(row.estimated_cost_usd!==null)item.estimatedCostUsd=(item.estimatedCostUsd??0)+Number(row.estimated_cost_usd);return all},{}));return{requests:rows.length,todayRequests:rows.filter(row=>row.created_at.startsWith(today)).length,successful:rows.filter(row=>row.status==="success").length,failed:rows.filter(row=>row.status==="failed").length,fallback:rows.filter(row=>row.fallback_used).length,usageUnavailable:rows.filter(row=>row.usage_unavailable).length,pricingUnknown:rows.filter(row=>row.pricing_unknown).length,totalTokens:rows.reduce((sum,row)=>sum+Number(row.total_tokens||0),0),estimatedCostUsd:costs.length?costs.reduce((sum,value)=>sum+Number(value),0):null,byModule:modules,byOperation:operations,byModel:models};}catch{return{requests:0,todayRequests:0,successful:0,failed:0,fallback:0,usageUnavailable:0,pricingUnknown:0,totalTokens:0,estimatedCostUsd:null,byModule:[],byOperation:[],byModel:[]};}}
 
 const fallbackBudget = (): BudgetSettings => ({
   initialCreditUsd: Number(process.env.OPENAI_INITIAL_CREDIT_USD || 0),
@@ -113,8 +120,8 @@ function bucketCost(bucket: CostPage["data"][number]) {
   );
 }
 
-export async function getUsage(): Promise<UsageResult> {
-  if (cache && cache.expires > Date.now()) return cache.value;
+export async function getUsage(filters:StudioUsageFilters={}): Promise<UsageResult> {
+  if (cache && cache.expires > Date.now()&&Object.keys(filters).length===0) return cache.value;
 
   const now = new Date();
   const monthStartUtc = Math.floor(
@@ -188,9 +195,10 @@ export async function getUsage(): Promise<UsageResult> {
     usageError,
     configurationWarning,
     budgetWarning,
+    studio:await getStudioUsage(filters),
   };
 
-  cache = {expires: Date.now() + 5 * 60 * 1000, value};
+  if(Object.keys(filters).length===0)cache = {expires: Date.now() + 5 * 60 * 1000, value};
   return value;
 }
 

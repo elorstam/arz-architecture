@@ -14,6 +14,7 @@ const button = readFileSync("components/studio/official-processes/StudioFeeWhats
 const service = readFileSync("lib/studio/notifications/fee-whatsapp-service.ts", "utf8");
 const delivery = readFileSync("lib/studio/notifications/whatsapp-document-service.ts", "utf8");
 const aiService = readFileSync("lib/studio/notifications/fee-ai-message-service.ts", "utf8");
+const sharedAiService = readFileSync("lib/studio/ai/ai-writing-service.ts", "utf8");
 
 const folders = ["01 Proje", "02 Statik", "03 Mekanik-Elektrik", "04 Zemin Etüd", "05 Numarataj", "06 İSKİ", "07 Harçlar", "08 Dilekçeler", "09 Yapı Denetim", "10 Ruhsat Evrakları", "11 3D Görseller"];
 
@@ -53,9 +54,10 @@ test("AI fee message is deterministic, Turkish and amount-aware", () => {
 
 test("AI generation is server-only and safely falls back to the validated template", () => {
   assert.match(aiService, /server-only/);
-  assert.match(aiService, /api\.openai\.com\/v1\/responses/);
-  assert.match(aiService, /OPENAI_API_KEY/);
-  assert.match(aiService, /message: fallback/);
+  assert.match(aiService, /generateStudioAiText/);
+  assert.match(sharedAiService, /api\.openai\.com\/v1\/responses/);
+  assert.match(sharedAiService, /OPENAI_API_KEY/);
+  assert.match(sharedAiService, /fallbackStudioAiText/);
   assert.doesNotMatch(button, /OPENAI_API_KEY|Bearer/);
 });
 
