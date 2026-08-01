@@ -1,0 +1,4 @@
+"use client";
+import{useActionState}from"react";import{studioButtonClass}from"@/components/studio/StudioButton";import{createCustomFeeAction,type ProcessActionState}from"@/app/studio/(protected)/projects/[projectId]/official-processes/actions";
+const initial:ProcessActionState={success:false,message:""};
+export default function StudioCustomFeeForm({projectId}:{projectId:string}){const[state,action,pending]=useActionState(createCustomFeeAction.bind(null,projectId),initial);return <form action={action} className="flex flex-wrap items-end gap-3 rounded-xl border bg-white p-4"><label className="min-w-56 flex-1 text-sm font-medium">Özel harç adı<input required maxLength={160} name="title" className="mt-1 h-11 w-full rounded-lg border px-3 text-sm"/></label><button disabled={pending} className={studioButtonClass("primary")}>{pending?"Ekleniyor…":"Özel Harç Ekle"}</button>{state.message?<p role="status" className="w-full text-sm">{state.message}</p>:null}</form>}

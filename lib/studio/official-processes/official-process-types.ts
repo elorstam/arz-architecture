@@ -1,0 +1,8 @@
+export const OFFICIAL_PROCESS_STATUSES=["waiting","assessment_uploaded","client_notified","payment_waiting","receipt_uploaded","paid","document_received","cancelled"]as const;
+export type OfficialProcessStatus=typeof OFFICIAL_PROCESS_STATUSES[number];
+export const STATUS_LABELS:Record<OfficialProcessStatus,string>={waiting:"Bekleniyor",assessment_uploaded:"Tahakkuk Yüklendi",client_notified:"Müşteriye Bildirildi",payment_waiting:"Ödeme Bekleniyor",receipt_uploaded:"Dekont Yüklendi",paid:"Ödendi",document_received:"Evrak Alındı",cancelled:"İptal"};
+export const RESPONSIBLE_PARTIES=["arz_architecture","client","municipality","survey_engineer","soil_company","other"]as const;
+export type ResponsibleParty=typeof RESPONSIBLE_PARTIES[number];
+export const RESPONSIBLE_LABELS:Record<ResponsibleParty,string>={arz_architecture:"ARZ Mimarlık",client:"Müşteri",municipality:"Belediye",survey_engineer:"Harita Mühendisi",soil_company:"Zemin Firması",other:"Diğer"};
+export type OfficialProcess={id:string;projectId:string;entityType:"fee"|"application"|"clean_application";feeType:string|null;title:string;status:OfficialProcessStatus;amount:number|null;dueDate:string|null;responsibleParty:ResponsibleParty;description:string|null;isClientVisible:boolean;clientNotifiedAt:string|null;assessmentFileId:string|null;receiptFileId:string|null;receivedDocumentFileId:string|null;createdAt:string;updatedAt:string;isOverdue:boolean;events:Array<{id:string;title:string;createdAt:string}>};
+export type OfficialProcessSummary={pendingFees:number;paidFees:number;receivedDocuments:number;pendingDocuments:number;overdue:number;applicationStatus:string;cleanApplicationStatus:string};

@@ -1,0 +1,11 @@
+begin;
+drop trigger if exists studio_initialize_project_obligations_after_insert on public.studio_projects;
+drop function if exists public.studio_initialize_project_obligations_trigger();
+drop function if exists public.studio_initialize_project_obligations(uuid,uuid);
+drop table if exists public.studio_project_obligation_notifications;
+drop table if exists public.studio_project_obligation_events;
+drop table if exists public.studio_project_obligations;
+drop function if exists public.studio_obligation_audit();
+drop function if exists public.studio_validate_obligation();
+drop function if exists public.studio_validate_obligation_child();
+commit;

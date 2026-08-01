@@ -9,6 +9,7 @@ import {archiveStudioProject,createStudioProject,updateStudioProject} from "@/li
 import type {ProjectFormState} from "@/lib/studio/projects/project-types";
 import {parseStudioProjectForm} from "@/lib/studio/projects/project-validation";
 import {initializeStudioProjectDriveStorageIfReady} from "@/lib/studio/files/storage/project-drive-auto-initialization";
+import {initializeOfficialProcesses} from "@/lib/studio/official-processes/official-process-repository";
 
 function actionError(error:unknown,values:ProjectFormState["values"]):ProjectFormState{
  if(error instanceof StudioProjectError){
@@ -26,7 +27,7 @@ export async function createStudioProjectAction(_previous:ProjectFormState,formD
  let projectId:string;
  try{projectId=await createStudioProject(parsed.input);}
  catch(error){return actionError(error,parsed.values);}
- after(async()=>{await initializeStudioProjectDriveStorageIfReady(projectId).catch(()=>undefined);});
+ after(async()=>{await initializeStudioProjectDriveStorageIfReady(projectId).catch(()=>undefined);await initializeOfficialProcesses(projectId).catch(()=>undefined);});
  revalidatePath("/studio/projects");
  redirect(`/studio/projects/${projectId}`);
 }
