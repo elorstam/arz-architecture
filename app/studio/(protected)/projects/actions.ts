@@ -2,11 +2,13 @@
 
 import {revalidatePath} from "next/cache";
 import {redirect} from "next/navigation";
+import {after} from "next/server";
 
 import {StudioProjectError} from "@/lib/studio/projects/project-errors";
 import {archiveStudioProject,createStudioProject,updateStudioProject} from "@/lib/studio/projects/project-repository";
 import type {ProjectFormState} from "@/lib/studio/projects/project-types";
 import {parseStudioProjectForm} from "@/lib/studio/projects/project-validation";
+import {initializeStudioProjectDriveStorageIfReady} from "@/lib/studio/files/storage/project-drive-auto-initialization";
 
 function actionError(error:unknown,values:ProjectFormState["values"]):ProjectFormState{
  if(error instanceof StudioProjectError){
@@ -24,6 +26,7 @@ export async function createStudioProjectAction(_previous:ProjectFormState,formD
  let projectId:string;
  try{projectId=await createStudioProject(parsed.input);}
  catch(error){return actionError(error,parsed.values);}
+ after(async()=>{await initializeStudioProjectDriveStorageIfReady(projectId).catch(()=>undefined);});
  revalidatePath("/studio/projects");
  redirect(`/studio/projects/${projectId}`);
 }
