@@ -34,6 +34,7 @@ export async function createDriveResumableSession(organizationId:string,input:{n
 export async function downloadDriveFile(organizationId:string,fileId:string){return drive(organizationId,`files/${encodeURIComponent(fileId)}?alt=media`);}
 export async function getDriveFileMetadata(organizationId:string,fileId:string){return readMetadata(organizationId,fileId);}
 export async function updateDriveFile(organizationId:string,fileId:string,body:Record<string,unknown>){return patchMetadata(organizationId,fileId,body);}
+export async function copyDriveFile(organizationId:string,fileId:string,input:{name:string;parentId:string;appProperties:Record<string,string>}){const response=await drive(organizationId,`files/${encodeURIComponent(fileId)}/copy?fields=${encodeURIComponent(METADATA_FIELDS)}`,{method:"POST",headers:{"content-type":"application/json"},body:JSON.stringify({name:input.name,parents:[input.parentId],appProperties:input.appProperties})});return metadata(await response.json() as RawMetadata);}
 
 export const googleDriveStorageProvider:StudioStorageOperations={
  downloadFile:downloadDriveFile,

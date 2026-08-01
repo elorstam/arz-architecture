@@ -1,0 +1,5 @@
+"use client";
+import {useState,useTransition} from "react";
+import {promoteFileVersionAction} from "@/app/studio/(protected)/projects/[projectId]/files/actions";
+import {studioButtonClass,StudioPendingLabel} from "@/components/studio/StudioButton";
+export default function StudioVersionPromoteButton({projectId,fileId,versionId,versionNumber}:{projectId:string;fileId:string;versionId:string;versionNumber:number}){const[pending,start]=useTransition();const[error,setError]=useState("");return <div><button type="button" disabled={pending} onClick={()=>{if(window.confirm(`V${versionNumber} kaynak alınarak yeni bir geri dönüş sürümü oluşturulsun mu? Geçmiş silinmez.`))start(async()=>{setError("");try{await promoteFileVersionAction(projectId,fileId,versionId);}catch(value){setError(value instanceof Error?value.message:"Geri dönüş sürümü oluşturulamadı.");}});}} className={studioButtonClass("outline","sm")}><StudioPendingLabel pending={pending} pendingLabel="Kopyalanıyor…">Bu Sürümü Güncel Yap</StudioPendingLabel></button>{error?<p role="alert" className="mt-2 text-sm text-[#8b5141]">{error}</p>:null}</div>;}

@@ -1,0 +1,14 @@
+begin;
+drop trigger if exists studio_versions_current_state_validate on public.studio_project_file_versions;
+drop function if exists public.studio_validate_version_current_state();
+drop trigger if exists studio_files_current_version_validate on public.studio_project_files;
+drop function if exists public.studio_validate_current_version_pointer();
+drop function if exists public.studio_finalize_file_version(uuid,text,text,text,timestamptz);
+drop function if exists public.studio_finalize_initial_file_version(uuid,text,text,text,text,timestamptz);
+drop function if exists public.studio_reserve_file_version(uuid,text,text,bigint,text,text,text,text,uuid);
+alter table public.studio_project_files drop constraint if exists studio_project_files_current_version_fkey;
+alter table public.studio_project_files drop column if exists current_version_id,drop column if exists version_count,drop column if exists latest_version_number;
+drop table if exists public.studio_project_file_versions;
+drop function if exists public.studio_validate_file_version();
+notify pgrst,'reload schema';
+commit;

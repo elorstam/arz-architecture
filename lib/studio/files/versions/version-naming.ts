@@ -1,0 +1,4 @@
+import {fileExtension} from "../file-validation";
+function safeMarker(value:string){return value.normalize("NFD").replace(/[\u0300-\u036f]/g,"").replace(/[^a-zA-Z0-9_-]/g,"-").replace(/-+/g,"-").replace(/^-|-$/g,"").slice(0,40);}
+export function physicalVersionName(logicalName:string,versionNumber:number,revisionCode=""){const extension=fileExtension(logicalName);const base=logicalName.slice(0,-extension.length-1).replace(/__V\d+(?:__[^.]*)?$/i,"").trim();const revision=safeMarker(revisionCode);return`${base}__V${versionNumber}${revision?`__${revision}`:""}.${extension}`;}
+export function versionDownloadName(logicalName:string,versionNumber:number){const extension=fileExtension(logicalName);const base=logicalName.slice(0,-extension.length-1);return`${base}_V${versionNumber}.${extension}`;}
