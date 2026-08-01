@@ -7,6 +7,7 @@ import {
   attachStageFileAction,
   createStageAction,
   duplicateStageAction,
+  generateStageDescriptionAction,
   removeStageFileAction,
   reorderStageAction,
   sendStageNotificationAction,
@@ -93,6 +94,31 @@ function AttachmentList({ projectId, attachments, canManage, archived }: { proje
   );
 }
 
+function StageDescriptionField({ stageId, initialValue }: { stageId: string; initialValue: string }) {
+  const [value, setValue] = useState(initialValue);
+  const [candidate, setCandidate] = useState("");
+  const [open, setOpen] = useState(false);
+  const [error, setError] = useState("");
+  const [generating, startGenerating] = useTransition();
+
+  function generate(seed = value) {
+    setError("");
+    startGenerating(async () => {
+      const response = await generateStageDescriptionAction(stageId, seed);
+      if (!response.success) { setError(response.message ?? "AI açıklaması oluşturulamadı."); return; }
+      setCandidate(response.description);
+      setOpen(true);
+    });
+  }
+
+  return <div className="grid gap-2 md:col-span-2">
+    <div className="flex flex-wrap items-center justify-between gap-2"><label htmlFor={`stage-description-${stageId}`} className="text-sm font-semibold">Açıklama</label><button type="button" disabled={generating} onClick={() => generate()} className={studioButtonClass("outline", "sm")}>{generating ? "Oluşturuluyor…" : "✨ AI ile Oluştur"}</button></div>
+    <textarea id={`stage-description-${stageId}`} name="description" value={value} onChange={(event) => setValue(event.target.value)} maxLength={1500} className="min-h-28 w-full rounded-lg border p-3 text-[15px] leading-6" />
+    {error && !open ? <p role="alert" className="text-sm text-red-700">{error}</p> : null}
+    {open ? <div role="dialog" aria-modal="true" aria-labelledby={`stage-ai-title-${stageId}`} className="fixed inset-0 z-50 grid place-items-center overflow-y-auto bg-black/50 p-4"><div className="w-full max-w-2xl rounded-xl bg-white p-5 shadow-xl sm:p-6"><h4 id={`stage-ai-title-${stageId}`} className="text-xl font-semibold">AI Aşama Açıklaması</h4><p className="mt-2 text-sm text-slate-600">Öneriyi düzenleyebilir veya yeniden oluşturabilirsiniz. “Kullan” seçilene kadar ana forma aktarılmaz.</p><label className="mt-4 grid gap-2 text-sm font-semibold">Oluşturulan açıklama<textarea value={candidate} onChange={(event) => setCandidate(event.target.value)} maxLength={1500} className="min-h-48 rounded-lg border p-3 text-[15px] font-normal leading-6" /></label>{error ? <p role="alert" className="mt-3 text-sm text-red-700">{error}</p> : null}<div className="mt-5 flex flex-wrap justify-end gap-2"><button type="button" onClick={() => setOpen(false)} className={studioButtonClass("ghost", "sm")}>İptal</button><button type="button" disabled={generating} onClick={() => generate(candidate)} className={studioButtonClass("outline", "sm")}>Yeniden Oluştur</button><button type="button" disabled={!candidate.trim()} onClick={() => { setValue(candidate); setOpen(false); }} className={studioButtonClass("primary", "sm")}>Kullan</button></div></div></div> : null}
+  </div>;
+}
+
 function ActiveStage({ projectId, stage, attachments, files, canManage, whatsApp }: { projectId: string; stage: StudioProjectStage; attachments: Attachment[]; files: FileOption[]; canManage: boolean; whatsApp: WhatsAppReadiness }) {
   const [state, action, pending] = useActionState(updateStageAction.bind(null, projectId, stage.id), initial);
   const [busy, start] = useTransition();
@@ -112,9 +138,9 @@ function ActiveStage({ projectId, stage, attachments, files, canManage, whatsApp
       {canManage ? <form action={action} className="mt-4 grid gap-3 md:grid-cols-2">
         <label>Başlık<input name="title" defaultValue={stage.title} className="h-11 w-full rounded-lg border px-3" /></label>
         <label>Durum<select name="status" defaultValue={stage.status} className="h-11 w-full rounded-lg border px-3">{PROJECT_STAGE_STATUSES.map((value) => <option key={value} value={value}>{PROJECT_STAGE_STATUS_LABELS[value]}</option>)}</select></label>
-        <label>Açıklama<input name="description" defaultValue={stage.description} className="h-11 w-full rounded-lg border px-3" /></label>
-        <label>Başlangıç<input type="date" name="startedAt" defaultValue={stage.startedAt?.slice(0, 10)} className="h-11 w-full rounded-lg border px-3" /></label>
-        <label>Tamamlanma<input type="date" name="completedAt" defaultValue={stage.completedAt?.slice(0, 10)} className="h-11 w-full rounded-lg border px-3" /></label>
+        <StageDescriptionField stageId={stage.id} initialValue={stage.description} />
+        <label>Başlangıç <span className="font-normal text-slate-500">(opsiyonel)</span><input type="date" name="startedAt" defaultValue={stage.startedAt?.slice(0, 10)} className="h-11 w-full rounded-lg border px-3" /></label>
+        <label>Tamamlanma <span className="font-normal text-slate-500">(opsiyonel)</span><input type="date" name="completedAt" defaultValue={stage.completedAt?.slice(0, 10)} className="h-11 w-full rounded-lg border px-3" /></label>
         <label>Not<input name="note" defaultValue={stage.note} className="h-11 w-full rounded-lg border px-3" /></label>
         <label><input type="checkbox" name="isActive" defaultChecked={stage.isActive} /> Aktif</label>
         <label><input type="checkbox" name="isClientVisible" defaultChecked={stage.isClientVisible} /> Müşteriye görünür</label>
