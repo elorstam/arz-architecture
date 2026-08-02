@@ -1,5 +1,6 @@
 import { notFound } from "next/navigation";
 import StudioProjectStages from "@/components/studio/notifications/StudioProjectStages";
+import StudioProjectStageMilestoneWorkspace from "@/components/studio/notifications/StudioProjectStageMilestoneWorkspace";
 import StudioProjectTabs from "@/components/studio/projects/StudioProjectTabs";
 import {
   getProjectWhatsAppReadiness,
@@ -46,8 +47,12 @@ export default async function Page({
       <p className="text-sm font-semibold text-[#9a7b40]">{project.code}</p>
       <h1 className="mt-1 text-3xl font-semibold">Proje Aşamaları</h1>
       <StudioProjectTabs projectId={projectId} active="stages" />
-      {payload ? (
-        <StudioProjectStages
+       {payload ? (
+        view === "active" ? <StudioProjectStageMilestoneWorkspace
+          projectId={projectId}
+          {...payload}
+          canManage={access.canManage}
+        /> : <StudioProjectStages
           projectId={projectId}
           {...payload}
           view={view}

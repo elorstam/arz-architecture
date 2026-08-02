@@ -102,7 +102,7 @@ function StageDescriptionField({ stageId, initialValue }: { stageId: string; ini
   </div>;
 }
 
-function ActiveStage({ projectId, stage, attachments, files, canManage, whatsApp }: { projectId: string; stage: StudioProjectStage; attachments: Attachment[]; files: FileOption[]; canManage: boolean; whatsApp: WhatsAppReadiness }) {
+export function ActiveStage({ projectId, stage, attachments, files, canManage, whatsApp }: { projectId: string; stage: StudioProjectStage; attachments: Attachment[]; files: FileOption[]; canManage: boolean; whatsApp: WhatsAppReadiness }) {
   const [state, action, pending] = useActionState(updateStageAction.bind(null, projectId, stage.id), initial);
   const [busy, start] = useTransition();
   const [preview, setPreview] = useState(false);
@@ -157,7 +157,7 @@ function ArchivedStage({ projectId, stage, attachments, canManage }: { projectId
 }
 
 export default function StudioProjectStages({ projectId, stages, notifications, attachments, files, canManage, view, activeCount, archiveCount, whatsApp }: { projectId: string; stages: StudioProjectStage[]; notifications: StudioNotification[]; attachments: Attachment[]; files: FileOption[]; canManage: boolean; view: "active" | "archive"; activeCount: number; archiveCount: number; whatsApp: WhatsAppReadiness }) {
-  const progressStages = stages.filter((stage) => view === "active" && stage.isActive && stage.status !== "cancelled");
+  const progressStages = stages.filter((stage) => view === "active" && stage.isSystem && stage.isActive && !stage.isArchived && stage.status !== "cancelled");
   const completed = progressStages.filter((stage) => stage.status === "completed").length;
   const progress = progressStages.length ? Math.round((completed / progressStages.length) * 100) : 0;
   return (

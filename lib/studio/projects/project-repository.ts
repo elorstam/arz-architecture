@@ -7,7 +7,7 @@ import type {ProjectArchiveFilter,StudioProjectInput,StudioProjectMember,StudioP
 import {isStudioProjectId} from "@/lib/studio/projects/project-validation";
 import {createStudioServerClient} from "@/lib/studio/supabase/server";
 
-const projectSelect="id,organization_id,code,name,client_name,client_contact_name,client_email,client_phone,category,location,project_year,stage,status,progress,summary,current_phase,start_date,target_date,next_milestone,next_milestone_date,responsible_user_id,thumbnail_url,is_archived,created_at,updated_at,responsible_profile:profiles!studio_projects_responsible_user_id_fkey(id,full_name),stages:studio_project_stages(id,title,status,is_active,is_archived,sort_order)";
+const projectSelect="id,organization_id,code,name,client_name,client_contact_name,client_email,client_phone,category,location,project_year,stage,status,progress,summary,current_phase,start_date,target_date,next_milestone,next_milestone_date,responsible_user_id,thumbnail_url,is_archived,created_at,updated_at,responsible_profile:profiles!studio_projects_responsible_user_id_fkey(id,full_name),stages:studio_project_stages(id,title,status,is_active,is_archived,is_system,sort_order)";
 
 type ProjectContext={userId:string;organizationId:string;role:StudioRole;canManage:boolean};
 async function requireProjectContext(requireOwner=false):Promise<ProjectContext>{
