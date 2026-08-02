@@ -1,3 +1,13 @@
 import StudioTabs,{type StudioTabItem}from"@/components/studio/StudioTabs";
-const items:readonly StudioTabItem[]=[['/studio/finance','Genel Bakış'],['/studio/finance/incomes','Gelirler'],['/studio/finance/expenses','Giderler'],['/studio/finance/payments','Tahsilatlar'],['/studio/finance/progress-payments','Hakedişler'],['/studio/finance/profitability','Proje Karlılığı'],['/studio/finance/cash-flow','Nakit Akışı'],['/studio/finance/invoices','Faturalar'],['/studio/finance/reports','Raporlar']].map(([href,label])=>({href,label}));
-export default function StudioFinanceNav({active}:{active:string}){return <StudioTabs items={items} active={active} ariaLabel="Finans bölümleri"/>}
+const items:readonly StudioTabItem[]=[
+ {href:"/studio/finance",label:"Genel Bakış",icon:"dashboard"},
+ {href:"/studio/finance/incomes",label:"Gelirler",icon:"wallet"},
+ {href:"/studio/finance/expenses",label:"Giderler",icon:"receipt"},
+ {href:"/studio/finance/payments",label:"Tahsilatlar",icon:"check"},
+ {href:"/studio/finance/progress-payments",label:"Hakedişler",icon:"file-text"},
+ {href:"/studio/finance/profitability",label:"Proje Karlılığı",icon:"chart"},
+ {href:"/studio/finance/cash-flow",label:"Nakit Akışı",icon:"activity"},
+ {href:"/studio/finance/invoices",label:"Faturalar",icon:"receipt"},
+ {href:"/studio/finance/reports",label:"Raporlar",icon:"chart"},
+];
+export default function StudioFinanceNav({active}:{active:string}){return <StudioTabs items={items} active={active} ariaLabel="Finans bölümleri" variant="icon-navigation"/>}
