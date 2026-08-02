@@ -1,7 +1,16 @@
 begin;
 
 alter table public.studio_ai_usage_events drop constraint if exists studio_ai_usage_events_operation_check;
-alter table public.studio_ai_usage_events add constraint studio_ai_usage_events_operation_check check(operation in('fee_ai_whatsapp_message','stage_ai_description','crm_ai_meeting_note','proposal_ai_description','decision_ai_summary','render_description','render_analysis','finance_summary','payment_reminder','invoice_description','progress_payment','cashflow_summary','project_expense_description','visualization_finance_summary','visualization_expense_description','visualization_profitability_insight')));
+alter table public.studio_ai_usage_events
+  add constraint studio_ai_usage_events_operation_check
+  check (operation in (
+    'fee_ai_whatsapp_message','stage_ai_description','crm_ai_meeting_note',
+    'proposal_ai_description','decision_ai_summary','render_description',
+    'render_analysis','finance_summary','payment_reminder','invoice_description',
+    'progress_payment','cashflow_summary','project_expense_description',
+    'visualization_finance_summary','visualization_expense_description',
+    'visualization_profitability_insight'
+  ));
 alter table public.studio_finance_entries drop constraint if exists studio_finance_entries_category_check;
 alter table public.studio_finance_entries add constraint studio_finance_entries_category_check check(category in('project_fee','municipal_fee','building_inspection','personnel','office','software','advertising','tax','social_security','electricity','water','internet','vehicle','fuel','other','progress_payment','invoice','statik','mekanik','elektrik','zemin_etud','yapi_denetim','ozalit','belediye','harc','noter','ulasim','render_farm','freelance_modelleme','freelance_render','asset_model','texture_material','stock_visual','ai_credits','software_license','plugin','animation','video_editing','sound_license','hardware_rental','outsourced_service'));
 
