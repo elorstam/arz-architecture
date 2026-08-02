@@ -59,10 +59,31 @@ export async function getStudioProjectMembers():Promise<StudioProjectMember[]>{
 }
 export async function createStudioProject(input:StudioProjectInput){
  const context=await requireProjectContext(true);const supabase=await createStudioServerClient();
+ await assertActiveProjectType(input.stage,context.organizationId,supabase);
  if(input.responsibleUserId)await assertResponsibleMember(input.responsibleUserId,context.organizationId);
  const{data,error}=await supabase.from("studio_projects").insert({...projectInputToRow(input),organization_id:context.organizationId}).select("id").single();
  if(error){console.error("Studio project create failed.",{code:error.code});throw normalizeProjectError(error);}
  return data.id as string;
+}
+export async function listStudioProjectTypes(includeInactive=false){
+ const context=await requireProjectContext();const supabase=await createStudioServerClient();
+ let query=supabase.from("studio_project_types").select("id,organization_id,canonical_key,display_name,is_system,is_active,sort_order,archived_at").or(`organization_id.is.null,organization_id.eq.${context.organizationId}`).order("sort_order");
+ if(!includeInactive)query=query.eq("is_active",true);
+ const{data,error}=await query;if(error){console.error("Studio project types could not be loaded.",{code:error.code});throw normalizeProjectError(error);}return data??[];
+}
+export async function setStudioProjectTypeActive(typeId:string,active:boolean){
+ const context=await requireProjectContext(true);const supabase=await createStudioServerClient();
+ const{data,error}=await supabase.from("studio_project_types").update({is_active:active,archived_at:active?null:new Date().toISOString(),archived_by:active?null:context.userId,updated_by:context.userId}).eq("id",typeId).eq("organization_id",context.organizationId).eq("is_system",false).select("id").maybeSingle();
+ if(error)throw normalizeProjectError(error);if(!data)throw new StudioProjectError("not_found","Proje türü bulunamadı.");
+}
+export async function createStudioProjectType(canonicalKey:string,displayName:string){
+ const context=await requireProjectContext(true);const supabase=await createStudioServerClient();const key=canonicalKey.trim().toLowerCase();const name=displayName.trim();
+ if(!/^[a-z][a-z0-9_]{1,60}$/.test(key)||name.length<2||name.length>120)throw new StudioProjectError("forbidden","Geçersiz proje türü.");
+ const{error}=await supabase.from("studio_project_types").insert({organization_id:context.organizationId,canonical_key:key,display_name:name,is_system:false,is_active:true,sort_order:100,created_by:context.userId,updated_by:context.userId});if(error)throw normalizeProjectError(error);
+}
+async function assertActiveProjectType(value:string,organizationId:string,supabase:Awaited<ReturnType<typeof createStudioServerClient>>){
+ const{data,error}=await supabase.from("studio_project_types").select("id,is_active").or(`organization_id.is.null,organization_id.eq.${organizationId}`).eq("display_name",value).eq("is_active",true).maybeSingle();
+ if(error)throw normalizeProjectError(error);if(!data)throw new StudioProjectError("forbidden","Bu proje türü şu anda aktif değil.");
 }
 export async function updateStudioProject(projectId:string,input:StudioProjectInput){
  if(!isStudioProjectId(projectId))throw new StudioProjectError("not_found","Proje bulunamadı.");

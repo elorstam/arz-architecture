@@ -1,0 +1,20 @@
+begin;
+create table if not exists public.studio_project_types(
+ id uuid primary key default gen_random_uuid(), organization_id uuid references public.organizations(id), canonical_key text not null check(canonical_key~'^[a-z][a-z0-9_]{1,60}$'), display_name text not null check(char_length(btrim(display_name)) between 2 and 120), is_system boolean not null default false, is_active boolean not null default true, sort_order integer not null default 0 check(sort_order between 0 and 10000), created_by uuid references auth.users(id), updated_by uuid references auth.users(id), created_at timestamptz not null default now(), updated_at timestamptz not null default now(), archived_at timestamptz, archived_by uuid references auth.users(id), check((is_active and archived_at is null and archived_by is null) or (not is_active))) ;
+create unique index if not exists studio_project_types_system_key_uq on public.studio_project_types(canonical_key) where organization_id is null;
+create unique index if not exists studio_project_types_org_key_uq on public.studio_project_types(organization_id,canonical_key) where organization_id is not null;
+create index if not exists studio_project_types_active_order_idx on public.studio_project_types(organization_id,is_active,sort_order);
+create or replace function public.studio_validate_project_type() returns trigger language plpgsql set search_path=public as $$ begin new.display_name:=btrim(new.display_name);new.updated_at:=now();if tg_op='UPDATE' and (new.organization_id is distinct from old.organization_id or new.canonical_key<>old.canonical_key or new.is_system<>old.is_system or new.created_by is distinct from old.created_by or new.created_at<>old.created_at) then raise exception 'project_type_immutable_fields' using errcode='42501';end if;if new.is_system and new.organization_id is not null then raise exception 'system_project_type_scope_invalid' using errcode='23514';end if;return new;end $$;
+drop trigger if exists studio_validate_project_type on public.studio_project_types;
+create trigger studio_validate_project_type before insert or update on public.studio_project_types for each row execute function public.studio_validate_project_type();
+alter table public.studio_project_types enable row level security;
+drop policy if exists studio_project_types_select on public.studio_project_types;
+create policy studio_project_types_select on public.studio_project_types for select to authenticated using(organization_id is null or public.studio_is_organization_member(organization_id));
+drop policy if exists studio_project_types_owner_insert on public.studio_project_types;
+create policy studio_project_types_owner_insert on public.studio_project_types for insert to authenticated with check(organization_id is not null and not is_system and public.studio_has_organization_role(organization_id,array['owner']) and created_by=auth.uid() and updated_by=auth.uid());
+drop policy if exists studio_project_types_owner_update on public.studio_project_types;
+create policy studio_project_types_owner_update on public.studio_project_types for update to authenticated using(organization_id is not null and public.studio_has_organization_role(organization_id,array['owner'])) with check(organization_id is not null and public.studio_has_organization_role(organization_id,array['owner']) and updated_by=auth.uid());
+grant select,insert,update on public.studio_project_types to authenticated;
+revoke delete on public.studio_project_types from anon,authenticated;
+insert into public.studio_project_types(organization_id,canonical_key,display_name,is_system,is_active,sort_order) values(null,'permit','Ruhsat',true,true,1),(null,'visualization','Görselleştirme',true,true,2),(null,'proposal','Teklif',true,false,10),(null,'preliminary_design','Ön Tasarım',true,false,11),(null,'design','Tasarım',true,false,12),(null,'implementation','Uygulama',true,false,13),(null,'delivery','Teslim',true,false,14) on conflict do nothing;
+commit;

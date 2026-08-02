@@ -1,7 +1,7 @@
 import type {StudioIconName} from "@/components/studio/StudioIcons";
-import {PROJECT_STAGES,PROJECT_STATUSES} from "@/lib/studio/projects/project-constants";
+import {PROJECT_TYPE_VALUES,PROJECT_STATUSES} from "@/lib/studio/projects/project-constants";
 
-export type ProjectStage=(typeof PROJECT_STAGES)[number];
+export type ProjectStage=(typeof PROJECT_TYPE_VALUES)[number];
 export type ProjectStatus=(typeof PROJECT_STATUSES)[number];
 export type ProjectArchiveFilter="active"|"archived"|"all";
 export type ProjectTeamMember={id?:string;name:string;initials:string;role:string};

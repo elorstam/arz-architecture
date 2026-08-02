@@ -9,7 +9,7 @@ import {StudioPendingLabel,studioButtonClass} from "@/components/studio/StudioBu
 
 type Action=(state:ProjectFormState,formData:FormData)=>Promise<ProjectFormState>;
 const emptyValues:ProjectFormValues={name:"",code:"",category:"",location:"",projectYear:String(new Date().getFullYear()),
- clientName:"",clientContactName:"",clientEmail:"",clientPhone:"",stage:"Ön Tasarım",status:"Aktif",progress:"0",
+ clientName:"",clientContactName:"",clientEmail:"",clientPhone:"",stage:"",status:"Aktif",progress:"0",
  startDate:"",targetDate:"",summary:"",currentPhase:"",nextMilestone:"",nextMilestoneDate:"",responsibleUserId:""};
 
 function Field({name,label,state,type="text",required,placeholder}:{
@@ -31,9 +31,10 @@ function TextArea({name,label,state,placeholder}:{
    className="mt-2 w-full resize-y rounded-lg border border-[#ddd8ce] bg-[#fbfaf7] px-3 py-3 text-[11px] leading-5 text-[#343b40] outline-none placeholder:text-[#aaa9a4] focus:border-[#a58a56] focus:ring-2 focus:ring-[#a58a56]/15" />
   {error?<span id={`${name}-error`} className="mt-1.5 block text-[9px] text-[#9b5d48]">{error}</span>:null}</label>;
 }
-export default function StudioProjectForm({action,initialValues,members,mode,projectId}:{
- action:Action;initialValues?:ProjectFormValues;members:StudioProjectMember[];mode:"create"|"edit";projectId?:string;
+export default function StudioProjectForm({action,initialValues,members,mode,projectId,projectTypes}:{
+ action:Action;initialValues?:ProjectFormValues;members:StudioProjectMember[];mode:"create"|"edit";projectId?:string;projectTypes?:{display_name:string;is_active:boolean}[];
 }){
+ void projectTypes;
  const[state,formAction,pending]=useActionState(action,{success:false,values:initialValues??emptyValues});
  const values=state.values??initialValues??emptyValues;
  return <form action={formAction} className="space-y-5">
