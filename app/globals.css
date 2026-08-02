@@ -429,6 +429,8 @@ html[data-theme="light"] .language-switcher-trigger {
 .studio-root .studio-project-tabs-future { display:flex; min-width:0; flex-wrap:wrap; gap:.35rem; padding:.25rem .2rem .1rem; color:#9b9b96; font-size:.75rem; }
 .studio-root .studio-project-tabs-future span { display:inline-flex; align-items:center; gap:.35rem; border-radius:.5rem; padding:.35rem .55rem; }
 .studio-root .studio-project-tabs-future small { border:1px solid var(--studio-border); border-radius:9999px; padding:.15rem .35rem; font-size:.625rem; }
+.studio-root .studio-filter-input,.studio-root .studio-filter-select { min-height:2.75rem; border:1px solid var(--studio-border-strong); border-radius:.75rem; background:var(--studio-surface); padding:.65rem .8rem; color:var(--studio-text); font-size:.8125rem; outline:none; }
+.studio-root .studio-filter-input:focus,.studio-root .studio-filter-select:focus { border-color:#a98f5e; box-shadow:0 0 0 3px rgb(169 143 94/.14); }
 .studio-root :where(input, select, textarea) { color: var(--studio-text); font: inherit; }
 .studio-root :where(input, select, textarea)::placeholder { color: #8e918d; opacity: 1; }
 .studio-root :where(input, select, textarea):disabled { cursor: not-allowed; background: #eeece7; color: #777b78; opacity: 1; }

@@ -5,10 +5,11 @@ import StudioProjectProgress from "@/components/studio/projects/StudioProjectPro
 import StudioProjectStatusBadge from "@/components/studio/projects/StudioProjectStatusBadge";
 import StudioFavoriteButton from "@/components/studio/quick-access/StudioFavoriteButton";
 import StudioProjectCardMilestoneTimeline from "@/components/studio/projects/StudioProjectCardMilestoneTimeline";
+import {StudioCard} from "@/components/studio/StudioDesignSystem";
 
 export default function StudioProjectCard({project,isFavorite=false}: {project: StudioProject;isFavorite?:boolean}) {
   return (
-    <article className="group relative min-w-0 overflow-hidden rounded-xl border border-[#dedad1] bg-white shadow-[0_4px_18px_rgba(32,39,46,.03)] transition-[border-color,box-shadow,transform] duration-200 hover:-translate-y-0.5 hover:border-[#cfc7b7] hover:shadow-[0_12px_30px_rgba(32,39,46,.065)]">
+    <StudioCard as="article" className="group relative overflow-hidden p-0 transition-transform duration-200 hover:-translate-y-0.5">
       <div className="absolute right-4 top-4 z-10"><StudioFavoriteButton entityType="project" entityId={project.id} initialFavorite={isFavorite} compact/></div><Link href={`/studio/projects/${project.id}`} className="block outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-[#9e8452]">
         <div className="relative h-36 overflow-hidden bg-[#1b2731] sm:h-40">
           {project.thumbnail?<div className="absolute inset-0 bg-cover bg-center opacity-55 grayscale transition-[opacity,transform] duration-300 group-hover:scale-[1.015] group-hover:opacity-65" style={{backgroundImage:`url("${project.thumbnail}")`}}/>:<div className="absolute inset-0 bg-[linear-gradient(135deg,#25343f_0%,#17242e_55%,#34414a_100%)]"/>}
@@ -33,6 +34,6 @@ export default function StudioProjectCard({project,isFavorite=false}: {project: 
           <div className="mt-5"><StudioProjectCardMilestoneTimeline items={project.cardMilestones}/></div>
         </div>
       </Link>
-    </article>
+    </StudioCard>
   );
 }
