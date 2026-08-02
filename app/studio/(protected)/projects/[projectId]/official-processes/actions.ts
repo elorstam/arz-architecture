@@ -1,6 +1,6 @@
 "use server";
 import { revalidatePath } from "next/cache";
-import { archiveCustomFee, createCustomFee, notifyOfficialProcess, updateOfficialProcess } from "@/lib/studio/official-processes/official-process-repository";
+import { archiveOfficialProcess, archiveCustomFee, createCustomFee, issueOfficialProcessDeletionConfirmation, notifyOfficialProcess, permanentlyDeleteOfficialProcess, restoreOfficialProcess, updateOfficialProcess } from "@/lib/studio/official-processes/official-process-repository";
 import { recordOfficialProcessNotification } from "@/lib/studio/notifications/notification-repository";
 
 export type ProcessActionState = { success: boolean; message: string };
@@ -26,6 +26,10 @@ export async function createCustomFeeAction(projectId: string, _state: ProcessAc
 
 export async function notifyOfficialProcessAction(id: string) { await recordOfficialProcessNotification(id); const projectId = await notifyOfficialProcess(id); revalidatePath(`/studio/projects/${projectId}/official-processes`); }
 export async function archiveCustomFeeAction(id: string) { const projectId = await archiveCustomFee(id); revalidatePath(`/studio/projects/${projectId}/official-processes`); }
+export async function archiveOfficialProcessAction(id: string) { const projectId = await archiveOfficialProcess(id); revalidatePath(`/studio/projects/${projectId}/official-processes`); }
+export async function restoreOfficialProcessAction(id: string) { const projectId = await restoreOfficialProcess(id); revalidatePath(`/studio/projects/${projectId}/official-processes?view=archive`); }
+export async function prepareOfficialProcessDeletionAction(id: string, name: string) { try { return { ok: true, token: await issueOfficialProcessDeletionConfirmation(id, name) }; } catch { return { ok: false, message: "Süreç adı doğrulanamadı." }; } }
+export async function permanentlyDeleteOfficialProcessAction(id: string, token: string, reason: string) { try { await permanentlyDeleteOfficialProcess(id, token, reason); revalidatePath("/studio/projects", "layout"); return { ok: true }; } catch { return { ok: false, message: "Süreç kalıcı olarak silinemedi." }; } }
 
 export async function generateFeeWhatsAppMessageAction(id: string) {
   try { const { generateAiFeeWhatsAppMessage } = await import("@/lib/studio/notifications/fee-ai-message-service"); return { success: true, ...(await generateAiFeeWhatsAppMessage(id)) }; }
