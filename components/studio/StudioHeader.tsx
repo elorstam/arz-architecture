@@ -1,6 +1,27 @@
 "use client";
+
 import Link from "next/link";
 import {studioButtonClass} from "@/components/studio/StudioButton";
 import {StudioIcon} from "@/components/studio/StudioIcons";
+import {StudioIconButton} from "@/components/studio/ui";
 import StudioCommandPalette from "@/components/studio/search/StudioCommandPalette";
-export default function StudioHeader({onMenuOpen,userName}:{onMenuOpen:()=>void;userName:string}){return <header className="sticky top-0 z-30 flex min-h-[82px] flex-wrap items-center gap-3 border-b border-[#ddd9d0] bg-[#f4f2ed]/95 px-4 py-3 backdrop-blur-md sm:h-[82px] sm:flex-nowrap sm:px-6 sm:py-0 lg:px-8"><button type="button" onClick={onMenuOpen} aria-label="Menüyü aç" className={studioButtonClass("icon","md","lg:hidden")}><StudioIcon name="menu" className="h-5 w-5"/></button><div className="order-last w-full sm:order-none sm:max-w-[420px]"><StudioCommandPalette/></div><div className="ml-auto flex items-center gap-2 sm:gap-3"><button type="button" aria-label="Bildirimler" title="Bildirimler" className={studioButtonClass("icon","md","relative")}><StudioIcon name="notifications" className="h-[19px] w-[19px]"/><span className="absolute right-2.5 top-2.5 h-1.5 w-1.5 rounded-full bg-[#b39459]"/></button><Link href="/studio/projects/new" className={studioButtonClass("primary","md","px-3.5 sm:px-4")}><StudioIcon name="plus" className="h-4 w-4 text-[#d6bd87]"/><span className="hidden sm:inline">Yeni Proje</span><span className="sm:hidden">Yeni</span></Link><div className="ml-1 hidden border-l border-[#d8d4cb] pl-4 xl:block"><p className="text-[10px] text-[#8b8b86]">Aktif kullanıcı</p><p className="mt-0.5 max-w-[140px] truncate text-[12px] font-medium text-[#30363b]">{userName}</p></div></div></header>;}
+
+export default function StudioHeader({onMenuOpen,userName}:{onMenuOpen:()=>void;userName:string}){
+  return <header className="studio-shell-header sticky top-0 z-30">
+    <div className="flex min-w-0 items-center gap-2">
+      <StudioIconButton icon="menu" label="Menüyü aç" onClick={onMenuOpen} className="lg:hidden" />
+      <div className="min-w-0 max-w-[420px] flex-1 sm:flex-none"><StudioCommandPalette /></div>
+    </div>
+    <div className="ml-auto flex shrink-0 items-center gap-2 sm:gap-3">
+      <StudioIconButton icon="notifications" label="Bildirimler" variant="subtle" />
+      <Link href="/studio/projects/new" className={studioButtonClass("primary","md","px-3.5 sm:px-4")}>
+        <StudioIcon name="plus" className="h-4 w-4 text-[#d6bd87]" />
+        <span className="hidden sm:inline">Yeni Proje</span><span className="sm:hidden">Yeni</span>
+      </Link>
+      <div className="ml-1 hidden min-w-0 border-l border-[#d8d4cb] pl-4 xl:block">
+        <p className="text-[10px] text-[#8b8b86]">Aktif kullanıcı</p>
+        <p className="mt-0.5 max-w-[140px] truncate text-[12px] font-medium text-[#30363b]">{userName}</p>
+      </div>
+    </div>
+  </header>;
+}
