@@ -16,7 +16,7 @@ export default function StudioDailyFocus({items}: {items: FocusItem[]}) {
           <h2 id="daily-focus-title" className="mt-3 text-[20px] font-medium tracking-[-.025em]">Bugünün Odağı</h2>
           <p className="mt-2 text-[11px] leading-5 text-white/45">Önce dikkat gerektiren işleri tamamlayın.</p>
         </div>
-        <div className="grid gap-px bg-white/[.07] sm:grid-cols-2 xl:grid-cols-4">
+        <div className="grid gap-px bg-white/[.07] sm:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-6">
           {items.map((item) => (
             <article key={item.label} className="group bg-[#17222c] p-5 transition-colors hover:bg-[#1d2a35]">
               <div className="flex items-start justify-between gap-3">

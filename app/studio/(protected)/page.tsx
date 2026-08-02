@@ -21,8 +21,11 @@ export default async function StudioDashboardPage() {
   const profile = Array.isArray(context.membership.profiles)
     ? context.membership.profiles[0]
     : context.membership.profiles;
-  const activeProject = projects[0] ?? null;
-  const officialProcesses = activeProject ? await listOfficialProcesses(activeProject.id) : [];
+  const officialProcessesByProject = Object.fromEntries(
+    await Promise.all(
+      projects.map(async (project) => [project.id, await listOfficialProcesses(project.id)] as const),
+    ),
+  );
   const dateLabel = new Intl.DateTimeFormat("tr-TR", {
     weekday: "long",
     day: "numeric",
@@ -41,7 +44,7 @@ export default async function StudioDashboardPage() {
       quickAccess={quickAccess}
       finance={finance}
       projects={projects}
-      officialProcesses={officialProcesses}
+      officialProcessesByProject={officialProcessesByProject}
     />
   );
 }
