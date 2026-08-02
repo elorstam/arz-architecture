@@ -344,6 +344,18 @@ html[data-theme="light"] .language-switcher-trigger {
   --studio-border-strong: #d4dde6;
   --studio-gold: #9b7f4d;
   --studio-danger: #8b5141;
+  --studio-workspace: #f7f9fc;
+  --studio-surface-muted: #f3f6fa;
+  --studio-text-primary: #202a30;
+  --studio-text-secondary: #59656d;
+  --studio-text-muted: #89939a;
+  --studio-navy: #17232e;
+  --studio-blue: #2d7ef7;
+  --studio-purple: #7b3ff2;
+  --studio-green: #2fa84f;
+  --studio-amber: #f6a100;
+  --studio-red: #b45f59;
+  --studio-slate: #60738a;
   --studio-font-helper: .8125rem;
   --studio-font-label: .875rem;
   --studio-font-content: .9375rem;
@@ -777,10 +789,14 @@ html[data-theme="light"] .site-header .language-switcher__menu {
 .studio-root .studio-dashboard-v3 .studio-dashboard-milestone__node--sand { background:#f4eee6; color:#8f7559; }
 .studio-root .studio-dashboard-v3 .studio-dashboard-milestone__node--slate { background:#edf1f4; color:#617783; }
 .studio-root .studio-icon-surface { display:inline-grid; flex-shrink:0; place-items:center; border:0; border-radius:1.25rem; box-shadow:0 8px 18px rgba(39,53,65,.08); transition:transform 150ms ease,box-shadow 150ms ease; }
-.studio-root .studio-icon-surface--sm { width:3rem; height:3rem; border-radius:1rem; }.studio-root .studio-icon-surface--md { width:4rem; height:4rem; }.studio-root .studio-icon-surface--lg { width:4.25rem; height:4.25rem; }
+.studio-root .studio-icon-surface--sm { width:2.25rem; height:2.25rem; border-radius:1rem; }.studio-root .studio-icon-surface--md { width:2.75rem; height:2.75rem; }.studio-root .studio-icon-surface--lg { width:3.5rem; height:3.5rem; }
+.studio-root .studio-icon-surface--xl { width:4rem; height:4rem; }
+.studio-root .studio-icon-surface--rounded { border-radius:1rem; }.studio-root .studio-icon-surface--squircle { border-radius:1.25rem; }
+.studio-root .studio-icon-surface--interactive { cursor:pointer; }
 .studio-root .studio-icon-surface__icon { width:1.875rem; height:1.875rem; stroke-width:2.4; stroke-linecap:round; stroke-linejoin:round; }
-.studio-root .studio-icon-surface--sm .studio-icon-surface__icon { width:1.35rem; height:1.35rem; }.studio-root .studio-icon-surface--lg .studio-icon-surface__icon { width:2rem; height:2rem; }
+.studio-root .studio-icon-surface--sm .studio-icon-surface__icon { width:1rem; height:1rem; }.studio-root .studio-icon-surface--md .studio-icon-surface__icon { width:1.25rem; height:1.25rem; }.studio-root .studio-icon-surface--lg .studio-icon-surface__icon { width:1.625rem; height:1.625rem; }.studio-root .studio-icon-surface--xl .studio-icon-surface__icon { width:1.875rem; height:1.875rem; }
 .studio-root .studio-icon-surface--gold { background:#fbf3e4; color:#c48a1a; }.studio-root .studio-icon-surface--purple { background:#f1ebff; color:#7b3ff2; }.studio-root .studio-icon-surface--blue { background:#eaf4ff; color:#2d7ef7; }.studio-root .studio-icon-surface--amber { background:#fff6e4; color:#f6a100; }.studio-root .studio-icon-surface--green { background:#ebf9ef; color:#2fa84f; }.studio-root .studio-icon-surface--sand { background:#f6f2e8; color:#a67c3a; }.studio-root .studio-icon-surface--slate { background:#eef2f7; color:#60738a; }
+.studio-root .studio-icon-surface--red { background:#fbeceb; color:#b45f59; }
 .studio-root .studio-icon-surface:hover { transform:scale(1.04); box-shadow:0 12px 24px rgba(39,53,65,.14); }
 .studio-root .studio-milestone-icon--current { box-shadow:0 0 0 4px rgba(45,126,247,.13),0 12px 26px rgba(45,126,247,.18); }
 .studio-root .studio-milestone-icon--completed { box-shadow:0 0 0 3px rgba(47,168,79,.1),0 10px 22px rgba(47,168,79,.14); }

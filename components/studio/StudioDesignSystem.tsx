@@ -7,7 +7,7 @@ export function StudioCard({children,className="",as:Tag="section"}:{children:Re
 }
 
 export function StudioKpiCard({label,value,detail,icon="chart",className=""}:{label:string;value:ReactNode;detail?:string;icon?:StudioIconName;className?:string}){
-  return <StudioCard as="article" className={`studio-kpi-v2 group ${className}`}><div className="flex items-start justify-between gap-4"><div className="min-w-0"><p className="studio-eyebrow">{label}</p><p className="studio-kpi-value">{value}</p></div><StudioIconSurface icon={icon} tone="blue" size="md" className="studio-kpi-icon"/></div>{detail?<p className="studio-kpi-detail">{detail}</p>:null}</StudioCard>;
+  return <StudioCard as="article" className={`studio-kpi-v2 group ${className}`}><div className="flex items-start justify-between gap-4"><div className="min-w-0"><p className="studio-eyebrow">{label}</p><p className="studio-kpi-value">{value}</p></div><StudioIconSurface icon={icon} tone="blue" size="lg" className="studio-kpi-icon"/></div>{detail?<p className="studio-kpi-detail">{detail}</p>:null}</StudioCard>;
 }
 
 export function StudioToolbar({children,className=""}:{children:ReactNode;className?:string}){
