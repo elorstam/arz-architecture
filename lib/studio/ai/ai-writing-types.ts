@@ -4,6 +4,7 @@ export const STUDIO_AI_OPERATIONS = {
   crm: ["crm_ai_meeting_note"],
   proposals: ["proposal_ai_description"],
   decision_log: ["decision_ai_summary"],
+  renders: ["render_description", "render_analysis"],
 } as const;
 
 export type StudioAiModule = keyof typeof STUDIO_AI_OPERATIONS;

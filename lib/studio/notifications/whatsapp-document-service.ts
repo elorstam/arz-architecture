@@ -6,7 +6,7 @@ import { sendWhatsAppDocument, uploadWhatsAppDocument } from "./whatsapp-media-a
 
 export async function sendStudioDocumentNotification(input: {
   projectId: string;
-  sourceType: "fee" | "project_stage";
+  sourceType: "fee" | "project_stage" | "custom";
   sourceId: string;
   fileId: string;
   templateName: string;
@@ -35,7 +35,7 @@ export async function sendStudioDocumentNotification(input: {
     await db.from("studio_notifications").update({ status: "failed", safe_error_code: media.errorCode }).eq("id", notification.id);
     throw new Error(media.errorCode);
   }
-  const sent = await sendWhatsAppDocument({ phone: leads[0].whatsapp_phone || project.client_phone, templateName: input.templateName, parameters: input.parameters ?? Object.values(input.variables), mediaId: media.mediaId, fileName: download.fileName });
+  const sent = await sendWhatsAppDocument({ phone: leads[0].whatsapp_phone || project.client_phone, templateName: input.templateName, parameters: input.parameters ?? Object.values(input.variables), mediaId: media.mediaId, fileName: download.fileName, mimeType:mime });
   await db.from("studio_notification_attachments").insert({ organization_id: organizationId, notification_id: notification.id, file_id: input.fileId, status: sent.ok ? "sent" : "failed", provider_media_id: media.mediaId, provider_message_id: sent.ok ? sent.messageId : null, safe_error_code: sent.ok ? null : sent.errorCode });
   await db.from("studio_notifications").update(sent.ok ? { status: "sent", provider_message_id: sent.messageId, sent_at: new Date().toISOString() } : { status: "failed", safe_error_code: sent.errorCode }).eq("id", notification.id);
   if (!sent.ok) throw new Error(sent.errorCode);
