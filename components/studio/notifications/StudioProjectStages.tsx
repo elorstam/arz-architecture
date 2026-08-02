@@ -157,7 +157,10 @@ function ArchivedStage({ projectId, stage, attachments, canManage }: { projectId
 }
 
 export default function StudioProjectStages({ projectId, stages, notifications, attachments, files, canManage, view, activeCount, archiveCount, whatsApp }: { projectId: string; stages: StudioProjectStage[]; notifications: StudioNotification[]; attachments: Attachment[]; files: FileOption[]; canManage: boolean; view: "active" | "archive"; activeCount: number; archiveCount: number; whatsApp: WhatsAppReadiness }) {
-  const progressStages = stages.filter((stage) => view === "active" && stage.isSystem && stage.isActive && !stage.isArchived && stage.status !== "cancelled");
+  const progressStages = stages.filter((stage) => {
+    const activeStage = stage.isActive && stage.status !== "cancelled" && !stage.isArchived;
+    return view === "active" && stage.isSystem && activeStage;
+  });
   const completed = progressStages.filter((stage) => stage.status === "completed").length;
   const progress = progressStages.length ? Math.round((completed / progressStages.length) * 100) : 0;
   return (
