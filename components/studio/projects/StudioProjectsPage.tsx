@@ -4,6 +4,7 @@ import type {StudioProject} from "@/components/studio/projects/StudioProjectData
 import StudioProjectsHeader from "@/components/studio/projects/StudioProjectsHeader";
 import StudioProjectsFilters, {type ProjectFilters} from "@/components/studio/projects/StudioProjectsFilters";
 import {studioButtonClass} from "@/components/studio/StudioButton";
+import {StudioEmptyState} from "@/components/studio/ui";
 
 export default function StudioProjectsPage({projects, totalCount, filters,canManage,favoriteKeys}: {
   projects: StudioProject[];
@@ -21,15 +22,11 @@ export default function StudioProjectsPage({projects, totalCount, filters,canMan
         <p className="text-[8px] text-[#aaa69e]">Son güncellenenler önce</p>
       </div>
       {projects.length ? (
-        <div className="mt-3 grid min-w-0 gap-4 md:grid-cols-2 2xl:grid-cols-3">
+        <div className="mt-3 grid min-w-0 items-stretch gap-4 md:grid-cols-2 xl:grid-cols-3">
           {projects.map((project) => <StudioProjectCard key={project.id} project={project} isFavorite={favoriteKeys.has(`project:${project.id}`)} />)}
         </div>
       ) : (
-        <div className="mt-3 rounded-xl border border-dashed border-[#d7d1c6] bg-white/55 px-6 py-16 text-center">
-          <h2 className="text-[16px] font-semibold text-[#3f474c]">{totalCount===0?"Henüz bir proje oluşturulmadı.":"Eşleşen proje bulunamadı"}</h2>
-          <p className="mx-auto mt-2 max-w-md text-[10px] leading-5 text-[#92938e]">{totalCount===0?"İlk projenizi oluşturarak proje süreçlerini ARZ Studio üzerinden takip etmeye başlayın.":"Arama ifadesini veya filtreleri değiştirerek yeniden deneyin."}</p>
-          {totalCount===0&&canManage?<Link href="/studio/projects/new" className={studioButtonClass("primary", "md", "mt-5")}>İlk Projeyi Oluştur</Link>:null}
-        </div>
+        <div className="mt-3"><StudioEmptyState icon="building" title={totalCount===0?"Henüz bir proje oluşturulmadı.":"Eşleşen proje bulunamadı"} description={totalCount===0?"İlk projenizi oluşturarak proje süreçlerini ARZ Studio üzerinden takip etmeye başlayın.":"Arama ifadesini veya filtreleri değiştirerek yeniden deneyin."} action={totalCount===0&&canManage?<Link href="/studio/projects/new" className={studioButtonClass("primary","md")}>İlk Projeyi Oluştur</Link>:undefined}/></div>
       )}
     </section>
   );
