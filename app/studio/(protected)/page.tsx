@@ -5,11 +5,12 @@ import {getStudioContext} from "@/lib/studio/auth/get-studio-context";
 import {getStudioLeadSummary} from "@/lib/studio/crm/lead-repository";
 import {getStudioQuoteSummary} from "@/lib/studio/quotes/quote-repository";
 import {getQuickAccessData} from "@/lib/studio/quick-access/quick-access-repository";
+import {getFinanceDashboard} from "@/lib/studio/finance/finance-repository";
 
 export const dynamic = "force-dynamic";
 
 export default async function StudioDashboardPage() {
-  const [context, crmSummary, quoteSummary, quickAccess] = await Promise.all([getStudioContext(), getStudioLeadSummary(), getStudioQuoteSummary(), getQuickAccessData(4)]);
+  const [context, crmSummary, quoteSummary, quickAccess, finance] = await Promise.all([getStudioContext(), getStudioLeadSummary(), getStudioQuoteSummary(), getQuickAccessData(4), getFinanceDashboard()]);
   if (!context?.membership) redirect("/studio/login");
 
   const organization = Array.isArray(context.membership.organizations)
@@ -34,6 +35,7 @@ export default async function StudioDashboardPage() {
       crmSummary={crmSummary}
       quoteSummary={quoteSummary}
       quickAccess={quickAccess}
+      finance={finance}
     />
   );
 }

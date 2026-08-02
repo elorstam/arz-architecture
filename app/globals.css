@@ -94,6 +94,8 @@ html[data-theme="light"] [class~="bg-[#080b10]"] {
 html[data-theme="light"] [class~="text-white"] { color: rgb(var(--theme-fg)); }
 .studio-project-tab-active,
 html[data-theme="light"] .studio-project-tab-active { color:#fff !important; }
+.studio-root .studio-tab-active,
+html[data-theme="light"] .studio-root .studio-tab-active { color:#fff !important; }
 html[data-theme="light"] [class~="text-white/95"] { color: rgb(var(--theme-fg) / .95); }
 html[data-theme="light"] [class~="text-white/92"] { color: rgb(var(--theme-fg) / .92); }
 html[data-theme="light"] [class~="text-white/90"] { color: rgb(var(--theme-fg) / .90); }
@@ -414,6 +416,14 @@ html[data-theme="light"] .language-switcher-trigger {
   line-height: 1.6;
 }
 .studio-root :where(button, a, input, select, textarea):focus-visible { outline: 2px solid #b89a62; outline-offset: 2px; }
+.studio-root .studio-tabs { margin-top:1.5rem; min-width:0; overflow-x:auto; padding-bottom:.5rem; scrollbar-width:thin; scrollbar-color:#c8b997 transparent; }
+.studio-root .studio-tabs__track { display:flex; width:max-content; min-width:100%; gap:.5rem; }
+.studio-root .studio-tab { display:inline-flex; min-height:2.75rem; flex-shrink:0; align-items:center; justify-content:center; border:1px solid #d8d0c2; border-radius:.625rem; padding:.75rem 1rem; font-size:.9375rem; font-weight:650; line-height:1.2; white-space:nowrap; text-decoration:none; transition:background-color 180ms ease,border-color 180ms ease,color 180ms ease,box-shadow 180ms ease; }
+.studio-root .studio-tab-active { border-color:#26313a; background:#26313a; color:#fff !important; box-shadow:0 4px 12px rgb(38 49 58/.14); }
+.studio-root .studio-tab-active:hover { border-color:#324553; background:#324553; color:#fff !important; }
+.studio-root .studio-tab-inactive { background:#fff; color:#34403f; }
+.studio-root .studio-tab-inactive:hover { border-color:#b49a64; background:#f7f3eb; color:#26313a; }
+.studio-root .studio-tab:focus-visible { outline:2px solid #9b7f4d; outline-offset:3px; box-shadow:0 0 0 4px rgb(155 127 77/.16); }
 .studio-root :where(input, select, textarea) { color: var(--studio-text); font: inherit; }
 .studio-root :where(input, select, textarea)::placeholder { color: #8e918d; opacity: 1; }
 .studio-root :where(input, select, textarea):disabled { cursor: not-allowed; background: #eeece7; color: #777b78; opacity: 1; }
