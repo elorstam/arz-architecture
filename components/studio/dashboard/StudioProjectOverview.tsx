@@ -1,19 +1,16 @@
 import Link from "next/link";
 import {StudioIcon} from "@/components/studio/StudioIcons";
-import {StudioBadge,StudioSectionHeader} from "@/components/studio/ui";
+import {StudioBadge,StudioMilestoneIcon,StudioSectionHeader,type StudioMilestoneVariant} from "@/components/studio/ui";
 import type {OfficialProcess} from "@/lib/studio/official-processes/official-process-types";
 import type {ProjectCardMilestone,StudioProject} from "@/lib/studio/projects/project-types";
 
 const stateLabel:Record<ProjectCardMilestone["state"],string>={completed:"Tamamlandı",current:"Devam ediyor",upcoming:"Bekliyor",cancelled:"İptal"};
 const stateVariant:Record<ProjectCardMilestone["state"],"success"|"info"|"neutral"|"danger">={completed:"success",current:"info",upcoming:"neutral",cancelled:"danger"};
-const icons=["briefcase","revision","chart","activity","building","file-text","check"] as const;
-const iconTone=["gold","purple","blue","amber","green","sand","slate"] as const;
+const variants:StudioMilestoneVariant[]=["architecture","structural","mechanical","electrical","ground","permit","delivery"];
 
 function Milestone({milestone,index,last}:{milestone:ProjectCardMilestone;index:number;last:boolean}) {
   return <div className="studio-dashboard-milestone">
-    <div className={`studio-dashboard-milestone__node studio-dashboard-milestone__node--${milestone.state} studio-dashboard-milestone__node--${iconTone[index]}`}>
-      <StudioIcon name={icons[index]} className="h-5 w-5" />
-    </div>
+    <StudioMilestoneIcon variant={variants[index]??"delivery"} status={milestone.state} />
     {!last?<span aria-hidden="true" className={`studio-dashboard-milestone__line ${milestone.state==="completed"?"is-complete":""}`} />:null}
     <div className="mt-3 min-w-0">
       <p className="truncate text-sm font-semibold text-[#27333e]" title={milestone.fullTitle}>{milestone.title}</p>
