@@ -5,7 +5,7 @@ export const STUDIO_AI_OPERATIONS = {
   proposals: ["proposal_ai_description"],
   decision_log: ["decision_ai_summary"],
   renders: ["render_description", "render_analysis"],
-  finance: ["finance_summary", "payment_reminder", "invoice_description", "progress_payment", "cashflow_summary", "project_expense_description"],
+  finance: ["finance_summary", "payment_reminder", "invoice_description", "progress_payment", "cashflow_summary", "project_expense_description", "visualization_finance_summary", "visualization_expense_description", "visualization_profitability_insight"],
 } as const;
 
 export type StudioAiModule = keyof typeof STUDIO_AI_OPERATIONS;

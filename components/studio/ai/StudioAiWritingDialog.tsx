@@ -3,8 +3,8 @@ import{useEffect,useRef,useState,useTransition}from"react";
 import{generateStudioFormTextAction}from"@/app/studio/(protected)/ai-writing-actions";
 import{studioButtonClass}from"@/components/studio/StudioButton";
 import type{StudioAiOperation,StudioAiOutputFormat}from"@/lib/studio/ai/ai-writing-types";
-type Props={operation:StudioAiOperation;title:string;triggerLabel:string;currentText:string;context:Record<string,string|string[]|null>;onUse:(text:string)=>void;allowFormat?:boolean};
-export default function StudioAiWritingDialog({operation,title,triggerLabel,currentText,context,onUse,allowFormat=false}:Props){
+type Props={operation:StudioAiOperation;title:string;triggerLabel:string;currentText?:string;context:Record<string,string|string[]|null>;onUse:(text:string)=>void;allowFormat?:boolean};
+export default function StudioAiWritingDialog({operation,title,triggerLabel,currentText="",context,onUse,allowFormat=false}:Props){
  const[open,setOpen]=useState(false),[text,setText]=useState(""),[message,setMessage]=useState(""),[format,setFormat]=useState<StudioAiOutputFormat>("paragraph");const[pending,start]=useTransition();const closeRef=useRef<HTMLButtonElement>(null),dialogRef=useRef<HTMLDivElement>(null);
  function generate(){setMessage("");start(async()=>{const result=await generateStudioFormTextAction(operation,context,currentText,format);if(!result.success){setMessage(result.message??"AI metni şu anda oluşturulamadı.");return}setText(result.text);setMessage(result.message??"");setOpen(true);});}
  useEffect(()=>{if(!open)return;closeRef.current?.focus();function key(event:KeyboardEvent){if(event.key==="Escape")setOpen(false);if(event.key==="Tab"){const nodes=dialogRef.current?.querySelectorAll<HTMLElement>('button:not([disabled]),textarea,select');if(!nodes?.length)return;const first=nodes[0],last=nodes[nodes.length-1];if(event.shiftKey&&document.activeElement===first){event.preventDefault();last.focus()}else if(!event.shiftKey&&document.activeElement===last){event.preventDefault();first.focus()}}}document.addEventListener("keydown",key);return()=>document.removeEventListener("keydown",key)},[open]);

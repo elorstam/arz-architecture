@@ -13,6 +13,9 @@ const instructions: Record<StudioAiOperation, string> = {
   progress_payment: "Yalnız sağlanan proje, dönem, tutar ve kapsam bilgileriyle profesyonel bir hakediş açıklaması yaz.",
   cashflow_summary: "Verilen nakit giriş, çıkış ve bakiye verilerini değiştirmeden kısa, ihtiyatlı bir Türkçe nakit akışı özeti yaz.",
   project_expense_description: "Proje gideri için kategori, tutar ve proje bağlamına dayanarak kısa, profesyonel ve gerçekçi bir Türkçe açıklama yaz. Yeni bir gider veya teknik detay uydurma.",
+  visualization_finance_summary: "Görselleştirme finans verilerini değiştirmeden; maliyet, saatlik kazanç, render başına maliyet ve revize yükünü ihtiyatlı, profesyonel Türkçe ile özetle. Kesin muhasebe veya hukuki tavsiye verme.",
+  visualization_expense_description: "Görselleştirme gideri için kategori, tutar ve proje bağlamına dayanarak kısa, gerçekçi ve profesyonel Türkçe açıklama yaz. Yeni gider uydurma.",
+  visualization_profitability_insight: "Görselleştirme projesinin kârlılık, saatlik kazanç, render maliyeti ve revize verilerini değiştirmeden yönetici içgörüsüne dönüştür. Muhasebe veya yatırım tavsiyesi verme.",
   render_analysis: "Render analizi bu sürümde etkin değildir. Yalnız sağlanan metinsel bağlamı yapılandır; görsel analiz yaptığını iddia etme.",
 };
 
@@ -37,6 +40,9 @@ export function fallbackStudioAiText(operation: StudioAiOperation, context: Stud
   if (operation === "progress_payment") return `${value("projectName", "Proje")} kapsamında ${value("period", "ilgili dönem")} içinde tamamlanan ve sunulan çalışmalar için hakediş açıklamasıdır.`;
   if (operation === "cashflow_summary") return "İlgili dönemin nakit giriş ve çıkışları değerlendirilmiş; mevcut bakiye ile bekleyen tahsilatların düzenli izlenmesi önerilmiştir.";
   if (operation === "project_expense_description") return `${value("category", "Proje gideri")} için ${value("projectName", "proje")} kapsamında ${value("amount", "belirtilen tutarda")} tutarında gider kaydı oluşturulmuştur.`;
+  if (operation === "visualization_expense_description") return `${value("category", "Görselleştirme gideri")} için ${value("projectName", "proje")} kapsamında ${value("amount", "belirtilen tutarda")} tutarında gider kaydı oluşturulmuştur.`;
+  if (operation === "visualization_finance_summary") return `${value("projectName", "Görselleştirme projesi")} için finansal özet hazırlanmıştır. Maliyet, çalışma süresi ve render teslimleri birlikte takip edilmelidir.`;
+  if (operation === "visualization_profitability_insight") return "Görselleştirme projesinin maliyet, süre, render ve revize göstergeleri birlikte değerlendirilmelidir.";
   const prefix = format === "bullets" ? "• Görüşme özeti\n• Konuşulan başlıklar\n• Müşteri beklentileri\n• Alınan kararlar\n• Sonraki aksiyonlar" : "Görüşme kapsamında müşteri beklentileri, hizmet ihtiyacı ve sonraki takip adımları değerlendirilmiştir.";
   return `${prefix}${context.currentNote ? `\n\nMevcut not: ${String(context.currentNote).slice(0, 1200)}` : ""}`;
 }

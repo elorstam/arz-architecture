@@ -1,2 +1,2 @@
-export const PROJECT_EXPENSE_CATEGORIES=["statik","mekanik","elektrik","zemin_etud","yapi_denetim","ozalit","belediye","harc","noter","ulasim","other"] as const;
+export const PROJECT_EXPENSE_CATEGORIES=["statik","mekanik","elektrik","zemin_etud","yapi_denetim","ozalit","belediye","harc","noter","ulasim","render_farm","freelance_modelleme","freelance_render","asset_model","texture_material","stock_visual","ai_credits","software_license","plugin","animation","video_editing","sound_license","hardware_rental","outsourced_service","other"] as const;
 export type ProjectExpenseCategory=typeof PROJECT_EXPENSE_CATEGORIES[number];
