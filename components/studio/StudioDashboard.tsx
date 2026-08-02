@@ -40,7 +40,7 @@ export default function StudioDashboard({userName, organizationName, dateLabel, 
     <section className="studio-dashboard-v3 mx-auto min-w-0 max-w-[1540px] px-4 py-4 sm:px-6 sm:py-5 lg:px-6">
       <StudioWelcome userName={userName} organizationName={organizationName} dateLabel={dateLabel} />
       <StudioDailyFocus items={dailyPlan} />
-      <div className="grid min-w-0 auto-rows-[450px] items-stretch gap-3 md:grid-cols-2 min-[1440px]:h-[450px] min-[1440px]:grid-cols-[minmax(0,1.45fr)_minmax(0,1fr)_minmax(0,1fr)]"><StudioProjectOverview projects={projects} officialProcessesByProject={officialProcessesByProject}/><StudioPermitSummary items={officialProcesses}/><StudioActivityFeed items={activityItems}/></div>
+      <div className="dashboard-operation-grid grid w-full min-w-0 auto-rows-[410px] grid-cols-1 items-stretch gap-3 md:grid-cols-2 xl:h-[410px] xl:grid-cols-[1.35fr_1fr_1fr] [&>*]:min-w-0 [&>*]:overflow-hidden"><StudioProjectOverview projects={projects} officialProcessesByProject={officialProcessesByProject}/><StudioPermitSummary items={officialProcesses}/><StudioActivityFeed items={activityItems}/></div>
       <StudioCompactWidgets finance={finance} quotes={quoteSummary} crm={crmSummary} renderCount={renderProjects.length} quickAccess={quickAccess}/>
     </section>
   );
