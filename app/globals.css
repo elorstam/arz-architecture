@@ -766,6 +766,26 @@ html[data-theme="light"] .site-header .language-switcher__menu {
   .studio-root .studio-dashboard-v3 * { transition:none!important; transform:none!important; }
 }
 
+/* Studio finance workspace — dashboard-aligned surfaces without affecting public pages. */
+.studio-root .studio-finance-page { color:#28343c; }
+.studio-root .studio-finance-page .studio-page-header { border:0; padding-bottom:1rem; }
+.studio-root .studio-finance-page .studio-page-title { font-size:clamp(1.875rem,3vw,2.125rem); font-weight:700; }
+.studio-root .studio-finance-page .studio-page-description { margin-top:.35rem; font-size:.875rem; }
+.studio-root .studio-finance-page .studio-tabs { margin-top:.75rem; }
+.studio-root .studio-finance-page section.rounded-2xl,
+.studio-root .studio-finance-page section.rounded-xl,
+.studio-root .studio-finance-page form.rounded-2xl,
+.studio-root .studio-finance-page div.rounded-xl.border.bg-white { border-color:#e5e7eb; border-radius:1.125rem; box-shadow:0 7px 22px rgba(40,57,73,.04); }
+.studio-root .studio-finance-page section.rounded-2xl,
+.studio-root .studio-finance-page section.rounded-xl { padding:1rem; }
+.studio-root .studio-finance-page section.rounded-2xl h2,
+.studio-root .studio-finance-page section.rounded-xl h2 { font-size:1rem; font-weight:700; letter-spacing:-.02em; }
+.studio-root .studio-finance-page form { min-width:0; }
+.studio-root .studio-finance-page table th { font-weight:600; }
+@media (max-width:767px) {
+  .studio-root .studio-finance-page .studio-page-actions { width:100%; }
+}
+
 /* Dashboard V3.1 visual refinement: cool SaaS workspace, richer icon surfaces
    and a lighter product-like hierarchy. */
 .studio-root .studio-dashboard-v3 { --dashboard-accent-gold:#b18a4c; --dashboard-accent-purple:#80649b; --dashboard-accent-blue:#5c8297; --dashboard-accent-green:#5f8a6c; background:transparent; }
