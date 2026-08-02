@@ -695,6 +695,10 @@ html[data-theme="light"] .site-header .language-switcher__menu {
 /* Dashboard V3 workspace home. This is intentionally scoped to the dashboard
    surface so existing module contracts and public-site styles remain untouched. */
 .studio-root .studio-dashboard-v3 { --dashboard-gap:1.25rem; display:flex; flex-direction:column; gap:var(--dashboard-gap); overflow-x:hidden; }
+.studio-root .studio-dashboard-greeting { display:flex; min-width:0; flex-wrap:wrap; align-items:flex-end; justify-content:space-between; gap:1.5rem; padding:1rem 0 .5rem; }
+.studio-root .studio-dashboard-greeting__title { margin-top:.35rem; color:#202a30; font-size:clamp(2rem,4vw,2.75rem); font-weight:650; letter-spacing:-.055em; line-height:1.08; }
+.studio-root .studio-dashboard-greeting__description { margin-top:.65rem; max-width:42rem; color:#69716f; font-size:1rem; line-height:1.55; }
+.studio-root .studio-dashboard-greeting__meta { display:flex; align-items:center; gap:.75rem; }
 .studio-root .studio-dashboard-v3 > * { min-width:0; margin-top:0; }
 .studio-root .studio-dashboard-v3 .studio-page-header { border:0; border-radius:1.5rem; background:linear-gradient(135deg,#fffefa 0%,#f7f3ea 100%); padding:1.75rem 1.5rem; box-shadow:0 10px 35px rgb(30 38 45/.055); }
 .studio-root .studio-dashboard-v3 .studio-page-title { font-size:clamp(2rem,3.5vw,2.75rem); letter-spacing:-.05em; }
@@ -726,11 +730,22 @@ html[data-theme="light"] .site-header .language-switcher__menu {
 .studio-root .studio-dashboard-v3 .studio-kpi-v2 { border-radius:1.25rem; padding:1.25rem; box-shadow:0 8px 24px rgb(30 38 45/.045); }
 .studio-root .studio-dashboard-v3 .studio-kpi-value { font-size:1.8rem; }
 .studio-root .studio-dashboard-v3 article { min-width:0; }
+.studio-root .studio-dashboard-milestone-track { display:grid; grid-template-columns:repeat(7,minmax(0,1fr)); min-width:0; overflow-x:auto; padding:.25rem .25rem .5rem; }
+.studio-root .studio-dashboard-milestone { position:relative; min-width:6.5rem; padding-right:1rem; }
+.studio-root .studio-dashboard-milestone__node { position:relative; z-index:1; display:grid; width:2.75rem; height:2.75rem; place-items:center; border:1px solid transparent; border-radius:1rem; }
+.studio-root .studio-dashboard-milestone__node--gold { background:#f5eee0; color:#957844; }.studio-root .studio-dashboard-milestone__node--purple { background:#f0ebf5; color:#765c8d; }.studio-root .studio-dashboard-milestone__node--blue { background:#e9f1f6; color:#55798c; }.studio-root .studio-dashboard-milestone__node--amber { background:#f8f0dc; color:#93703a; }.studio-root .studio-dashboard-milestone__node--green { background:#e8f2ec; color:#4f795c; }.studio-root .studio-dashboard-milestone__node--sand { background:#f3ede4; color:#826e55; }.studio-root .studio-dashboard-milestone__node--slate { background:#edf0f1; color:#60717a; }
+.studio-root .studio-dashboard-milestone__node--completed { box-shadow:0 0 0 3px rgba(88,132,99,.1); }.studio-root .studio-dashboard-milestone__node--current { box-shadow:0 0 0 3px rgba(85,121,140,.13); }.studio-root .studio-dashboard-milestone__node--cancelled { opacity:.6; }
+.studio-root .studio-dashboard-milestone__line { position:absolute; z-index:0; top:1.375rem; left:2.75rem; width:calc(100% - 2.75rem); height:1px; background:#e4dfd5; }.studio-root .studio-dashboard-milestone__line.is-complete { background:#b8cdbd; }
+.studio-root .studio-dashboard-milestone .studio-badge { margin-top:.5rem; max-width:100%; font-size:.7rem; }
+.studio-root .studio-dashboard-empty { display:flex; min-height:8rem; flex-direction:column; align-items:center; justify-content:center; border:1px dashed #dcd6ca; border-radius:1rem; background:#fbfaf7; padding:1.25rem; text-align:center; color:#927845; }
+.studio-root .studio-dashboard-permit { min-width:0; }
 @media (max-width:767px) {
   .studio-root .studio-dashboard-v3 { --dashboard-gap:1rem; }
   .studio-root .studio-dashboard-v3 .studio-page-header { padding:1.25rem; }
   .studio-root .studio-dashboard-v3 .studio-page-actions { width:auto; }
   .studio-root .studio-dashboard-v3 section[aria-labelledby="dashboard-quick-access"] { padding:1.25rem; }
+  .studio-root .studio-dashboard-milestone-track { grid-template-columns:repeat(7,6.5rem); scrollbar-width:thin; }
+  .studio-root .studio-dashboard-greeting__meta { width:100%; }
   .studio-root .studio-dashboard-v3 section[aria-labelledby="project-overview-title"] > div:first-child,
   .studio-root .studio-dashboard-v3 section[aria-labelledby="activity-title"] > div:first-child,
   .studio-root .studio-dashboard-v3 section[aria-labelledby="schedule-title"] > div:first-child { padding-inline:1rem; }

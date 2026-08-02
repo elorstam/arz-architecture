@@ -1,52 +1,37 @@
-import type {ProjectOverviewItem} from "@/components/studio/dashboard/StudioDashboardData";
+import Link from "next/link";
+import {StudioIcon} from "@/components/studio/StudioIcons";
+import {StudioBadge,StudioSectionHeader} from "@/components/studio/ui";
+import type {OfficialProcess} from "@/lib/studio/official-processes/official-process-types";
+import type {ProjectCardMilestone,StudioProject} from "@/lib/studio/projects/project-types";
 
-const statusStyles: Record<string, string> = {
-  Aktif: "border-[#ccd8d0] bg-[#f0f5f1] text-[#587060]",
-  Render: "border-[#d6d8dd] bg-[#f2f3f5] text-[#626b77]",
-  Gecikmiş: "border-[#e3d1c9] bg-[#f8f1ee] text-[#916554]",
-  Planlandı: "border-[#dfd8c9] bg-[#f7f4ed] text-[#7e6b48]",
-};
+const stateLabel:Record<ProjectCardMilestone["state"],string>={completed:"Tamamlandı",current:"Devam ediyor",upcoming:"Bekliyor",cancelled:"İptal"};
+const stateVariant:Record<ProjectCardMilestone["state"],"success"|"info"|"neutral"|"danger">={completed:"success",current:"info",upcoming:"neutral",cancelled:"danger"};
+const icons=["briefcase","revision","chart","activity","building","file-text","check"] as const;
+const iconTone=["gold","purple","blue","amber","green","sand","slate"] as const;
 
-export default function StudioProjectOverview({items}: {items: ProjectOverviewItem[]}) {
-  return (
-    <section aria-labelledby="project-overview-title" className="overflow-hidden rounded-xl border border-[#dedad1] bg-white shadow-[0_4px_18px_rgba(32,39,46,.03)]">
-      <div className="flex items-center justify-between gap-4 border-b border-[#ece9e3] px-5 py-5 sm:px-6">
-        <div>
-          <h2 id="project-overview-title" className="text-[15px] font-semibold tracking-[-.015em] text-[#273038]">Proje Aşamaları</h2>
-          <p className="mt-1 text-[10px] text-[#969792]">Aktif çalışma akışı ve son güncellemeler</p>
-        </div>
-        <span className="rounded-full border border-[#dfdbd2] px-2.5 py-1 text-[9px] font-medium text-[#7b7d78]">4 proje</span>
-      </div>
+function Milestone({milestone,index,last}:{milestone:ProjectCardMilestone;index:number;last:boolean}) {
+  return <div className="studio-dashboard-milestone">
+    <div className={`studio-dashboard-milestone__node studio-dashboard-milestone__node--${milestone.state} studio-dashboard-milestone__node--${iconTone[index]}`}>
+      <StudioIcon name={icons[index]} className="h-5 w-5" />
+    </div>
+    {!last?<span aria-hidden="true" className={`studio-dashboard-milestone__line ${milestone.state==="completed"?"is-complete":""}`} />:null}
+    <div className="mt-3 min-w-0">
+      <p className="truncate text-sm font-semibold text-[#27333e]" title={milestone.fullTitle}>{milestone.title}</p>
+      <StudioBadge variant={stateVariant[milestone.state]} icon={milestone.state==="completed"?"check":milestone.state==="cancelled"?"close":"clock"}>{stateLabel[milestone.state]}</StudioBadge>
+    </div>
+  </div>;
+}
 
-      <div className="hidden grid-cols-[minmax(220px,1.6fr)_110px_120px_120px_90px] gap-4 border-b border-[#eeece7] bg-[#faf9f6] px-6 py-2.5 text-[8px] font-semibold uppercase tracking-[.12em] text-[#a19e97] lg:grid">
-        <span>Proje / Müşteri</span><span>Aşama</span><span>İlerleme</span><span>Son Güncelleme</span><span>Sorumlu</span>
+export default function StudioProjectOverview({projects,officialProcesses}:{projects:StudioProject[];officialProcesses:OfficialProcess[]}) {
+  const project=projects[0];
+  return <section aria-label="Proje Aşamaları" className="studio-dashboard-project-stages studio-card-v2">
+    <StudioSectionHeader title="Proje Aşamaları" description={project?`${project.name} · ${project.client.name||"Müşteri bilgisi bulunmuyor"}`:"Aktif proje bulunmuyor"} icon="activity" count={project?.cardMilestones.length??0} action={project?<Link href={`/studio/projects/${project.id}/stages`} className="inline-flex min-h-10 items-center gap-1.5 rounded-xl border border-[#d9d3c6] bg-white px-3.5 text-sm font-semibold text-[#34414a] transition hover:border-[#ab925f] hover:bg-[#fbfaf6]">Tüm Aşamaları Gör <StudioIcon name="chevron-right" className="h-4 w-4" /></Link>:null} />
+    {project?<>
+      <div className="mt-6 flex min-w-0 items-center justify-between gap-4"><div className="min-w-0"><p className="text-sm text-[#69716f]">İlerleme</p><p className="mt-1 text-lg font-semibold text-[#26333c]">%{project.progress}</p></div><StudioBadge variant={project.status==="Aktif"?"success":"warning"} icon="activity">{project.status}</StudioBadge></div>
+      <div className="studio-dashboard-milestone-track mt-6" role="list" aria-label={`${project.name} proje aşamaları`}>
+        {project.cardMilestones.map((milestone,index)=><div role="listitem" key={milestone.id}><Milestone milestone={milestone} index={index} last={index===project.cardMilestones.length-1}/></div>)}
       </div>
-      <div className="divide-y divide-[#efede8]">
-        {items.map((project) => (
-          <article key={project.name} className="grid min-w-0 gap-4 px-5 py-4 transition-colors hover:bg-[#fbfaf7] sm:px-6 lg:grid-cols-[minmax(220px,1.6fr)_110px_120px_120px_90px] lg:items-center">
-            <div className="flex min-w-0 items-center gap-3">
-              <span className="grid h-10 w-10 shrink-0 place-items-center rounded-lg bg-[#18232d] text-[9px] font-semibold tracking-[.08em] text-[#d5b878]">{project.code}</span>
-              <div className="min-w-0">
-                <p className="truncate text-[12px] font-semibold text-[#30383e]">{project.name}</p>
-                <p className="mt-1 truncate text-[9px] text-[#969792]">{project.client}</p>
-              </div>
-            </div>
-            <div className="flex items-center justify-between gap-3 lg:block">
-              <span className="text-[9px] text-[#9b9a94] lg:hidden">Aşama</span>
-              <div><p className="text-[10px] text-[#5f6568]">{project.stage}</p><span className={`mt-1.5 inline-flex rounded-full border px-2 py-0.5 text-[8px] font-medium ${statusStyles[project.status]}`}>{project.status}</span></div>
-            </div>
-            <div>
-              <div className="flex justify-between text-[8px] text-[#999a95]"><span>İlerleme</span><span>%{project.progress}</span></div>
-              <div className="mt-2 h-1.5 overflow-hidden rounded-full bg-[#edeae4]"><div className="h-full rounded-full bg-[#ad9360]" style={{width: `${project.progress}%`}} /></div>
-            </div>
-            <div className="flex items-center justify-between lg:block"><span className="text-[9px] text-[#9b9a94] lg:hidden">Güncelleme</span><p className="text-[9px] text-[#747976]">{project.updatedAt}</p></div>
-            <div className="flex items-center justify-between lg:justify-start">
-              <span className="text-[9px] text-[#9b9a94] lg:hidden">Sorumlu</span>
-              <span className="grid h-7 w-7 place-items-center rounded-full border border-[#ddd6c8] bg-[#f4f0e8] text-[8px] font-semibold text-[#7f6940]" title="Sorumlu kişi">{project.owner}</span>
-            </div>
-          </article>
-        ))}
-      </div>
-    </section>
-  );
+      <p className="mt-5 text-xs text-[#858c88]">Son güncelleme: {project.lastUpdate}{officialProcesses.length?` · ${officialProcesses.length} resmi süreç`:""}</p>
+    </>:<div role="status" className="studio-dashboard-empty mt-6"><StudioIcon name="folder" className="h-7 w-7"/><p className="mt-3 font-semibold text-[#33404a]">Henüz aktif proje bulunmuyor</p><p className="mt-1 text-sm text-[#747b78]">Proje oluşturduğunuzda aşama akışı burada görünecek.</p></div>}
+  </section>;
 }
