@@ -669,3 +669,25 @@ html[data-theme="light"] .site-header .language-switcher__menu {
 .studio-root .studio-root-surface button:not(.studio-button):focus-visible,.studio-root .studio-card button:focus-visible { outline:2px solid #b89a62; outline-offset:2px; }
 .studio-root .group.min-w-0.overflow-hidden.rounded-2xl.border.bg-white { border-color:var(--studio-border); border-radius:1rem; box-shadow:0 4px 18px rgb(30 38 45/.035); transition:box-shadow .2s ease,border-color .2s ease,transform .2s ease; }
 .studio-root .group.min-w-0.overflow-hidden.rounded-2xl.border.bg-white:hover { border-color:var(--studio-border-strong); box-shadow:0 12px 30px rgb(30 38 45/.07); transform:translateY(-1px); }
+@media (max-width:767px) {
+  .studio-root .studio-page-actions { width:100%; margin-left:0; }
+  .studio-root .studio-page-actions > * { flex:1 1 auto; justify-content:center; }
+  .studio-root .studio-toolbar-v2 { align-items:stretch; }
+  .studio-root .studio-toolbar-v2 > * { min-width:0; }
+  .studio-root .studio-modal { max-height:calc(100vh - 1rem); border-radius:1rem; }
+  .studio-root .studio-drawer { width:100%; }
+}
+@media (min-width:768px) and (max-width:1279px) {
+  .studio-root .studio-kpi-v2 { padding:1rem; }
+  .studio-root .studio-kpi-value { font-size:1.4rem; }
+}
+@media (min-width:1280px) {
+  .studio-root main > section,.studio-root main > div { min-width:0; }
+}
+.studio-root .studio-card table,.studio-root .studio-root-surface table { border-collapse:collapse; }
+.studio-root .studio-card th,.studio-root .studio-card td,.studio-root .studio-root-surface th,.studio-root .studio-root-surface td { vertical-align:top; }
+.studio-root .studio-button:focus-visible,.studio-root button:focus-visible,.studio-root a:focus-visible { outline:2px solid #b89a62; outline-offset:2px; }
+@media (prefers-color-scheme:dark) {
+  .studio-root[data-theme="dark"] .studio-field,.studio-root[data-theme="dark"] .studio-card { background:#17212b; border-color:rgba(255,255,255,.12); color:#f5f5f1; }
+  .studio-root[data-theme="dark"] .studio-helper-text,.studio-root[data-theme="dark"] .studio-label { color:rgba(255,255,255,.62); }
+}
