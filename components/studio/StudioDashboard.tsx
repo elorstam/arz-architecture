@@ -1,5 +1,4 @@
 import StudioActivityFeed from "@/components/studio/dashboard/StudioActivityFeed";
-import {activities,renderQueue,revisions,schedule} from "@/components/studio/dashboard/StudioDashboardData";
 import StudioDailyFocus from "@/components/studio/dashboard/StudioDailyFocus";
 import StudioProjectOverview from "@/components/studio/dashboard/StudioProjectOverview";
 import StudioWelcome from "@/components/studio/dashboard/StudioWelcome";
@@ -24,21 +23,26 @@ export default function StudioDashboard({userName, organizationName, dateLabel, 
   officialProcessesByProject: Record<string,OfficialProcess[]>;
 }) {
   const officialProcesses=Object.values(officialProcessesByProject).flat();
+  const delayedProjects=projects.filter(project=>project.status==="Gecikmiş");
+  const renderProjects=projects.filter(project=>project.stage==="Görselleştirme");
+  const todayProjects=projects.filter(project=>project.activities.some(activity=>activity.relativeTime.toLocaleLowerCase("tr-TR").includes("bugün")));
+  const upcomingDeliveries=projects.filter(project=>project.nextMilestone.toLocaleLowerCase("tr-TR").includes("teslim"));
+  const activityItems=projects.flatMap(project=>project.activities.map(activity=>({projectId:project.id,project:project.name,event:activity.title,type:activity.type,actor:activity.actorInitials,time:activity.relativeTime}))).slice(0,4);
   const dailyPlan=[
-    {count:schedule.length,label:"Bugünkü işler",context:"Planlanan ofis akışı",icon:"calendar" as const,priority:"normal" as const},
-    {count:revisions.filter(item=>item.due.includes("gecikti")).length,label:"Geciken işler",context:"Öncelik gerektiriyor",icon:"clock" as const,priority:"high" as const},
-    {count:renderQueue.filter(item=>item.state.includes("Onaya hazır")).length+quoteSummary.awaitingApproval,label:"Bekleyen onaylar",context:"Render ve teklif onayları",icon:"check" as const,priority:"medium" as const},
-    {count:schedule.filter(item=>item.title.toLocaleLowerCase("tr-TR").includes("teslim")).length,label:"Yaklaşan teslimler",context:"Takvimdeki teslimler",icon:"calendar" as const,priority:"medium" as const},
-    {count:renderQueue.filter(item=>item.state!=="Teslim edildi").length,label:"Render bekleyenler",context:"Aktif render kuyruğu",icon:"render" as const,priority:"normal" as const},
-    {count:crmSummary.awaitingQuote,label:"Teklif hazırlanacaklar",context:"CRM teklif akışı",icon:"receipt" as const,priority:"normal" as const},
+    {count:todayProjects.length,label:"Bugünkü işler",context:"Bugün işlem gören projeler",icon:"calendar" as const,priority:"normal" as const,href:"/studio/projects?archive=active"},
+    {count:delayedProjects.length,label:"Geciken işler",context:"Öncelikli projeler",icon:"clock" as const,priority:"high" as const,href:"/studio/projects?status=Gecikmiş"},
+    {count:quoteSummary.awaitingApproval,label:"Bekleyen onaylar",context:"Onay bekleyen teklifler",icon:"check" as const,priority:"medium" as const,href:"/studio/quotes"},
+    {count:upcomingDeliveries.length,label:"Yaklaşan teslimler",context:"Sıradaki adımı teslim olanlar",icon:"calendar" as const,priority:"medium" as const,href:"#active-projects"},
+    {count:renderProjects.length,label:"Render bekleyenler",context:"Görselleştirme projeleri",icon:"render" as const,priority:"normal" as const,href:"/studio/projects?stage=Görselleştirme"},
+    {count:crmSummary.awaitingQuote,label:"Teklif hazırlanacaklar",context:"CRM teklif akışı",icon:"receipt" as const,priority:"normal" as const,href:"/studio/crm"},
   ];
   return (
     <section className="studio-dashboard-v3 mx-auto min-w-0 max-w-[1540px] px-4 py-6 sm:px-6 sm:py-8 lg:px-8 lg:py-9">
       <StudioWelcome userName={userName} organizationName={organizationName} dateLabel={dateLabel} />
       <StudioDailyFocus items={dailyPlan} />
       <StudioProjectOverview projects={projects} officialProcessesByProject={officialProcessesByProject} />
-      <div className="grid min-w-0 gap-5 xl:grid-cols-[minmax(0,1.65fr)_minmax(280px,.85fr)]"><StudioPermitSummary items={officialProcesses}/><StudioActivityFeed items={activities.slice(0,4)}/></div>
-      <StudioCompactWidgets finance={finance} quotes={quoteSummary} crm={crmSummary} renderCount={renderQueue.filter(item=>item.state!=="Teslim edildi").length} quickAccess={quickAccess}/>
+      <div className="grid min-w-0 gap-6 xl:grid-cols-[minmax(0,1.65fr)_minmax(320px,.85fr)]"><StudioPermitSummary items={officialProcesses}/><StudioActivityFeed items={activityItems}/></div>
+      <StudioCompactWidgets finance={finance} quotes={quoteSummary} crm={crmSummary} renderCount={renderProjects.length} quickAccess={quickAccess}/>
     </section>
   );
 }

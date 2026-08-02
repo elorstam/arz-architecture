@@ -5,12 +5,7 @@ import {StudioBadge,StudioCard,StudioSectionHeader} from "@/components/studio/ui
 import {STATUS_LABELS,type OfficialProcess} from "@/lib/studio/official-processes/official-process-types";
 import type {ProjectCardMilestone,StudioProject} from "@/lib/studio/projects/project-types";
 
-const milestoneStateStyles:Record<ProjectCardMilestone["state"],string>={
-  completed:"border-[#bad2c0] bg-[#eaf4ed] text-[#477058]",
-  current:"border-[#b9d0df] bg-[#eaf3f8] text-[#4d758b]",
-  upcoming:"border-[#dde2e5] bg-[#f3f5f6] text-[#78848a]",
-  cancelled:"border-[#e1c3bd] bg-[#f8eeec] text-[#9b5c51]",
-};
+const milestoneStyles:Record<ProjectCardMilestone["state"],string>={completed:"bg-[#55a66d]",current:"bg-[#4f8fac] ring-4 ring-[#dcebf2]",upcoming:"bg-[#d5dce0]",cancelled:"bg-[#c98c82]"};
 
 function municipalityStatus(items:OfficialProcess[]){
   const active=items.filter(item=>!item.isArchived&&item.status!=="cancelled");
@@ -21,35 +16,20 @@ function municipalityStatus(items:OfficialProcess[]){
   return {label:STATUS_LABELS[latest.status],variant:latest.status==="paid"||latest.status==="document_received"?"success" as const:"warning" as const};
 }
 
-function ProjectCard({project,processes}:{project:StudioProject;processes:OfficialProcess[]}){
+function ProjectRow({project,processes}:{project:StudioProject;processes:OfficialProcess[]}){
   const municipality=municipalityStatus(processes);
-  return <StudioCard as="article" className="group relative flex min-w-0 flex-col overflow-hidden p-0 transition duration-200 hover:-translate-y-0.5 hover:border-[#becfda] hover:shadow-[0_18px_42px_rgba(40,57,73,.11)]">
-    <Link href={`/studio/projects/${project.id}`} aria-label={`${project.name} projesine git`} className="flex h-full min-w-0 flex-col rounded-[inherit] outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-[#668ba0]">
-      <div className="flex min-w-0 items-start justify-between gap-4 border-b border-[#e8edf0] bg-[linear-gradient(135deg,#fbfcfd_0%,#f3f7f9_100%)] p-5">
-        <div className="min-w-0"><p className="text-[9px] font-semibold uppercase tracking-[.14em] text-[#9a8253]">{project.code}</p><h3 className="mt-1 truncate text-lg font-semibold tracking-[-.025em] text-[#26343d]">{project.name}</h3><p className="mt-1 truncate text-sm text-[#778188]">{project.client.name||"Müşteri bilgisi yok"}</p></div>
-        <StudioBadge variant={project.status==="Aktif"?"success":"warning"} icon="activity">{project.status}</StudioBadge>
-      </div>
-      <div className="flex flex-1 flex-col p-5">
-        <div className="flex items-end justify-between gap-4"><div><p className="text-xs text-[#7b858b]">İlerleme</p><p className="mt-1 text-2xl font-semibold tracking-[-.04em] text-[#283640]">%{project.progress}</p></div><p className="max-w-[55%] truncate text-right text-xs font-semibold text-[#57788a]">{project.stage}</p></div>
-        <div className="mt-3 h-2.5 overflow-hidden rounded-full bg-[#e9eef1]" role="progressbar" aria-label={`${project.name} ilerleme`} aria-valuemin={0} aria-valuemax={100} aria-valuenow={project.progress}><span className="block h-full rounded-full bg-[linear-gradient(90deg,#6e9ab0,#557f94)]" style={{width:`${project.progress}%`}} /></div>
-        <div className="mt-5 flex flex-wrap gap-1.5" aria-label={`${project.name} kilometre taşları`}>
-          {project.cardMilestones.map(item=><span key={item.id} title={item.fullTitle} className={`rounded-full border px-2.5 py-1 text-[10px] font-semibold ${milestoneStateStyles[item.state]}`}>{item.title}</span>)}
-        </div>
-        <dl className="mt-5 grid grid-cols-2 gap-x-4 gap-y-3 border-t border-[#e9edf0] pt-4 text-xs">
-          <div><dt className="text-[#92999d]">Güncel aşama</dt><dd className="mt-1 truncate font-semibold text-[#4a565d]">{project.currentPhase||project.stage}</dd></div>
-          <div><dt className="text-[#92999d]">Belediye durumu</dt><dd className="mt-1"><StudioBadge variant={municipality.variant}>{municipality.label}</StudioBadge></dd></div>
-          <div><dt className="text-[#92999d]">Son işlem</dt><dd className="mt-1 truncate font-semibold text-[#4a565d]">{project.lastUpdate}</dd></div>
-          <div><dt className="text-[#92999d]">Sorumlu</dt><dd className="mt-1 truncate font-semibold text-[#4a565d]">{project.responsible?.name??"Atanmadı"}</dd></div>
-        </dl>
-        <span className="mt-5 inline-flex min-h-10 items-center justify-center gap-2 self-start rounded-xl bg-[#263640] px-4 text-sm font-semibold text-white transition group-hover:bg-[#385568]">Projeye Git <StudioIcon name="chevron-right" className="h-4 w-4" /></span>
-      </div>
-    </Link>
-  </StudioCard>;
+  return <Link href={`/studio/projects/${project.id}`} aria-label={`${project.name} projesine git`} className="group grid min-w-0 items-center gap-4 border-t border-[#edf0f2] px-4 py-4 outline-none transition-colors hover:bg-[#fafbfc] focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-[#668ba0] md:grid-cols-[minmax(220px,1.35fr)_minmax(150px,.8fr)_minmax(170px,.9fr)_minmax(130px,.72fr)] xl:grid-cols-[minmax(250px,1.35fr)_minmax(190px,.85fr)_minmax(200px,1fr)_minmax(120px,.65fr)_minmax(140px,.72fr)_minmax(125px,.65fr)]">
+    <div className="flex min-w-0 items-center gap-3"><div className="relative h-14 w-20 shrink-0 overflow-hidden rounded-xl bg-[#e9edf0]">{project.thumbnail?<span className="absolute inset-0 bg-cover bg-center" style={{backgroundImage:`url("${project.thumbnail}")`}}/>:<span className="absolute inset-0 bg-[linear-gradient(135deg,#dce4e9,#eef1f3)]"/>}<span className="absolute bottom-1 left-1 rounded bg-white/90 px-1.5 py-0.5 text-[9px] font-bold text-[#66747d]">{project.code}</span></div><div className="min-w-0"><h3 className="truncate text-sm font-semibold text-[#2e3a42]">{project.name}</h3><p className="mt-1 truncate text-xs text-[#89939a]">{project.client.name||"Müşteri bilgisi yok"}</p></div></div>
+    <div><div className="flex items-center justify-between gap-2 text-xs"><span className="text-[#89939a]">İlerleme</span><strong className="text-[#43515a]">%{project.progress}</strong></div><div className="mt-2 h-1.5 overflow-hidden rounded-full bg-[#e8edf0]" role="progressbar" aria-label={`${project.name} ilerleme`} aria-valuemin={0} aria-valuemax={100} aria-valuenow={project.progress}><span className="block h-full rounded-full bg-[#5c8fa8]" style={{width:`${project.progress}%`}}/></div></div>
+    <div className="flex items-center gap-2" aria-label={`${project.name} kilometre taşları`}>{project.cardMilestones.map(item=><span key={item.id} title={item.fullTitle} className={`h-2.5 w-2.5 shrink-0 rounded-full ${milestoneStyles[item.state]}`}/>)}</div>
+    <div className="min-w-0"><p className="mb-1 text-[10px] font-semibold uppercase tracking-[.08em] text-[#a0a8ad] md:hidden">Güncel aşama</p><StudioBadge variant="info">{project.stage}</StudioBadge></div>
+    <div className="min-w-0 md:col-span-2 xl:col-span-1"><p className="mb-1 text-[10px] font-semibold uppercase tracking-[.08em] text-[#a0a8ad] md:hidden">Belediye</p><StudioBadge variant={municipality.variant}>{municipality.label}</StudioBadge></div>
+    <div className="flex min-w-0 items-center justify-between gap-3 md:col-span-2 xl:col-span-1"><div className="min-w-0"><p className="truncate text-xs font-semibold text-[#53616a]">{project.lastUpdate}</p><p className="mt-1 truncate text-[11px] text-[#929ba0]">{project.responsible?.name??"Atanmadı"}</p></div><StudioIcon name="chevron-right" className="h-4 w-4 shrink-0 text-[#a3adb2] transition-transform group-hover:translate-x-0.5"/></div>
+  </Link>;
 }
 
 export default function StudioProjectOverview({projects,officialProcessesByProject}:{projects:StudioProject[];officialProcessesByProject:Record<string,OfficialProcess[]>}){
-  return <section aria-label="Aktif Projeler" className="min-w-0">
-    <StudioSectionHeader title="Aktif Projeler" description="Ofiste devam eden tüm projelerin operasyon görünümü" icon="folder" count={projects.length} action={<Link href="/studio/projects" className="inline-flex min-h-10 items-center gap-1.5 rounded-xl border border-[#d9d3c6] bg-white px-3.5 text-sm font-semibold text-[#34414a] transition hover:border-[#ab925f] hover:bg-[#fbfaf6]">Tüm Projeler <StudioIcon name="chevron-right" className="h-4 w-4" /></Link>} />
-    {projects.length?<div className="mt-5 grid min-w-0 gap-5 md:grid-cols-2 2xl:grid-cols-3">{projects.map(project=><ProjectCard key={project.id} project={project} processes={officialProcessesByProject[project.id]??[]}/>)}</div>:<StudioCard className="studio-dashboard-empty mt-5"><StudioIcon name="folder" className="h-7 w-7"/><p className="mt-3 font-semibold text-[#33404a]">Aktif proje bulunmuyor</p><p className="mt-1 text-sm text-[#747b78]">Yeni veya arşivden çıkarılan projeler burada görünür.</p></StudioCard>}
+  return <section id="active-projects" aria-label="Aktif Projeler" className="min-w-0"><StudioSectionHeader title="Aktif Projeler" description="Ofiste devam eden tüm projelerin operasyon görünümü" icon="folder" count={projects.length} action={<Link href="/studio/projects" className="inline-flex min-h-10 items-center gap-1.5 rounded-xl border border-[#d9dfe3] bg-white px-3.5 text-sm font-semibold text-[#34414a] transition hover:border-[#9fb4c0] hover:bg-[#fafbfc]">Tüm Projeler <StudioIcon name="chevron-right" className="h-4 w-4"/></Link>}/>
+    {projects.length?<StudioCard className="mt-5 overflow-hidden p-0"><div className="hidden grid-cols-[minmax(250px,1.35fr)_minmax(190px,.85fr)_minmax(200px,1fr)_minmax(120px,.65fr)_minmax(140px,.72fr)_minmax(125px,.65fr)] gap-4 bg-[#fafbfc] px-4 py-3 text-[10px] font-semibold uppercase tracking-[.09em] text-[#929ba0] xl:grid"><span>Proje</span><span>İlerleme</span><span>Milestone</span><span>Güncel aşama</span><span>Belediye</span><span>Son işlem · Sorumlu</span></div>{projects.map(project=><ProjectRow key={project.id} project={project} processes={officialProcessesByProject[project.id]??[]}/>)}</StudioCard>:<StudioCard className="studio-dashboard-empty mt-5"><StudioIcon name="folder" className="h-7 w-7"/><p className="mt-3 font-semibold text-[#33404a]">Aktif proje bulunmuyor</p><p className="mt-1 text-sm text-[#747b78]">Yeni veya arşivden çıkarılan projeler burada görünür.</p></StudioCard>}
   </section>;
 }

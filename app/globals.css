@@ -706,7 +706,7 @@ html[data-theme="light"] .site-header .language-switcher__menu {
 
 /* Dashboard V3 workspace home. This is intentionally scoped to the dashboard
    surface so existing module contracts and public-site styles remain untouched. */
-.studio-root .studio-dashboard-v3 { --dashboard-gap:1.25rem; display:flex; flex-direction:column; gap:var(--dashboard-gap); overflow-x:hidden; }
+.studio-root .studio-dashboard-v3 { --dashboard-gap:2rem; display:flex; flex-direction:column; gap:var(--dashboard-gap); overflow-x:hidden; }
 .studio-root .studio-dashboard-greeting { display:flex; min-width:0; flex-wrap:wrap; align-items:flex-end; justify-content:space-between; gap:1.5rem; padding:1rem 0 .5rem; }
 .studio-root .studio-dashboard-greeting__title { margin-top:.35rem; color:#202a30; font-size:clamp(2rem,4vw,2.75rem); font-weight:650; letter-spacing:-.055em; line-height:1.08; }
 .studio-root .studio-dashboard-greeting__description { margin-top:.65rem; max-width:42rem; color:#69716f; font-size:1rem; line-height:1.55; }

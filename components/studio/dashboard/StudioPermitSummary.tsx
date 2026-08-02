@@ -11,8 +11,8 @@ export default function StudioPermitSummary({items}:{items:OfficialProcess[]}) {
   const paid=fees.filter(item=>item.status==="paid"||item.status==="document_received").reduce((sum,item)=>sum+(item.amount??0),0);
   const pending=total-paid;
   const docs=items.filter(item=>Boolean(item.receivedDocumentFileId)).length;
-  return <section aria-label="Harç ve Evraklar özeti" className="studio-dashboard-permit studio-card-v2">
-    <StudioSectionHeader title="Harç ve Evraklar" description="Aktif projelerin resmi süreç özeti" icon="receipt" action={<Link href="/studio/projects" className="inline-flex min-h-10 items-center gap-1.5 rounded-xl border border-[#d9d3c6] bg-white px-3.5 text-sm font-semibold text-[#34414a] transition hover:border-[#ab925f] hover:bg-[#fbfaf6]">Detaya Git <StudioIcon name="chevron-right" className="h-4 w-4" /></Link>} />
+  return <section aria-label="Tüm aktif projelerin resmî süreç özeti" className="studio-dashboard-permit studio-card-v2">
+    <StudioSectionHeader title="Tüm Aktif Projelerin Resmî Süreç Özeti" description="Harç ve evrakların ofis genelindeki toplam görünümü" icon="receipt" action={<Link href="/studio/projects" className="inline-flex min-h-10 items-center gap-1.5 rounded-xl border border-[#d9d3c6] bg-white px-3.5 text-sm font-semibold text-[#34414a] transition hover:border-[#ab925f] hover:bg-[#fbfaf6]">Detaya Git <StudioIcon name="chevron-right" className="h-4 w-4" /></Link>} />
     <div className="mt-5 grid min-w-0 gap-3 sm:grid-cols-2 xl:grid-cols-4">
       <StudioKpiCard label="Toplam Harç" value={money(total)} detail="Aktif resmi süreçler" icon="receipt" />
       <StudioKpiCard label="Ödenen" value={money(paid)} detail="Tamamlanan tahakkuklar" icon="check" />
