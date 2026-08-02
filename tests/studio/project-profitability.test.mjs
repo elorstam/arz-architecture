@@ -18,5 +18,5 @@ test("paid expense support is additive and rollback-safe",async()=>{
 });
 
 test("main dashboard and project finance route reuse the finance aggregate",async()=>{
- const [page,route]=await Promise.all([read("app/studio/(protected)/page.tsx"),read("app/studio/(protected)/projects/[projectId]/finance/page.tsx")]);assert.match(page,/getFinanceDashboard/);assert.match(page,/finance=\{finance\}/);assert.match(route,/projectId/);assert.match(route,/StudioFinancePage/);
+ const [page,route]=await Promise.all([read("app/studio/(protected)/page.tsx"),read("app/studio/(protected)/projects/[projectId]/finance/page.tsx")]);assert.match(page,/getFinanceDashboard/);assert.match(page,/finance=\{finance\}/);assert.match(route,/projectId/);assert.match(route,/StudioProjectFinanceWorkspace/);
 });

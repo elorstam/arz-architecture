@@ -1,0 +1,7 @@
+"use server";
+import {revalidatePath} from "next/cache";
+import {createProjectExpense,saveProjectFinanceProfile} from "@/lib/studio/finance/project-finance-repository";
+const value=(form:FormData,key:string)=>String(form.get(key)??"");
+const refresh=(projectId:string)=>{revalidatePath(`/studio/projects/${projectId}/finance`);revalidatePath("/studio/finance");revalidatePath("/studio");revalidatePath("/studio/finance/profitability");};
+export async function saveProjectFinanceProfileAction(projectId:string,form:FormData){try{await saveProjectFinanceProfile(projectId,{agreedAmount:value(form,"agreedAmount"),currency:value(form,"currency")||"TRY",contractDate:value(form,"contractDate"),description:value(form,"description"),contractFileId:value(form,"contractFileId")});refresh(projectId);return{success:true,message:"Proje finans profili kaydedildi."};}catch{return{success:false,message:"Proje finans profili kaydedilemedi."};}}
+export async function createProjectExpenseAction(projectId:string,form:FormData){try{await createProjectExpense(projectId,{category:value(form,"category"),amount:value(form,"amount"),paidAmount:value(form,"paidAmount")||"0",status:value(form,"status")||"waiting",entryDate:value(form,"entryDate"),description:value(form,"description"),documentFileId:value(form,"documentFileId"),receiptFileId:value(form,"receiptFileId"),invoiceFileId:value(form,"invoiceFileId")});refresh(projectId);return{success:true,message:"Proje gideri kaydedildi."};}catch{return{success:false,message:"Proje gideri kaydedilemedi."};}}

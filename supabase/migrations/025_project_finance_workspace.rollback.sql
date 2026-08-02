@@ -1,0 +1,16 @@
+begin;
+drop policy if exists studio_project_finance_profiles_owner_update on public.studio_project_finance_profiles;
+drop policy if exists studio_project_finance_profiles_owner_insert on public.studio_project_finance_profiles;
+drop policy if exists studio_project_finance_profiles_select on public.studio_project_finance_profiles;
+revoke all on public.studio_project_finance_profiles from authenticated;
+drop trigger if exists studio_validate_project_finance_profile_trigger on public.studio_project_finance_profiles;
+drop trigger if exists studio_validate_project_finance_documents_trigger on public.studio_finance_entries;
+drop function if exists public.studio_validate_project_finance_profile();
+drop function if exists public.studio_validate_project_finance_documents();
+drop index if exists public.studio_finance_entries_project_expense_history_idx;
+drop index if exists public.studio_project_finance_profiles_org_idx;
+drop index if exists public.studio_project_finance_profiles_project_unique;
+drop table if exists public.studio_project_finance_profiles;
+alter table public.studio_finance_entries drop column if exists receipt_file_id;
+alter table public.studio_finance_entries drop column if exists invoice_file_id;
+commit;
