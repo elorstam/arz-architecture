@@ -6,8 +6,9 @@ import StudioAiWritingDialog from "@/components/studio/ai/StudioAiWritingDialog"
 import {studioButtonClass} from "@/components/studio/StudioButton";
 import {money} from "@/lib/studio/finance/finance-validation";
 import type {FinanceDashboard,FinanceEntry,FinanceType} from "@/lib/studio/finance/finance-types";
+import {StudioKpiCard} from "@/components/studio/ui";
 
-function Metric({label,value}:{label:string;value:string}){return <div className="rounded-xl border bg-white p-5"><p className="text-sm text-[#68706f]">{label}</p><p className="mt-2 text-xl font-semibold">{value}</p></div>}
+function Metric({label,value}:{label:string;value:string}){return <StudioKpiCard label={label} value={value} icon="wallet"/>}
 
 const labels:Record<FinanceType,string>={income:"Gelir",expense:"Gider",progress_payment:"Hakediş",invoice:"Fatura"};
 const categories=[['project_fee','Proje Geliri'],['municipal_fee','Belediye Harcı'],['building_inspection','Yapı Denetim'],['personnel','Personel'],['office','Ofis'],['software','Yazılım'],['advertising','Reklam'],['tax','Vergi'],['social_security','SGK'],['electricity','Elektrik'],['water','Su'],['internet','İnternet'],['vehicle','Araç'],['fuel','Yakıt'],['other','Diğer'],['progress_payment','Hakediş'],['invoice','Fatura']] as const;
