@@ -16,8 +16,9 @@ import {tagSearchProvider} from "./providers/tag-provider";
 import {taggedRecordSearchProvider} from "./providers/tagged-record-provider";
 import {officialProcessSearchProvider} from "./providers/official-process-provider";
 import {renderSearchProvider} from "./providers/render-provider";
+import {financeSearchProvider} from "./providers/finance-provider";
 
-const providers: readonly StudioSearchProvider[] = [tagSearchProvider, taggedRecordSearchProvider, officialProcessSearchProvider, projectSearchProvider, crmSearchProvider, renderSearchProvider, fileSearchProvider, fileVersionSearchProvider, folderSearchProvider, proposalSearchProvider, timelineSearchProvider, decisionSearchProvider];
+const providers: readonly StudioSearchProvider[] = [tagSearchProvider, financeSearchProvider, taggedRecordSearchProvider, officialProcessSearchProvider, projectSearchProvider, crmSearchProvider, renderSearchProvider, fileSearchProvider, fileVersionSearchProvider, folderSearchProvider, proposalSearchProvider, timelineSearchProvider, decisionSearchProvider];
 export function getStudioSearchProviders(){return providers;}
 export async function searchStudio(query:string):Promise<StudioSearchResponse>{
   const clean=safeSearchTerm(query);if(clean.length<2)return{query:clean,groups:[],total:0};

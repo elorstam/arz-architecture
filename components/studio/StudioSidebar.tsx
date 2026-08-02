@@ -15,7 +15,7 @@ const navigation: Array<{label: string; icon: StudioIconName; href?: string; div
   {label: "AI Kullanımı", icon: "chart", href: "/studio/ai-usage"},
   {label: "Takvim", icon: "calendar"},
   {label: "Dosyalar", icon: "files"},
-  {label: "Finans", icon: "payments"},
+  {label: "Finans", icon: "payments", href: "/studio/finance"},
 ];
 
 type Props = {

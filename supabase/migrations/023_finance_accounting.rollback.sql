@@ -1,0 +1,11 @@
+begin;
+revoke all on public.studio_finance_events,public.studio_finance_payments,public.studio_finance_entries from authenticated;
+drop trigger if exists studio_sync_finance_income_status_trigger on public.studio_finance_payments;
+drop trigger if exists studio_payment_audit_trigger on public.studio_finance_payments;
+drop trigger if exists studio_finance_audit_trigger on public.studio_finance_entries;
+drop trigger if exists studio_finance_update_audit_trigger on public.studio_finance_entries;
+drop trigger if exists studio_validate_finance_payment_trigger on public.studio_finance_payments;
+drop trigger if exists studio_validate_finance_entry_trigger on public.studio_finance_entries;
+drop function if exists public.studio_sync_finance_income_status(); drop function if exists public.studio_finance_update_audit(); drop function if exists public.studio_payment_audit(); drop function if exists public.studio_finance_audit(); drop function if exists public.studio_validate_finance_payment(); drop function if exists public.studio_validate_finance_entry();
+drop table if exists public.studio_finance_events; drop table if exists public.studio_finance_payments; drop table if exists public.studio_finance_entries;
+commit;
