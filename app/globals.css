@@ -607,3 +607,16 @@ html[data-theme="light"] .site-header .nav-control {
 html[data-theme="light"] .site-header .language-switcher__menu {
   background: color-mix(in srgb, var(--nav-surface) 94%, var(--nav-foreground) 6%);
 }
+.studio-root .studio-card-v2 { border:1px solid var(--studio-border); border-radius:1rem; background:var(--studio-surface); padding:1.25rem; box-shadow:0 4px 18px rgb(30 38 45/.035); transition:box-shadow 200ms ease,transform 200ms ease,border-color 200ms ease; }
+.studio-root .studio-card-v2:hover { border-color:var(--studio-border-strong); box-shadow:0 12px 28px rgb(30 38 45/.08); transform:translateY(-1px); }
+.studio-root .studio-kpi-v2 { min-width:0; }
+.studio-root .studio-kpi-icon { display:grid; width:2.5rem; height:2.5rem; flex-shrink:0; place-items:center; border:1px solid #e4ded2; border-radius:.75rem; background:#f4f1eb; color:#8d7548; transition:background-color 200ms ease,color 200ms ease; }
+.studio-root .studio-kpi-v2:hover .studio-kpi-icon { background:#eee8dd; color:#6f5933; }
+.studio-root .studio-eyebrow { color:#777b78; font-size:.75rem; font-weight:600; letter-spacing:.04em; line-height:1.4; }
+.studio-root .studio-kpi-value { margin-top:.55rem; color:#222b32; font-size:1.65rem; font-weight:650; letter-spacing:-.045em; line-height:1.1; }
+.studio-root .studio-kpi-detail { margin-top:.8rem; color:#696e6b; font-size:.8125rem; line-height:1.5; }
+.studio-root .studio-toolbar-v2 { display:flex; min-width:0; flex-wrap:wrap; align-items:center; gap:.625rem; border:1px solid var(--studio-border); border-radius:1rem; background:var(--studio-surface); padding:.625rem; box-shadow:0 3px 14px rgb(30 38 45/.025); }
+.studio-root .studio-empty-v2 { display:flex; min-height:14rem; flex-direction:column; align-items:center; justify-content:center; border:1px dashed var(--studio-border-strong); border-radius:1rem; background:#fbfaf7; padding:2rem 1.5rem; text-align:center; }
+.studio-root .studio-empty-v2 h3 { margin-top:.8rem; color:#293239; font-size:1rem; font-weight:650; }
+.studio-root .studio-empty-v2 p { margin-top:.4rem; max-width:30rem; color:#69716f; font-size:.875rem; line-height:1.6; }
+.studio-root .studio-empty-icon { display:grid; width:3rem; height:3rem; place-items:center; border-radius:1rem; background:#f1ece2; color:#927845; }
