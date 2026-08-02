@@ -15,6 +15,7 @@ import {
 } from "@/app/studio/(protected)/projects/[projectId]/stages/actions";
 import { studioButtonClass } from "@/components/studio/StudioButton";
 import StudioAiWritingDialog from "@/components/studio/ai/StudioAiWritingDialog";
+import StudioProjectStageDeleteDialog from "./StudioProjectStageDeleteDialog";
 import {
   PROJECT_STAGE_STATUSES,
   PROJECT_STAGE_STATUS_LABELS,
@@ -111,7 +112,7 @@ export function ActiveStage({ projectId, stage, attachments, files, canManage, w
     <div className="min-w-0 rounded-xl border bg-white p-4">
       <div className="flex flex-wrap items-start justify-between gap-3">
         <h3 className="min-w-0 break-words text-lg font-semibold">{stage.sortOrder}. {stage.title}</h3>
-        {canManage ? <div className="flex flex-wrap gap-2">
+        {canManage && !stage.isSystem ? <div className="flex flex-wrap gap-2">
           <button onClick={() => start(async () => { await reorderStageAction(projectId, stage.id, -1); })} className={studioButtonClass("ghost", "sm")}>↑ Yukarı</button>
           <button onClick={() => start(async () => { await reorderStageAction(projectId, stage.id, 1); })} className={studioButtonClass("ghost", "sm")}>↓ Aşağı</button>
           <button onClick={() => start(async () => { await duplicateStageAction(projectId, stage.id); })} className={studioButtonClass("outline", "sm")}>Çoğalt</button>
@@ -143,15 +144,17 @@ export function ActiveStage({ projectId, stage, attachments, files, canManage, w
 
 function ArchivedStage({ projectId, stage, attachments, canManage }: { projectId: string; stage: StudioProjectStage; attachments: Attachment[]; canManage: boolean }) {
   const [busy, start] = useTransition();
+  const [deleting, setDeleting] = useState(false);
   return (
     <div className="min-w-0 rounded-xl border bg-white p-4">
       <div className="flex flex-wrap items-start justify-between gap-3">
         <div className="min-w-0"><h3 className="break-words text-lg font-semibold">{stage.title}</h3><p className="mt-1 text-sm text-slate-600">Eski sıra: {stage.sortOrder} · Son durum: {PROJECT_STAGE_STATUS_LABELS[stage.status]}</p></div>
-        {canManage ? <button disabled={busy} aria-label={`${stage.title} aşamasını geri al`} onClick={() => start(async () => { await archiveStageAction(projectId, stage.id, false); })} className={studioButtonClass("outline", "sm")}>Geri Al</button> : null}
+        {canManage ? <div className="flex flex-wrap gap-2"><button disabled={busy} aria-label={`${stage.title} aşamasını geri al`} onClick={() => start(async () => { await archiveStageAction(projectId, stage.id, false); })} className={studioButtonClass("outline", "sm")}>Geri Al</button><button type="button" onClick={() => setDeleting(true)} className={studioButtonClass("danger", "sm")}>Kalıcı Sil</button></div> : null}
       </div>
       {stage.description ? <p className="mt-3 break-words text-sm">{stage.description}</p> : null}
       <dl className="mt-3 grid gap-2 text-sm sm:grid-cols-3"><div><dt className="font-semibold">Arşivlenme tarihi</dt><dd>{stage.archivedAt ? new Intl.DateTimeFormat("tr-TR", { dateStyle: "medium" }).format(new Date(stage.archivedAt)) : "—"}</dd></div><div><dt className="font-semibold">Arşivleyen</dt><dd>{stage.archivedByName ?? "—"}</dd></div><div><dt className="font-semibold">Timeline özeti</dt><dd>Son güncelleme: {new Intl.DateTimeFormat("tr-TR", { dateStyle: "medium" }).format(new Date(stage.updatedAt))}</dd></div></dl>
       <AttachmentList projectId={projectId} attachments={attachments} canManage={canManage} archived />
+      {deleting ? <StudioProjectStageDeleteDialog projectId={projectId} stageId={stage.id} stageTitle={stage.title} attachmentCount={attachments.length} onClose={() => setDeleting(false)} /> : null}
     </div>
   );
 }
