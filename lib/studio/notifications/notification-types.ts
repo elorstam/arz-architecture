@@ -27,6 +27,9 @@ export type StudioProjectStage = {
   archivedBy: string | null;
   archivedByName: string | null;
   isSystem: boolean;
+  municipalityStatus: "waiting"|"reviewing"|"approved"|"revision_requested"|"rejected";
+  municipalityApprovedAt: string|null;
+  municipalityApprovedBy: string|null;
   updatedAt: string;
 };
 
