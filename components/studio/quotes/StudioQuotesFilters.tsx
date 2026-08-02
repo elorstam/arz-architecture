@@ -15,6 +15,6 @@ export default function StudioQuotesFilters({filters,leads}:{filters:QuoteQueryF
     <input type="date" name="createdTo" defaultValue={filters.createdTo} aria-label="Oluşturulma bitiş tarihi" className={input}/>
     <input type="date" name="validFrom" defaultValue={filters.validFrom} aria-label="Geçerlilik başlangıç tarihi" className={input}/>
     <input type="date" name="validTo" defaultValue={filters.validTo} aria-label="Geçerlilik bitiş tarihi" className={input}/>
-    <div className="flex flex-wrap gap-2 sm:col-span-2 xl:justify-end"><Link href="/studio/quotes" className={studioButtonClass("outline", "sm")}>Temizle</Link><button className={studioButtonClass("primary", "sm")}>Filtrele</button></div>
+    <label className="flex min-h-10 items-center gap-2 text-sm font-semibold"><input type="checkbox" name="favorites" value="1" defaultChecked={filters.favoritesOnly}/>Sadece Favoriler</label><div className="flex flex-wrap gap-2 sm:col-span-2 xl:justify-end"><Link href="/studio/quotes" className={studioButtonClass("outline", "sm")}>Temizle</Link><button className={studioButtonClass("primary", "sm")}>Filtrele</button></div>
   </form>;
 }

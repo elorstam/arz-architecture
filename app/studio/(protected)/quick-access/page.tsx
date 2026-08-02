@@ -1,0 +1,4 @@
+import StudioQuickAccessPage from "@/components/studio/quick-access/StudioQuickAccessPage";
+import {getQuickAccessData} from "@/lib/studio/quick-access/quick-access-repository";
+export const dynamic="force-dynamic";
+export default async function QuickAccessPage(){const data=await getQuickAccessData();return <main className="mx-auto min-w-0 max-w-[1540px] px-4 py-6 sm:px-6 sm:py-8 lg:px-8 lg:py-9"><header className="border-b border-[#ddd8ce] pb-6"><p className="text-sm font-semibold uppercase tracking-[.14em] text-[#9a8253]">Çalışma Alanı</p><h1 className="mt-2 text-3xl font-semibold tracking-[-.04em]">Hızlı Erişim</h1><p className="mt-2 text-[15px] leading-6 text-[#69716f]">Favori kayıtlarınıza ve yakın zamanda açtığınız çalışmalara tek yerden ulaşın.</p></header><div className="mt-6"><StudioQuickAccessPage data={data}/></div></main>}

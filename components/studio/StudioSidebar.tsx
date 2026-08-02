@@ -8,6 +8,7 @@ import StudioLogoutButton from "@/components/studio/StudioLogoutButton";
 
 const navigation: Array<{label: string; icon: StudioIconName; href?: string; divider?: boolean}> = [
   {label: "Dashboard", icon: "dashboard", href: "/studio"},
+  {label: "Hızlı Erişim", icon: "star", href: "/studio/quick-access"},
   {label: "Projeler", icon: "folder", href: "/studio/projects"},
   {label: "CRM", icon: "clients", href: "/studio/crm"},
   {label: "Teklifler", icon: "money", href: "/studio/quotes", divider: true},

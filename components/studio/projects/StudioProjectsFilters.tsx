@@ -3,7 +3,7 @@ import {projectStages, projectStatuses} from "@/components/studio/projects/Studi
 import type {ProjectArchiveFilter} from "@/lib/studio/projects/project-types";
 import {studioButtonClass} from "@/components/studio/StudioButton";
 
-export type ProjectFilters = {query?: string; status?: string; stage?: string;archive?:ProjectArchiveFilter};
+export type ProjectFilters = {query?: string; status?: string; stage?: string;archive?:ProjectArchiveFilter;favoritesOnly?:boolean};
 
 export default function StudioProjectsFilters({filters}: {filters: ProjectFilters}) {
   return (
@@ -29,7 +29,7 @@ export default function StudioProjectsFilters({filters}: {filters: ProjectFilter
           {projectStages.map((stage) => <option key={stage} value={stage}>{stage}</option>)}
         </select>
       </label>
-      <button type="submit" className={studioButtonClass("primary", "sm")}>Filtrele</button>
+      <label className="flex min-h-10 items-center gap-2 text-sm font-semibold"><input type="checkbox" name="favorites" value="1" defaultChecked={filters.favoritesOnly}/>Sadece Favoriler</label><button type="submit" className={studioButtonClass("primary", "sm")}>Filtrele</button>
     </form>
   );
 }

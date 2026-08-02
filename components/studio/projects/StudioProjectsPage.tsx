@@ -5,11 +5,12 @@ import StudioProjectsHeader from "@/components/studio/projects/StudioProjectsHea
 import StudioProjectsFilters, {type ProjectFilters} from "@/components/studio/projects/StudioProjectsFilters";
 import {studioButtonClass} from "@/components/studio/StudioButton";
 
-export default function StudioProjectsPage({projects, totalCount, filters,canManage}: {
+export default function StudioProjectsPage({projects, totalCount, filters,canManage,favoriteKeys}: {
   projects: StudioProject[];
   totalCount: number;
   canManage:boolean;
   filters: ProjectFilters;
+  favoriteKeys:Set<string>;
 }) {
   return (
     <section className="mx-auto min-w-0 max-w-[1540px] px-4 py-6 sm:px-6 sm:py-8 lg:px-8 lg:py-9">
@@ -21,7 +22,7 @@ export default function StudioProjectsPage({projects, totalCount, filters,canMan
       </div>
       {projects.length ? (
         <div className="mt-3 grid min-w-0 gap-4 md:grid-cols-2 2xl:grid-cols-3">
-          {projects.map((project) => <StudioProjectCard key={project.id} project={project} />)}
+          {projects.map((project) => <StudioProjectCard key={project.id} project={project} isFavorite={favoriteKeys.has(`project:${project.id}`)} />)}
         </div>
       ) : (
         <div className="mt-3 rounded-xl border border-dashed border-[#d7d1c6] bg-white/55 px-6 py-16 text-center">

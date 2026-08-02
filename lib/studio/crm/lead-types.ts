@@ -22,5 +22,5 @@ export type StudioLeadInput={
 };
 export type LeadFormValues=Record<keyof StudioLeadInput,string>;
 export type LeadFormState={success:boolean;message?:string;fieldErrors?:Partial<Record<keyof LeadFormValues,string[]>>;values?:LeadFormValues};
-export type LeadQueryFilters={query?:string;stage?:LeadStage;status?:LeadStatus;serviceType?:LeadServiceType;assignedUserId?:string;archive?:LeadArchiveFilter};
+export type LeadQueryFilters={query?:string;stage?:LeadStage;status?:LeadStatus;serviceType?:LeadServiceType;assignedUserId?:string;archive?:LeadArchiveFilter;favoritesOnly?:boolean};
 export type StudioLeadSummary={total:number;newLeads:number;awaitingQuote:number;won:number;lost:number};
