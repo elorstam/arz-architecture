@@ -108,7 +108,7 @@ export function ActiveStage({ projectId, stage, attachments, files, canManage, w
   const [preview, setPreview] = useState(false);
   const disabledReason = whatsappDisabledReason(stage, attachments, whatsApp);
   return (
-    <li className="min-w-0 rounded-xl border bg-white p-4">
+    <div className="min-w-0 rounded-xl border bg-white p-4">
       <div className="flex flex-wrap items-start justify-between gap-3">
         <h3 className="min-w-0 break-words text-lg font-semibold">{stage.sortOrder}. {stage.title}</h3>
         {canManage ? <div className="flex flex-wrap gap-2">
@@ -137,14 +137,14 @@ export function ActiveStage({ projectId, stage, attachments, files, canManage, w
         {disabledReason ? <p id={`whatsapp-reason-${stage.id}`} className="mt-2 text-sm text-slate-600">{disabledReason}</p> : null}
       </div> : null}
       {preview ? <div role="dialog" aria-modal="true" aria-labelledby={`whatsapp-title-${stage.id}`} className="fixed inset-0 z-50 grid place-items-center bg-black/50 p-4"><div className="w-full max-w-lg rounded-xl bg-white p-6"><h4 id={`whatsapp-title-${stage.id}`} className="text-xl font-semibold">WhatsApp Önizlemesi</h4><p className="mt-3 text-sm">Güncel aşama adı, açıklaması ve müşteriye görünür PDF ekleri WhatsApp ile gönderilecek.</p><div className="mt-4 flex flex-wrap justify-end gap-2"><button onClick={() => setPreview(false)} className={studioButtonClass("ghost", "sm")}>İptal</button><button onClick={() => start(async () => { await sendStageNotificationAction(projectId, stage.id); setPreview(false); })} className={studioButtonClass("primary", "sm")}>WhatsApp ile Gönder</button></div></div></div> : null}
-    </li>
+    </div>
   );
 }
 
 function ArchivedStage({ projectId, stage, attachments, canManage }: { projectId: string; stage: StudioProjectStage; attachments: Attachment[]; canManage: boolean }) {
   const [busy, start] = useTransition();
   return (
-    <li className="min-w-0 rounded-xl border bg-white p-4">
+    <div className="min-w-0 rounded-xl border bg-white p-4">
       <div className="flex flex-wrap items-start justify-between gap-3">
         <div className="min-w-0"><h3 className="break-words text-lg font-semibold">{stage.title}</h3><p className="mt-1 text-sm text-slate-600">Eski sıra: {stage.sortOrder} · Son durum: {PROJECT_STAGE_STATUS_LABELS[stage.status]}</p></div>
         {canManage ? <button disabled={busy} aria-label={`${stage.title} aşamasını geri al`} onClick={() => start(async () => { await archiveStageAction(projectId, stage.id, false); })} className={studioButtonClass("outline", "sm")}>Geri Al</button> : null}
@@ -152,7 +152,7 @@ function ArchivedStage({ projectId, stage, attachments, canManage }: { projectId
       {stage.description ? <p className="mt-3 break-words text-sm">{stage.description}</p> : null}
       <dl className="mt-3 grid gap-2 text-sm sm:grid-cols-3"><div><dt className="font-semibold">Arşivlenme tarihi</dt><dd>{stage.archivedAt ? new Intl.DateTimeFormat("tr-TR", { dateStyle: "medium" }).format(new Date(stage.archivedAt)) : "—"}</dd></div><div><dt className="font-semibold">Arşivleyen</dt><dd>{stage.archivedByName ?? "—"}</dd></div><div><dt className="font-semibold">Timeline özeti</dt><dd>Son güncelleme: {new Intl.DateTimeFormat("tr-TR", { dateStyle: "medium" }).format(new Date(stage.updatedAt))}</dd></div></dl>
       <AttachmentList projectId={projectId} attachments={attachments} canManage={canManage} archived />
-    </li>
+    </div>
   );
 }
 
@@ -173,7 +173,7 @@ export default function StudioProjectStages({ projectId, stages, notifications, 
         </nav>
         {canManage && view === "active" ? <Create projectId={projectId} /> : null}
       </div>
-      {stages.length === 0 ? <p role="status" className="rounded-xl border border-dashed bg-white p-6">{view === "archive" ? "Aşama arşivinde kayıt bulunmuyor." : "Bu proje için aktif aşama bulunmuyor."}</p> : <ol className="grid min-w-0 gap-4">{stages.map((stage) => { const stageAttachments = attachments.filter((item) => item.stageId === stage.id); return view === "archive" ? <ArchivedStage key={stage.id} projectId={projectId} stage={stage} attachments={stageAttachments} canManage={canManage} /> : <ActiveStage key={stage.id} projectId={projectId} stage={stage} attachments={stageAttachments} files={files} canManage={canManage} whatsApp={whatsApp} />; })}</ol>}
+      {stages.length === 0 ? <p role="status" className="rounded-xl border border-dashed bg-white p-6">{view === "archive" ? "Aşama arşivinde kayıt bulunmuyor." : "Bu proje için aktif aşama bulunmuyor."}</p> : <ol className="grid min-w-0 gap-4">{stages.map((stage) => { const stageAttachments = attachments.filter((item) => item.stageId === stage.id); return <li key={stage.id}>{view === "archive" ? <ArchivedStage projectId={projectId} stage={stage} attachments={stageAttachments} canManage={canManage} /> : <ActiveStage projectId={projectId} stage={stage} attachments={stageAttachments} files={files} canManage={canManage} whatsApp={whatsApp} />}</li>; })}</ol>}
       <div className="rounded-xl border bg-white p-5"><h2 className="text-xl font-semibold">WhatsApp Gönderim Geçmişi</h2>{notifications.length ? <ul className="mt-3 space-y-2">{notifications.map((notification) => <li key={notification.id} className="text-sm">{notification.templateName} · {notification.status}</li>)}</ul> : <p className="mt-2 text-sm">Henüz WhatsApp bildirimi yok.</p>}</div>
     </section>
   );
