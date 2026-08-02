@@ -170,9 +170,9 @@ export default function StudioProjectStages({ projectId, stages, notifications, 
     <section className="mt-6 min-w-0 space-y-6">
       <div className="rounded-xl border bg-white p-5">
         <div className="flex min-w-0 flex-wrap items-center justify-between gap-4"><div><h2 className="text-xl font-semibold">{view === "archive" ? "Aşama Arşivi" : "Aktif Aşamalar"}</h2><p className="mt-1 text-sm">Aktif Aşamalar: {activeCount} · Arşiv: {archiveCount}</p></div>{view === "active" ? <div className="min-w-36"><p className="font-semibold">İlerleme %{progress}</p><div role="progressbar" aria-label="Proje aşaması ilerlemesi" aria-valuemin={0} aria-valuemax={100} aria-valuenow={progress} className="mt-2 h-2 overflow-hidden rounded-full bg-slate-200"><span className="block h-full rounded-full bg-[#9a7b40]" style={{ width: `${progress}%` }} /></div></div> : null}</div>
-        <nav aria-label="Aşama görünümü" className="mt-4 flex flex-wrap gap-2">
-          <Link href={`/studio/projects/${projectId}/stages`} aria-current={view === "active" ? "page" : undefined} className={studioButtonClass(view === "active" ? "primary" : "outline", "sm")}>Aktif Aşamalar <span aria-hidden="true">({activeCount})</span></Link>
-          <Link href={`/studio/projects/${projectId}/stages?view=archive`} aria-current={view === "archive" ? "page" : undefined} className={studioButtonClass(view === "archive" ? "primary" : "outline", "sm")}>Aşama Arşivi <span aria-hidden="true">({archiveCount})</span></Link>
+        <nav aria-label="Aşama görünümü" className="mt-4 inline-flex max-w-full rounded-xl border border-[#dedad1] bg-[#f8f6f1] p-1">
+          <Link href={`/studio/projects/${projectId}/stages`} aria-current={view === "active" ? "page" : undefined} className={studioButtonClass(view === "active" ? "primary" : "ghost", "sm")}>Aktif Aşamalar <span aria-hidden="true">({activeCount})</span></Link>
+          <Link href={`/studio/projects/${projectId}/stages?view=archive`} aria-current={view === "archive" ? "page" : undefined} className={studioButtonClass(view === "archive" ? "primary" : "ghost", "sm")}>Aşama Arşivi <span aria-hidden="true">({archiveCount})</span></Link>
         </nav>
         {canManage && view === "active" ? <Create projectId={projectId} /> : null}
       </div>
