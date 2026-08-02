@@ -10,7 +10,7 @@ const variants:StudioMilestoneVariant[]=["architecture","structural","mechanical
 
 function Milestone({milestone,index,last}:{milestone:ProjectCardMilestone;index:number;last:boolean}) {
   return <div className="studio-dashboard-milestone">
-    <StudioMilestoneIcon variant={variants[index]??"delivery"} status={milestone.state} />
+    <StudioMilestoneIcon variant={variants[index]??"delivery"} size="xl" status={milestone.state} />
     {!last?<span aria-hidden="true" className={`studio-dashboard-milestone__line ${milestone.state==="completed"?"is-complete":""}`} />:null}
     <div className="mt-3 min-w-0">
       <p className="truncate text-sm font-semibold text-[#27333e]" title={milestone.fullTitle}>{milestone.title}</p>
