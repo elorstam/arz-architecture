@@ -15,11 +15,11 @@ function activityVariant(type:string):StudioActivityVariant{
 
 export default function StudioActivityFeed({items}: {items:DashboardActivity[]}) {
   return <section aria-labelledby="activity-title" className="flex h-full min-h-0 flex-col overflow-hidden rounded-[20px] border border-[#e1e6ea] bg-white shadow-[0_10px_30px_rgba(40,57,73,.05)]">
-    <div className="border-b border-[#edf0f2] px-5 py-5"><h2 id="activity-title" className="text-lg font-semibold tracking-[-.025em] text-[#2d353b]">Son Aktiviteler</h2><p className="mt-1 text-sm text-[#89939a]">Aktif projelerdeki son işlemler</p></div>
-    <div className="min-h-0 flex-1 overflow-y-auto px-5 py-1">{items.length?items.map((item,index)=><Link key={`${item.projectId}-${item.event}-${index}`} href={`/studio/projects/${item.projectId}`} className="group relative flex gap-4 py-4 outline-none focus-visible:ring-2 focus-visible:ring-[#668ba0]">
-      {index<items.length-1?<span aria-hidden="true" className="absolute left-[27px] top-14 h-[calc(100%-1rem)] w-px bg-[#e5e9ec]"/>:null}
-      <StudioActivityIcon variant={activityVariant(item.type)} size="lg" className="relative z-10"/>
-      <div className="min-w-0 flex-1 pt-0.5"><div className="flex items-start justify-between gap-3"><p className="truncate text-sm font-semibold text-[#354149]">{item.project}</p><span className="shrink-0 text-xs text-[#a0a7ab]">{item.time}</span></div><p className="mt-1 text-sm leading-5 text-[#657078]">{item.event}</p><div className="mt-2 flex items-center justify-between gap-3"><p className="text-xs text-[#91999e]">{item.actor} · {item.type}</p><span aria-hidden="true" className="text-[#a6afb4] transition-transform duration-150 group-hover:translate-x-0.5">→</span></div></div>
-    </Link>):<p role="status" className="py-8 text-center text-sm text-[#89939a]">Henüz proje aktivitesi bulunmuyor.</p>}</div>
+    <div className="border-b border-[#edf0f2] px-4 py-4"><h2 id="activity-title" className="text-base font-semibold tracking-[-.025em] text-[#2d353b]">Son Aktiviteler</h2><p className="mt-0.5 text-xs text-[#89939a]">Aktif projelerdeki son işlemler</p></div>
+    <div className={`min-h-0 flex-1 overflow-y-auto px-4 ${items.length?"py-1":"flex items-center justify-center"}`}>{items.length?items.map((item,index)=><Link key={`${item.projectId}-${item.event}-${index}`} href={`/studio/projects/${item.projectId}`} className="group relative flex min-h-[52px] gap-3 py-2 outline-none focus-visible:ring-2 focus-visible:ring-[#668ba0]">
+      {index<items.length-1?<span aria-hidden="true" className="absolute left-[17px] top-9 h-[calc(100%-.25rem)] w-px bg-[#e5e9ec]"/>:null}
+      <StudioActivityIcon variant={activityVariant(item.type)} size="sm" className="relative z-10"/>
+      <div className="min-w-0 flex-1"><div className="flex items-start justify-between gap-2"><p className="truncate text-[13px] font-semibold text-[#354149]">{item.project}</p><span className="shrink-0 text-[11px] text-[#a0a7ab]">{item.time}</span></div><div className="mt-0.5 flex min-w-0 items-center justify-between gap-2"><p className="truncate text-[11px] leading-4 text-[#79838a]">{item.event} · {item.actor} · {item.type}</p><span aria-hidden="true" className="text-xs text-[#a6afb4] transition-transform duration-150 group-hover:translate-x-0.5">→</span></div></div>
+    </Link>):<p role="status" className="text-center text-xs text-[#89939a]">Henüz proje aktivitesi bulunmuyor.</p>}</div>
   </section>;
 }
