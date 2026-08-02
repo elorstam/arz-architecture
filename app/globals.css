@@ -335,13 +335,13 @@ html[data-theme="light"] .language-switcher-trigger {
 
 /* ARZ Studio visual system --------------------------------------------- */
 .studio-root {
-  --studio-bg: #f3f1ec;
+  --studio-bg: #f4f7fb;
   --studio-surface: #fff;
-  --studio-surface-soft: #faf8f4;
+  --studio-surface-soft: #f8fafc;
   --studio-text: #222b31;
   --studio-text-muted: #68706f;
-  --studio-border: #ddd8ce;
-  --studio-border-strong: #cbc3b5;
+  --studio-border: #e3e9ef;
+  --studio-border-strong: #d4dde6;
   --studio-gold: #9b7f4d;
   --studio-danger: #8b5141;
   --studio-font-helper: .8125rem;
@@ -752,4 +752,46 @@ html[data-theme="light"] .site-header .language-switcher__menu {
 }
 @media (prefers-reduced-motion:reduce) {
   .studio-root .studio-dashboard-v3 * { transition:none!important; transform:none!important; }
+}
+
+/* Dashboard V3.1 visual refinement: cool SaaS workspace, richer icon surfaces
+   and a lighter product-like hierarchy. */
+.studio-root .studio-dashboard-v3 { --dashboard-accent-gold:#b18a4c; --dashboard-accent-purple:#80649b; --dashboard-accent-blue:#5c8297; --dashboard-accent-green:#5f8a6c; background:transparent; }
+.studio-root .studio-dashboard-v3 .studio-card-v2 { border-color:rgba(211,220,229,.82); border-radius:1.375rem; background:rgba(255,255,255,.94); box-shadow:0 14px 40px rgba(40,57,73,.055); transition:transform 150ms ease,box-shadow 150ms ease,border-color 150ms ease; }
+.studio-root .studio-dashboard-v3 .studio-card-v2:hover { border-color:#cbd7e2; box-shadow:0 20px 48px rgba(40,57,73,.1); transform:translateY(-2px); }
+.studio-root .studio-dashboard-v3 .studio-section-header h2 { font-size:1.2rem; letter-spacing:-.03em; }
+.studio-root .studio-dashboard-v3 .studio-section-header p { color:#7b8790; font-size:.9rem; }
+.studio-root .studio-dashboard-v3 .studio-count { background:#edf3f7; color:#5d7482; }
+.studio-root .studio-dashboard-v3 .studio-dashboard-milestone-track { padding-top:.5rem; }
+.studio-root .studio-dashboard-v3 .studio-dashboard-milestone__node { width:3.25rem; height:3.25rem; border-radius:1.125rem; box-shadow:0 8px 18px rgba(39,53,65,.08); transition:transform 150ms ease,box-shadow 150ms ease; }
+.studio-root .studio-dashboard-v3 .studio-dashboard-milestone__node:hover { transform:translateY(-2px); box-shadow:0 12px 24px rgba(39,53,65,.14); }
+.studio-root .studio-dashboard-v3 .studio-dashboard-milestone__line { top:1.625rem; left:3.25rem; width:calc(100% - 3.25rem); height:2px; background:linear-gradient(90deg,#d9e2ea,#edf1f4); }
+.studio-root .studio-dashboard-v3 .studio-dashboard-milestone__line.is-complete { background:linear-gradient(90deg,#9fc2aa,#cfe0d3); }
+.studio-root .studio-dashboard-v3 .studio-dashboard-milestone__node--current { box-shadow:0 0 0 4px rgba(92,130,151,.14),0 10px 24px rgba(92,130,151,.2); }
+.studio-root .studio-dashboard-v3 .studio-dashboard-milestone .studio-badge { border:1px solid rgba(205,216,226,.7); padding:.35rem .7rem; font-size:.75rem; }
+.studio-root .studio-dashboard-v3 .studio-dashboard-milestone__node--gold { background:#f8f0df; color:var(--dashboard-accent-gold); }
+.studio-root .studio-dashboard-v3 .studio-dashboard-milestone__node--purple { background:#f0eafa; color:var(--dashboard-accent-purple); }
+.studio-root .studio-dashboard-v3 .studio-dashboard-milestone__node--blue { background:#e8f2f7; color:var(--dashboard-accent-blue); }
+.studio-root .studio-dashboard-v3 .studio-dashboard-milestone__node--amber { background:#fff1d8; color:#ad7b31; }
+.studio-root .studio-dashboard-v3 .studio-dashboard-milestone__node--green { background:#e8f3eb; color:var(--dashboard-accent-green); }
+.studio-root .studio-dashboard-v3 .studio-dashboard-milestone__node--sand { background:#f4eee6; color:#8f7559; }
+.studio-root .studio-dashboard-v3 .studio-dashboard-milestone__node--slate { background:#edf1f4; color:#617783; }
+.studio-root .studio-dashboard-v3 .studio-kpi-v2 { border:1px solid rgba(214,223,231,.8); border-radius:1.25rem; background:linear-gradient(145deg,#fff 0%,#fbfcfd 100%); padding:1.35rem; box-shadow:0 10px 28px rgba(40,57,73,.055); transition:transform 150ms ease,box-shadow 150ms ease; }
+.studio-root .studio-dashboard-v3 .studio-kpi-v2:hover { transform:translateY(-2px); box-shadow:0 18px 38px rgba(40,57,73,.11); }
+.studio-root .studio-dashboard-v3 .studio-kpi-icon { width:3rem; height:3rem; border:0; border-radius:1rem; background:#eef4f7; color:#55798c; box-shadow:0 6px 14px rgba(76,111,128,.1); }
+.studio-root .studio-dashboard-v3 .studio-kpi-v2:nth-child(2) .studio-kpi-icon { background:#f1ecf8; color:#80649b; }
+.studio-root .studio-dashboard-v3 .studio-kpi-v2:nth-child(3) .studio-kpi-icon { background:#fdf1dc; color:#a77932; }
+.studio-root .studio-dashboard-v3 .studio-kpi-v2:nth-child(4) .studio-kpi-icon { background:#eaf3ec; color:#5f8a6c; }
+.studio-root .studio-dashboard-v3 .studio-kpi-value { font-size:1.85rem; letter-spacing:-.05em; }
+.studio-root .studio-dashboard-v3 .studio-kpi-detail { color:#89939a; }
+.studio-root .studio-dashboard-v3 .studio-dashboard-activity-icon { box-shadow:0 6px 14px rgba(76,111,128,.1); }
+.studio-root .studio-dashboard-v3 section[aria-labelledby="activity-title"] article { padding-block:1rem; }
+.studio-root .studio-dashboard-v3 section[aria-labelledby="activity-title"] article > span:first-child { background:#edf4f7; color:#55798c; }
+.studio-root .studio-dashboard-v3 section[aria-labelledby="activity-title"] article > span:first-child + div { padding-top:.05rem; }
+.studio-root .studio-dashboard-v3 section[aria-labelledby="activity-title"] article > span:first-child + div > div > p:first-child { font-size:.9rem; }
+.studio-root .studio-dashboard-v3 section[aria-labelledby="activity-title"] article > span:first-child + div > span { border:1px solid #dce6ed; background:#f3f7f9; padding:.3rem .65rem; font-size:.7rem; }
+@media (max-width:767px) {
+  .studio-root .studio-dashboard-v3 .studio-dashboard-milestone-track { grid-template-columns:repeat(7,7rem); }
+  .studio-root .studio-dashboard-v3 .studio-dashboard-milestone__node { width:3rem; height:3rem; }
+  .studio-root .studio-dashboard-v3 .studio-dashboard-milestone__line { top:1.5rem; left:3rem; width:calc(100% - 3rem); }
 }
