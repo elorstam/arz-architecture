@@ -5,7 +5,7 @@ import {redirect} from "next/navigation";
 import {after} from "next/server";
 
 import {StudioProjectError} from "@/lib/studio/projects/project-errors";
-import {archiveStudioProject,createStudioProject,updateStudioProject} from "@/lib/studio/projects/project-repository";
+import {archiveStudioProject,createStudioProject,updateStudioProject,issuePermanentProjectDeletionConfirmation,permanentlyDeleteStudioProject} from "@/lib/studio/projects/project-repository";
 import type {ProjectFormState} from "@/lib/studio/projects/project-types";
 import {parseStudioProjectForm} from "@/lib/studio/projects/project-validation";
 import {initializeStudioProjectDriveStorageIfReady} from "@/lib/studio/files/storage/project-drive-auto-initialization";
@@ -44,4 +44,20 @@ export async function setStudioProjectArchivedAction(projectId:string,archived:b
  await archiveStudioProject(projectId,archived);
  revalidatePath("/studio/projects");revalidatePath(`/studio/projects/${projectId}`);
  redirect(archived?"/studio/projects?archive=archived":`/studio/projects/${projectId}`);
+}
+
+export async function preparePermanentProjectDeletionAction(projectId:string,expectedName:string){
+ try{return {ok:true as const,token:await issuePermanentProjectDeletionConfirmation(projectId,expectedName)};}
+ catch(error){return {ok:false as const,message:error instanceof StudioProjectError&&error.code==="forbidden"?"Bu işlem yalnızca proje sahibi tarafından yapılabilir.":"Proje silme onayı hazırlanamadı."};}
+}
+
+export async function permanentlyDeleteProjectAction(projectId:string,token:string,reason:string){
+ try{
+  await permanentlyDeleteStudioProject(projectId,token,reason);
+  revalidatePath("/studio/projects");
+ }catch(error){
+  if(error instanceof StudioProjectError&&error.code==="forbidden")return{ok:false as const,message:"Bu işlem yalnızca proje sahibi tarafından yapılabilir."};
+  return{ok:false as const,message:"Proje kalıcı olarak silinemedi. Onay süresi dolmuş olabilir."};
+ }
+ redirect("/studio/projects");
 }

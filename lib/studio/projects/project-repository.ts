@@ -82,6 +82,23 @@ export async function archiveStudioProject(projectId:string,archived:boolean){
  if(error){console.error("Studio project archive failed.",{code:error.code});throw normalizeProjectError(error);}
  if(!data)throw new StudioProjectError("not_found","Proje bulunamadı.");
 }
+
+export async function issuePermanentProjectDeletionConfirmation(projectId:string,expectedName:string){
+ if(!isStudioProjectId(projectId))throw new StudioProjectError("not_found","Proje bulunamadı.");
+ await requireProjectContext(true); const supabase=await createStudioServerClient();
+ const{data,error}=await supabase.rpc("studio_issue_project_deletion_confirmation",{target_project:projectId,target_name:expectedName});
+ if(error){console.error("Studio project deletion confirmation failed.",{code:error.code});throw normalizeProjectError(error);}
+ return String(data);
+}
+
+export async function permanentlyDeleteStudioProject(projectId:string,token:string,reason?:string){
+ if(!isStudioProjectId(projectId)||!token)throw new StudioProjectError("not_found","Proje bulunamadı.");
+ const allowedReasons=["Test projesi","Yanlış oluşturuldu","Mükerrer","Müşteri iptal etti","Diğer",""];
+ if(reason&&!allowedReasons.includes(reason))throw new StudioProjectError("forbidden","Geçersiz silme nedeni.");
+ await requireProjectContext(true); const supabase=await createStudioServerClient();
+ const{error}=await supabase.rpc("studio_permanently_delete_project",{target_project:projectId,target_token:token,target_reason:reason||null});
+ if(error){console.error("Studio permanent project deletion failed.",{code:error.code});throw normalizeProjectError(error);}
+}
 async function assertResponsibleMember(userId:string,organizationId:string){
  const supabase=await createStudioServerClient();
  const{data,error}=await supabase.from("organization_members").select("id").eq("organization_id",organizationId)
