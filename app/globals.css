@@ -691,3 +691,50 @@ html[data-theme="light"] .site-header .language-switcher__menu {
   .studio-root[data-theme="dark"] .studio-field,.studio-root[data-theme="dark"] .studio-card { background:#17212b; border-color:rgba(255,255,255,.12); color:#f5f5f1; }
   .studio-root[data-theme="dark"] .studio-helper-text,.studio-root[data-theme="dark"] .studio-label { color:rgba(255,255,255,.62); }
 }
+
+/* Dashboard V3 workspace home. This is intentionally scoped to the dashboard
+   surface so existing module contracts and public-site styles remain untouched. */
+.studio-root .studio-dashboard-v3 { --dashboard-gap:1.25rem; display:flex; flex-direction:column; gap:var(--dashboard-gap); overflow-x:hidden; }
+.studio-root .studio-dashboard-v3 > * { min-width:0; margin-top:0; }
+.studio-root .studio-dashboard-v3 .studio-page-header { border:0; border-radius:1.5rem; background:linear-gradient(135deg,#fffefa 0%,#f7f3ea 100%); padding:1.75rem 1.5rem; box-shadow:0 10px 35px rgb(30 38 45/.055); }
+.studio-root .studio-dashboard-v3 .studio-page-title { font-size:clamp(2rem,3.5vw,2.75rem); letter-spacing:-.05em; }
+.studio-root .studio-dashboard-v3 .studio-page-description { max-width:42rem; }
+.studio-root .studio-dashboard-v3 section[aria-labelledby="quick-actions-title"] > div:first-child { margin-bottom:.75rem; }
+.studio-root .studio-dashboard-v3 section[aria-labelledby="quick-actions-title"] > div:last-child { display:grid; gap:.75rem; }
+.studio-root .studio-dashboard-v3 section[aria-labelledby="quick-actions-title"] button { min-height:4.25rem; border-color:var(--studio-border); border-radius:1rem; background:var(--studio-surface); padding:1rem; box-shadow:0 5px 20px rgb(30 38 45/.035); transition:transform .2s ease,box-shadow .2s ease,border-color .2s ease; }
+.studio-root .studio-dashboard-v3 section[aria-labelledby="quick-actions-title"] button:hover:not(:disabled) { transform:translateY(-2px); box-shadow:0 12px 28px rgb(30 38 45/.09); border-color:var(--studio-border-strong); }
+.studio-root .studio-dashboard-v3 section[aria-labelledby="project-overview-title"],
+.studio-root .studio-dashboard-v3 .studio-dashboard-workflow,
+.studio-root .studio-dashboard-v3 section[aria-labelledby="activity-title"],
+.studio-root .studio-dashboard-v3 section[aria-labelledby="schedule-title"],
+.studio-root .studio-dashboard-v3 section[aria-labelledby="dashboard-quick-access"] { border-color:var(--studio-border); border-radius:1.25rem; box-shadow:0 8px 28px rgb(30 38 45/.045); }
+.studio-root .studio-dashboard-v3 section[aria-labelledby="project-overview-title"] > div:first-child,
+.studio-root .studio-dashboard-v3 section[aria-labelledby="activity-title"] > div:first-child,
+.studio-root .studio-dashboard-v3 section[aria-labelledby="schedule-title"] > div:first-child { padding-block:1.25rem; }
+.studio-root .studio-dashboard-v3 section[aria-labelledby="project-overview-title"] h2,
+.studio-root .studio-dashboard-v3 section[aria-labelledby="activity-title"] h2,
+.studio-root .studio-dashboard-v3 section[aria-labelledby="schedule-title"] h2 { font-size:1.125rem; letter-spacing:-.025em; }
+.studio-root .studio-dashboard-v3 .studio-dashboard-workflow { overflow:hidden; }
+.studio-root .studio-dashboard-v3 .studio-dashboard-workflow > div > div:first-child { background:#fcfbf8; padding-block:1rem; }
+.studio-root .studio-dashboard-v3 section[aria-labelledby="dashboard-quick-access"] { padding:1.5rem; }
+.studio-root .studio-dashboard-v3 section[aria-labelledby="dashboard-quick-access"] a,
+.studio-root .studio-dashboard-v3 section[aria-labelledby="project-overview-title"] article { transition:background-color .18s ease,border-color .18s ease; }
+.studio-root .studio-dashboard-v3 section[aria-labelledby="dashboard-quick-access"] a:hover { background:#fbfaf6; }
+.studio-root .studio-dashboard-v3 > .grid { gap:var(--dashboard-gap); }
+.studio-root .studio-dashboard-v3 [aria-label="Studio özeti"] { gap:1rem; }
+.studio-root .studio-dashboard-v3 [aria-label="Studio özeti"] > * { min-height:9.5rem; }
+.studio-root .studio-dashboard-v3 .studio-kpi-v2 { border-radius:1.25rem; padding:1.25rem; box-shadow:0 8px 24px rgb(30 38 45/.045); }
+.studio-root .studio-dashboard-v3 .studio-kpi-value { font-size:1.8rem; }
+.studio-root .studio-dashboard-v3 article { min-width:0; }
+@media (max-width:767px) {
+  .studio-root .studio-dashboard-v3 { --dashboard-gap:1rem; }
+  .studio-root .studio-dashboard-v3 .studio-page-header { padding:1.25rem; }
+  .studio-root .studio-dashboard-v3 .studio-page-actions { width:auto; }
+  .studio-root .studio-dashboard-v3 section[aria-labelledby="dashboard-quick-access"] { padding:1.25rem; }
+  .studio-root .studio-dashboard-v3 section[aria-labelledby="project-overview-title"] > div:first-child,
+  .studio-root .studio-dashboard-v3 section[aria-labelledby="activity-title"] > div:first-child,
+  .studio-root .studio-dashboard-v3 section[aria-labelledby="schedule-title"] > div:first-child { padding-inline:1rem; }
+}
+@media (prefers-reduced-motion:reduce) {
+  .studio-root .studio-dashboard-v3 * { transition:none!important; transform:none!important; }
+}

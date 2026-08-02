@@ -12,7 +12,7 @@ export default function StudioProjectOverview({items}: {items: ProjectOverviewIt
     <section aria-labelledby="project-overview-title" className="overflow-hidden rounded-xl border border-[#dedad1] bg-white shadow-[0_4px_18px_rgba(32,39,46,.03)]">
       <div className="flex items-center justify-between gap-4 border-b border-[#ece9e3] px-5 py-5 sm:px-6">
         <div>
-          <h2 id="project-overview-title" className="text-[15px] font-semibold tracking-[-.015em] text-[#273038]">Proje Görünümü</h2>
+          <h2 id="project-overview-title" className="text-[15px] font-semibold tracking-[-.015em] text-[#273038]">Proje Aşamaları</h2>
           <p className="mt-1 text-[10px] text-[#969792]">Aktif çalışma akışı ve son güncellemeler</p>
         </div>
         <span className="rounded-full border border-[#dfdbd2] px-2.5 py-1 text-[9px] font-medium text-[#7b7d78]">4 proje</span>

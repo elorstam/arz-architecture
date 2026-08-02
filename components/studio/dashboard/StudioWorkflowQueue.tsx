@@ -25,7 +25,7 @@ export default function StudioWorkflowQueue({revisions, renders}: {
   renders: WorkflowItem[];
 }) {
   return (
-    <section aria-label="Revizyon ve render iş akışı" className="grid overflow-hidden rounded-xl border border-[#dedad1] bg-white shadow-[0_4px_18px_rgba(32,39,46,.03)] lg:grid-cols-2">
+    <section aria-label="Revizyon ve render iş akışı" className="studio-dashboard-workflow grid overflow-hidden rounded-xl border border-[#dedad1] bg-white shadow-[0_4px_18px_rgba(32,39,46,.03)] lg:grid-cols-2">
       <div className="border-b border-[#e9e6df] lg:border-b-0 lg:border-r">
         <div className="flex items-center gap-3 border-b border-[#ece9e3] px-5 py-4">
           <span className="grid h-8 w-8 place-items-center rounded-lg bg-[#f3eee5] text-[#8d7548]"><StudioIcon name="revision" className="h-4 w-4" /></span>
