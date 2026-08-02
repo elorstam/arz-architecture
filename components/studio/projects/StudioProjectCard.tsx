@@ -1,10 +1,10 @@
 import Link from "next/link";
 
-import {StudioIcon} from "@/components/studio/StudioIcons";
 import type {StudioProject} from "@/components/studio/projects/StudioProjectData";
 import StudioProjectProgress from "@/components/studio/projects/StudioProjectProgress";
 import StudioProjectStatusBadge from "@/components/studio/projects/StudioProjectStatusBadge";
 import StudioFavoriteButton from "@/components/studio/quick-access/StudioFavoriteButton";
+import StudioProjectCardMilestoneTimeline from "@/components/studio/projects/StudioProjectCardMilestoneTimeline";
 
 export default function StudioProjectCard({project,isFavorite=false}: {project: StudioProject;isFavorite?:boolean}) {
   return (
@@ -30,16 +30,7 @@ export default function StudioProjectCard({project,isFavorite=false}: {project: 
             <div><p className="text-[#aaa69e]">Yıl</p><p className="mt-1 font-medium text-[#50575b]">{project.year}</p></div>
           </div>
           <div className="mt-5"><StudioProjectProgress value={project.progress} /></div>
-          <div className="mt-5 flex items-center justify-between gap-3 border-t border-[#eeece7] pt-4">
-            <div className="min-w-0">
-              <p className="text-[8px] uppercase tracking-[.08em] text-[#aaa69e]">Sonraki kilometre taşı</p>
-              <p className="mt-1 truncate text-[9px] font-medium text-[#5c6265]">{project.nextMilestone}</p>
-            </div>
-            <div className="flex shrink-0 items-center gap-2">
-              <span className="grid h-7 w-7 place-items-center rounded-full bg-[#f1ede5] text-[8px] font-semibold text-[#7d6841]" title={project.responsible?.name??"Sorumlu atanmadı"}>{project.responsible?.initials??"—"}</span>
-              <StudioIcon name="arrow" className="h-4 w-4 text-[#9b8355] transition-transform group-hover:translate-x-0.5" />
-            </div>
-          </div>
+          <div className="mt-5"><StudioProjectCardMilestoneTimeline items={project.cardMilestones}/></div>
         </div>
       </Link>
     </article>

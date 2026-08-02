@@ -1,0 +1,6 @@
+import test from "node:test";
+import assert from "node:assert/strict";
+import {readFile} from "node:fs/promises";
+const read=path=>readFile(path,"utf8");
+test("project cards use stage-derived reusable milestone timeline",async()=>{const[card,timeline,repo,mapper]=await Promise.all([read("components/studio/projects/StudioProjectCard.tsx"),read("components/studio/projects/StudioProjectCardMilestoneTimeline.tsx"),read("lib/studio/projects/project-repository.ts"),read("lib/studio/projects/project-mappers.ts")]);assert.doesNotMatch(card,/Sonraki kilometre taşı/);assert.match(card,/StudioProjectCardMilestoneTimeline/);assert.match(timeline,/Proje İlerlemesi/);assert.match(timeline,/Tamamlandı/);assert.match(timeline,/Devam Ediyor/);assert.match(repo,/stages:studio_project_stages/);assert.match(mapper,/cardMilestones/);});
+test("timeline preserves visualization stages and standard seven-step labels",async()=>{const[mapper,timeline]=await Promise.all([read("lib/studio/projects/project-mappers.ts"),read("components/studio/projects/StudioProjectCardMilestoneTimeline.tsx")]);for(const label of ["Avan","Mimari","Zemin","İSKİ","Statik","Mek.-Elk.","Ruhsat"]){assert.match(mapper,new RegExp(label.replace("İ","İ")));}assert.match(mapper,/görselleştirme/);assert.match(timeline,/Kilometre Taşı Tamamlandı/);});

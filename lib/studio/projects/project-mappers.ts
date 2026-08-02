@@ -1,4 +1,4 @@
-import type {ProjectFormValues,ProjectStage,ProjectStatus,StudioProject,StudioProjectInput} from "./project-types.ts";
+import type {ProjectCardMilestone,ProjectFormValues,ProjectStage,ProjectStatus,StudioProject,StudioProjectInput} from "./project-types.ts";
 
 export type StudioProjectRow={
  id:string;organization_id:string;code:string;name:string;client_name:string;client_contact_name:string;
@@ -6,20 +6,25 @@ export type StudioProjectRow={
  stage:string;status:string;progress:number;summary:string;current_phase:string;start_date:string|null;
  target_date:string|null;next_milestone:string;next_milestone_date:string|null;responsible_user_id:string|null;
  thumbnail_url:string|null;is_archived:boolean;created_at:string;updated_at:string;
- responsible_profile:{id:string;full_name:string}|{id:string;full_name:string}[]|null;
+ responsible_profile:{id:string;full_name:string}|{id:string;full_name:string}[]|null;stages?:{id:string;title:string;status:string;is_active:boolean;is_archived:boolean;sort_order:number}[]|null;
 };
+type CardStage={id:string;title:string;status:string;is_active:boolean;is_archived:boolean;sort_order:number};
 function initials(name:string){return name.split(/\s+/).filter(Boolean).slice(0,2).map(v=>v[0]?.toLocaleUpperCase("tr-TR")).join("")||"AR";}
 function formatDate(value:string|null){if(!value)return"";return new Intl.DateTimeFormat("tr-TR",{day:"numeric",month:"long",year:"numeric",timeZone:"UTC"}).format(new Date(`${value}T00:00:00Z`));}
 function relativeUpdate(value:string){return new Intl.DateTimeFormat("tr-TR",{day:"numeric",month:"short",year:"numeric",timeZone:"Europe/Istanbul"}).format(new Date(value));}
 export function mapStudioProject(row:StudioProjectRow,canManage:boolean):StudioProject{
  const profile=Array.isArray(row.responsible_profile)?row.responsible_profile[0]:row.responsible_profile;
+ const source:CardStage[]=(row.stages??[]).filter(stage=>stage.is_active&&!stage.is_archived).sort((a,b)=>a.sort_order-b.sort_order);
+ const visual=String(row.category??"").toLocaleLowerCase("tr-TR")==="görselleştirme"||String(row.stage??"").toLocaleLowerCase("tr-TR")==="görselleştirme";
+ const labels=visual?source.map(stage=>({stage,label:stage.title})):(["Avan","Mimari","Zemin","İSKİ","Statik","Mek.-Elk.","Ruhsat"].map(label=>({label,stage:source.find(item=>{const title=item.title.toLocaleLowerCase("tr-TR");return label==="Avan"?title.includes("avan"):label==="Mimari"?title.includes("mimari"):label==="Zemin"?title.includes("zemin"):label==="İSKİ"?title.includes("iski")||title.includes("i̇ski"):label==="Statik"?title.includes("statik"):label==="Mek.-Elk."?(title.includes("mekanik")||title.includes("elektrik")):title.includes("ruhsat")})}))); const hasCurrent=source.some(item=>item.status==="in_progress");
+ const cardMilestones:ProjectCardMilestone[]=labels.map(({label,stage})=>({id:stage?.id??`${row.id}-${label}`,title:label,fullTitle:stage?.title??label,state:stage?.status==="cancelled"?"cancelled":stage?.status==="completed"?"completed":stage?.status==="in_progress"?"current":!hasCurrent&&source.find(item=>item.status==="waiting")?.id===stage?.id?"current":"upcoming"}));
  return{id:row.id,code:row.code,name:row.name,client:{name:row.client_name,contact:row.client_contact_name,email:row.client_email??"",phone:row.client_phone},
  category:row.category,location:row.location,year:row.project_year,stage:row.stage as ProjectStage,status:row.status as ProjectStatus,
  progress:row.progress,lastUpdate:relativeUpdate(row.updated_at),responsible:profile?{id:profile.id,name:profile.full_name,initials:initials(profile.full_name),role:"Proje Sorumlusu"}:null,
  nextMilestone:row.next_milestone,nextMilestoneDate:formatDate(row.next_milestone_date),thumbnail:row.thumbnail_url??"",summary:row.summary,
  currentPhase:row.current_phase,startDate:formatDate(row.start_date),targetDate:formatDate(row.target_date),
  startDateValue:row.start_date??"",targetDateValue:row.target_date??"",nextMilestoneDateValue:row.next_milestone_date??"",responsibleUserId:row.responsible_user_id??"",
- team:profile?[{id:profile.id,name:profile.full_name,initials:initials(profile.full_name),role:"Proje Sorumlusu"}]:[],
+ team:profile?[{id:profile.id,name:profile.full_name,initials:initials(profile.full_name),role:"Proje Sorumlusu"}]:[],cardMilestones,
  milestones:[],activities:[],metrics:[],notes:[],isArchived:row.is_archived,canManage};
 }
 export function projectInputToRow(input:StudioProjectInput){

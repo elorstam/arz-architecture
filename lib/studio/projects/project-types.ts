@@ -6,6 +6,7 @@ export type ProjectStatus=(typeof PROJECT_STATUSES)[number];
 export type ProjectArchiveFilter="active"|"archived"|"all";
 export type ProjectTeamMember={id?:string;name:string;initials:string;role:string};
 export type ProjectMilestone={title:string;date:string;state:"completed"|"current"|"upcoming";description:string};
+export type ProjectCardMilestone={id:string;title:string;state:"completed"|"current"|"upcoming"|"cancelled";fullTitle:string};
 export type ProjectActivity={title:string;detail:string;type:string;actorInitials:string;relativeTime:string};
 export type ProjectSummaryMetric={label:string;value:string;detail:string;icon:StudioIconName};
 export type StudioProject={
@@ -17,6 +18,7 @@ export type StudioProject={
  currentPhase:string;startDate:string;targetDate:string;team:ProjectTeamMember[];
  startDateValue:string;targetDateValue:string;nextMilestoneDateValue:string;responsibleUserId:string;
  milestones:ProjectMilestone[];activities:ProjectActivity[];metrics:ProjectSummaryMetric[];
+ cardMilestones:ProjectCardMilestone[];
  notes:string[];isArchived:boolean;canManage:boolean;
 };
 export type StudioProjectMember={id:string;name:string;initials:string;role:string};
