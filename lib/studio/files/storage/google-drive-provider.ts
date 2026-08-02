@@ -5,7 +5,7 @@ import type {ExternalObjectMetadata,StudioStorageOperations} from "./storage-pro
 import {getGoogleAccessToken} from "./google-drive-auth";
 
 const DRIVE_FOLDER_MIME="application/vnd.google-apps.folder";
-const METADATA_FIELDS="id,name,mimeType,size,parents,md5Checksum,version,modifiedTime,trashed,appProperties";
+const METADATA_FIELDS="id,name,mimeType,size,parents,md5Checksum,version,modifiedTime,thumbnailLink,trashed,appProperties";
 
 function providerError(status:number){
  if(status===401)return new StudioFileError("reauthorization_required","Google Drive bağlantısının yeniden yetkilendirilmesi gerekiyor.");
@@ -21,8 +21,8 @@ async function drive(organizationId:string,path:string,init:RequestInit={}){
  return response;
 }
 
-type RawMetadata={id:string;name:string;mimeType?:string;size?:string;parents?:string[];md5Checksum?:string;version?:string;modifiedTime?:string;trashed?:boolean;appProperties?:Record<string,string>};
-function metadata(value:RawMetadata):ExternalObjectMetadata{return{id:value.id,name:value.name,mimeType:value.mimeType,size:value.size?Number(value.size):undefined,parents:value.parents??[],checksum:value.md5Checksum,version:value.version,modifiedTime:value.modifiedTime,trashed:Boolean(value.trashed),appProperties:value.appProperties??{}};}
+type RawMetadata={id:string;name:string;mimeType?:string;size?:string;parents?:string[];md5Checksum?:string;version?:string;modifiedTime?:string;thumbnailLink?:string;trashed?:boolean;appProperties?:Record<string,string>};
+function metadata(value:RawMetadata):ExternalObjectMetadata{return{id:value.id,name:value.name,mimeType:value.mimeType,size:value.size?Number(value.size):undefined,parents:value.parents??[],checksum:value.md5Checksum,version:value.version,modifiedTime:value.modifiedTime,thumbnailLink:value.thumbnailLink,trashed:Boolean(value.trashed),appProperties:value.appProperties??{}};}
 async function readMetadata(organizationId:string,id:string){const response=await drive(organizationId,`files/${encodeURIComponent(id)}?fields=${encodeURIComponent(METADATA_FIELDS)}`);return metadata(await response.json() as RawMetadata);}
 async function patchMetadata(organizationId:string,id:string,body:Record<string,unknown>,query=""){const response=await drive(organizationId,`files/${encodeURIComponent(id)}?fields=${encodeURIComponent(METADATA_FIELDS)}${query}`,{method:"PATCH",headers:{"content-type":"application/json"},body:JSON.stringify(body)});return metadata(await response.json() as RawMetadata);}
 async function move(organizationId:string,id:string,fromParentId:string,toParentId:string){const current=await readMetadata(organizationId,id);if(fromParentId===toParentId||current.parents.includes(toParentId)&&!current.parents.includes(fromParentId))return current;const query=`&addParents=${encodeURIComponent(toParentId)}&removeParents=${encodeURIComponent(fromParentId)}`;return patchMetadata(organizationId,id,{},query);}
@@ -33,6 +33,7 @@ export async function findDriveFolder(organizationId:string,parentId:string,prop
 export async function createDriveResumableSession(organizationId:string,input:{name:string;mimeType:string;size:number;parentId:string;appProperties?:Record<string,string>}){const token=await getGoogleAccessToken(organizationId);const response=await fetch("https://www.googleapis.com/upload/drive/v3/files?uploadType=resumable",{method:"POST",headers:{Authorization:`Bearer ${token}`,"Content-Type":"application/json","X-Upload-Content-Type":input.mimeType,"X-Upload-Content-Length":String(input.size)},body:JSON.stringify({name:input.name,parents:[input.parentId],appProperties:input.appProperties}),cache:"no-store"});if(!response.ok)throw providerError(response.status);const location=response.headers.get("location");if(!location)throw new StudioFileError("storage","Google Drive yükleme adresi alınamadı.");return location;}
 export async function downloadDriveFile(organizationId:string,fileId:string){return drive(organizationId,`files/${encodeURIComponent(fileId)}?alt=media`);}
 export async function getDriveFileMetadata(organizationId:string,fileId:string){return readMetadata(organizationId,fileId);}
+export async function downloadDriveThumbnail(organizationId:string,thumbnailLink:string){const url=new URL(thumbnailLink);if(url.protocol!=="https:"||!(url.hostname==="googleusercontent.com"||url.hostname.endsWith(".googleusercontent.com")))throw new StudioFileError("storage","Google Drive thumbnail adresi doğrulanamadı.");const token=await getGoogleAccessToken(organizationId);const response=await fetch(url,{headers:{Authorization:`Bearer ${token}`},cache:"no-store",redirect:"error"});if(!response.ok)throw providerError(response.status);return response;}
 export async function updateDriveFile(organizationId:string,fileId:string,body:Record<string,unknown>){return patchMetadata(organizationId,fileId,body);}
 export async function copyDriveFile(organizationId:string,fileId:string,input:{name:string;parentId:string;appProperties:Record<string,string>}){const response=await drive(organizationId,`files/${encodeURIComponent(fileId)}/copy?fields=${encodeURIComponent(METADATA_FIELDS)}`,{method:"POST",headers:{"content-type":"application/json"},body:JSON.stringify({name:input.name,parents:[input.parentId],appProperties:input.appProperties})});return metadata(await response.json() as RawMetadata);}
 

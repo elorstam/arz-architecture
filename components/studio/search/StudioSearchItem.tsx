@@ -1,1 +1,28 @@
-"use client";import type{StudioSearchResult}from"@/lib/studio/search/search-types";import{highlightStudioSearch}from"@/lib/studio/search/search-utils";export default function StudioSearchItem({result,query,active,onSelect,onHover}:{result:StudioSearchResult;query:string;active:boolean;onSelect:()=>void;onHover:()=>void}){return <button type="button" role="option" aria-selected={active} onMouseEnter={onHover} onClick={onSelect} className={`flex w-full items-start gap-3 rounded-xl px-3 py-3 text-left outline-none ${active?"bg-[#ede5d6] ring-1 ring-[#c7aa72]":"hover:bg-[#f4f1ea]"}`}><span aria-hidden="true" className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-[#272d32] text-xs font-bold text-[#d8bc82]">{result.icon.slice(0,2)}</span><span className="min-w-0 flex-1"><span className="block truncate text-[15px] font-semibold">{highlightStudioSearch(result.title,query).map((part,index)=>part.match?<mark key={index} className="rounded bg-[#ead49f] text-inherit">{part.text}</mark>:<span key={index}>{part.text}</span>)}</span><span className="mt-1 block truncate text-[13px] text-[#68706d]">{result.subtitle}</span><span className="mt-1 block truncate text-xs text-[#8a8f8c]">{result.breadcrumb}</span></span><span className="flex shrink-0 flex-col items-end gap-1">{result.isFavorite?<span className="rounded-full border border-[#d9c28c] bg-[#fff8e7] px-2 py-1 text-xs font-semibold" aria-label="Favori kayıt">★ Favori</span>:null}{result.badge?<span className="rounded-full border px-2 py-1 text-xs font-semibold">{result.badge}</span>:null}</span></button>}
+"use client";
+
+import Image from "next/image";
+import type { StudioSearchResult } from "@/lib/studio/search/search-types";
+import { highlightStudioSearch } from "@/lib/studio/search/search-utils";
+
+export default function StudioSearchItem({ result, query, active, onSelect, onHover }: {
+  result: StudioSearchResult;
+  query: string;
+  active: boolean;
+  onSelect: () => void;
+  onHover: () => void;
+}) {
+  return <button type="button" role="option" aria-selected={active} onMouseEnter={onHover} onClick={onSelect} className={`flex w-full items-start gap-3 rounded-xl px-3 py-3 text-left outline-none ${active ? "bg-[#ede5d6] ring-1 ring-[#c7aa72]" : "hover:bg-[#f4f1ea]"}`}>
+    {result.thumbnailUrl
+      ? <span className="relative h-11 w-14 shrink-0 overflow-hidden rounded-lg bg-[#e9e6df]"><Image src={result.thumbnailUrl} alt="" fill sizes="56px" unoptimized className="object-cover" /></span>
+      : <span aria-hidden="true" className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-[#272d32] text-xs font-bold text-[#d8bc82]">{result.icon.slice(0, 2)}</span>}
+    <span className="min-w-0 flex-1">
+      <span className="block truncate text-[15px] font-semibold">{highlightStudioSearch(result.title, query).map((part, index) => part.match ? <mark key={index} className="rounded bg-[#ead49f] text-inherit">{part.text}</mark> : <span key={index}>{part.text}</span>)}</span>
+      <span className="mt-1 block truncate text-[13px] text-[#68706d]">{result.subtitle}</span>
+      <span className="mt-1 block truncate text-xs text-[#8a8f8c]">{result.breadcrumb}</span>
+    </span>
+    <span className="flex shrink-0 flex-col items-end gap-1">
+      {result.isFavorite ? <span className="rounded-full border border-[#d9c28c] bg-[#fff8e7] px-2 py-1 text-xs font-semibold" aria-label="Favori kayıt">★ Favori</span> : null}
+      {result.badge ? <span className="rounded-full border px-2 py-1 text-xs font-semibold">{result.badge}</span> : null}
+    </span>
+  </button>;
+}

@@ -2,7 +2,7 @@ export type StudioStorageProvider="supabase"|"google_drive";
 
 export type ExternalObjectMetadata={
  id:string; name:string; mimeType?:string; size?:number; parents:string[];
- checksum?:string; version?:string; modifiedTime?:string; trashed:boolean;
+ checksum?:string; version?:string; modifiedTime?:string; thumbnailLink?:string; trashed:boolean;
  appProperties:Record<string,string>;
 };
 
