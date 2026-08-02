@@ -3,12 +3,13 @@ import StudioProjectActivity from "@/components/studio/projects/StudioProjectAct
 import StudioProjectClientCard from "@/components/studio/projects/StudioProjectClientCard";
 import StudioProjectMilestones from "@/components/studio/projects/StudioProjectMilestones";
 import StudioProjectTeam from "@/components/studio/projects/StudioProjectTeam";
+import {StudioCard} from "@/components/studio/ui";
 
 export default function StudioProjectOverview({project}: {project: StudioProject}) {
   return (
     <div className="mt-5 grid min-w-0 gap-5 xl:grid-cols-[minmax(0,1.55fr)_minmax(280px,.55fr)]">
       <div className="min-w-0 space-y-5">
-        <section aria-labelledby="project-summary-title" className="rounded-xl border border-[#dedad1] bg-white p-5 shadow-[0_4px_18px_rgba(32,39,46,.03)] sm:p-6">
+        <StudioCard as="section" className="p-5 sm:p-6">
           <div className="grid gap-6 lg:grid-cols-2">
             <div>
               <p className="text-[8px] font-semibold uppercase tracking-[.14em] text-[#a08859]">Proje Özeti</p>
@@ -26,7 +27,7 @@ export default function StudioProjectOverview({project}: {project: StudioProject
             <div><dt className="text-[8px] text-[#aaa69e]">Hedef teslim</dt><dd className="mt-1 text-[10px] font-medium text-[#51585c]">{project.targetDate}</dd></div>
             <div><dt className="text-[8px] text-[#aaa69e]">Proje yılı</dt><dd className="mt-1 text-[10px] font-medium text-[#51585c]">{project.year}</dd></div>
           </dl>
-        </section>
+        </StudioCard>
 
         <section aria-label="Gelecek proje iş akışları" className="grid gap-3 sm:grid-cols-2 xl:grid-cols-4">
           {["Revizyonlar","Renderlar","Görevler","Teslimler"].map(label=><article key={label} className="rounded-xl border border-dashed border-[#d8d3ca] bg-white/55 p-4"><p className="text-[9px] font-semibold text-[#676c69]">{label}</p><p className="mt-2 text-[8px] leading-4 text-[#a09f99]">Bu iş akışı sonraki fazda açılacak.</p></article>)}
