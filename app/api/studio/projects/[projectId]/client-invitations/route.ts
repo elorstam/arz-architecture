@@ -1,0 +1,5 @@
+import {NextResponse} from "next/server";
+import {z} from "zod";
+import {createStudioServerClient} from "@/lib/studio/supabase/server";
+const schema=z.object({email:z.string().email().max(320),expiresAt:z.string().datetime()});
+export async function POST(request:Request,{params}:{params:Promise<{projectId:string}>}){const{projectId}=await params;const input=schema.safeParse(await request.json().catch(()=>null));if(!input.success)return NextResponse.json({error:"Geçerli e-posta ve son kullanım tarihi gerekli."},{status:400});const supabase=await createStudioServerClient();const{data,error}=await supabase.rpc("studio_create_client_invitation",{p_project_id:projectId,p_invited_email:input.data.email,p_expires_at:input.data.expiresAt});if(error||!data?.[0]?.invitation_token)return NextResponse.json({error:"Davet oluşturulamadı. Yalnız proje sahibi yeni davet oluşturabilir."},{status:403});const configured=process.env.NEXT_PUBLIC_SITE_URL?.replace(/\/$/,"");const origin=configured||new URL(request.url).origin;return NextResponse.json({invitationUrl:`${origin}/client/invite/${encodeURIComponent(data[0].invitation_token)}`,expiresAt:data[0].expires_at});}

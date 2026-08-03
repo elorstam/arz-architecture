@@ -1,5 +1,5 @@
 import StudioTabs from "@/components/studio/StudioTabs";
-type ActiveTab = "overview" | "files" | "official-processes" | "stages" | "renders" | "finance";
+type ActiveTab = "overview" | "files" | "official-processes" | "stages" | "renders" | "finance" | "client";
 
 export default function StudioProjectTabs({projectId,active="overview"}:{projectId:string;active?:ActiveTab}){
   const links=[
@@ -12,8 +12,8 @@ export default function StudioProjectTabs({projectId,active="overview"}:{project
     {label:"Revizyonlar",icon:"revision" as const,badge:"Yakında",disabled:true},
     {label:"Görevler",icon:"check" as const,badge:"Yakında",disabled:true},
     {label:"Takvim",icon:"calendar" as const,badge:"Yakında",disabled:true},
-    {label:"Müşteri",icon:"clients" as const,badge:"Yakında",disabled:true},
+    {href:`/studio/projects/${projectId}/client`,label:"Müşteri",icon:"clients" as const},
   ];
-  const activeHref=links[({overview:0,files:1,renders:2,"official-processes":3,stages:4,finance:5})[active]]?.href ?? `/studio/projects/${projectId}`;
+  const activeHref=links[({overview:0,files:1,renders:2,"official-processes":3,stages:4,finance:5,client:9})[active]]?.href ?? `/studio/projects/${projectId}`;
   return <div className="studio-project-tabs-v2" data-active-class="studio-project-tab-active" data-focus-visible="focus-visible"><StudioTabs items={links} active={activeHref} ariaLabel="Proje bölümleri" variant="workspace-navigation"/></div>;
 }
