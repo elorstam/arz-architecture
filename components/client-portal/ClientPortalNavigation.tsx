@@ -6,7 +6,7 @@ const items=[
  {href:"/client",label:"Genel Bakış",icon:"dashboard" as const},
  {href:"/client/stages",label:"Proje Aşamaları",icon:"activity" as const},
  {href:"/client/renders",label:"Renderlar",icon:"render" as const},
- {label:"Dosyalar",icon:"files" as const,badge:"Yakında",disabled:true},
+ {href:"/client/files",label:"Dosyalar",icon:"files" as const},
  {label:"Evraklar",icon:"file-text" as const,badge:"Yakında",disabled:true},
  {label:"Finans / Ödemeler",icon:"payments" as const,badge:"Yakında",disabled:true},
  {label:"Bildirimler",icon:"notifications" as const,badge:"Yakında",disabled:true},
