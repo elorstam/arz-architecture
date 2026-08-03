@@ -1,0 +1,2 @@
+import Link from "next/link";
+export default function ClientFilesDocumentsTabs({active,projectId}:{active:"files"|"documents";projectId:string}){const query=`?project=${encodeURIComponent(projectId)}`;return <div className="client-center-tabs" role="tablist" aria-label="Dosya ve evrak görünümü"><Link href={`/client/files${query}`} role="tab" aria-selected={active==="files"}>Dosyalar</Link><Link href={`/client/documents${query}`} role="tab" aria-selected={active==="documents"}>Evraklar</Link></div>;}
