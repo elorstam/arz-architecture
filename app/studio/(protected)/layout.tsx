@@ -46,6 +46,8 @@ export default async function StudioProtectedLayout({children}: {children: React
     redirect("/studio/login?reason=access-denied");
   }
 
+  if (context.membership.role === "client") redirect("/client");
+
   const organization = Array.isArray(context.membership.organizations)
     ? context.membership.organizations[0]
     : context.membership.organizations;
