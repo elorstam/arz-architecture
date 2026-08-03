@@ -1,0 +1,3 @@
+import {StudioCard} from "@/components/studio/StudioDesignSystem";
+import {StudioSkeleton} from "@/components/studio/ui/StudioUiPrimitives";
+export default function ClientLoading(){return <div className="client-dashboard" aria-label="Client Portal yükleniyor"><div className="grid gap-2"><StudioSkeleton className="h-8 w-72"/><StudioSkeleton className="h-4 w-96 max-w-full"/></div><StudioCard className="client-progress-card"><StudioSkeleton className="h-6 w-48"/><StudioSkeleton className="mt-6 h-3 w-full"/><StudioSkeleton className="mt-5 h-20 w-full"/></StudioCard><div className="client-dashboard-grid">{Array.from({length:4},(_,index)=><StudioCard key={index}><StudioSkeleton className="h-5 w-36"/><StudioSkeleton className="mt-4 h-24 w-full"/></StudioCard>)}</div></div>}
