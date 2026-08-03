@@ -3,7 +3,7 @@ import {readFileSync} from "node:fs";
 import test from "node:test";
 
 const repository=readFileSync("lib/client-portal/files/client-file-download.ts","utf8");
-const route=readFileSync("app/client/files/[fileId]/download/route.ts","utf8");
+const route=readFileSync("app/client/(portal)/files/[fileId]/download/route.ts","utf8");
 const constants=readFileSync("lib/studio/files/file-constants.ts","utf8");
 const migration=readFileSync("supabase/migrations/041_client_file_download_service_grants.sql","utf8");
 const rollback=readFileSync("supabase/rollbacks/041_client_file_download_service_grants.rollback.sql","utf8");
