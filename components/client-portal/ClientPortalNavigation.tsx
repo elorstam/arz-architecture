@@ -5,7 +5,7 @@ import StudioTabs from "@/components/studio/StudioTabs";
 const items=[
  {href:"/client",label:"Genel Bakış",icon:"dashboard" as const},
  {href:"/client/stages",label:"Proje Aşamaları",icon:"activity" as const},
- {label:"Renderlar",icon:"render" as const,badge:"Yakında",disabled:true},
+ {href:"/client/renders",label:"Renderlar",icon:"render" as const},
  {label:"Dosyalar",icon:"files" as const,badge:"Yakında",disabled:true},
  {label:"Evraklar",icon:"file-text" as const,badge:"Yakında",disabled:true},
  {label:"Finans / Ödemeler",icon:"payments" as const,badge:"Yakında",disabled:true},
