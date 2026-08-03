@@ -187,8 +187,11 @@ insert into public.studio_project_stage_files(organization_id,project_id,stage_i
 ('${ids.orgA}','${ids.projectA1}','${ids.stageA1}','${ids.fileVisible}',true,'${users.ownerA.id}'),('${ids.orgA}','${ids.projectA1}','${ids.stageA1}','${ids.fileHidden}',false,'${users.ownerA.id}'),('${ids.orgA}','${ids.projectA1}','${ids.stageA1}','${ids.fileArchived}',true,'${users.ownerA.id}'),('${ids.orgA}','${ids.projectA1}','${ids.stageA1}','${ids.filePending}',true,'${users.ownerA.id}');
 insert into public.studio_project_renders(organization_id,project_id,logical_file_id,title,description,is_client_visible,created_by,updated_by) values
 ('${ids.orgA}','${ids.projectA1}','${ids.fileVisible}','Visible render','Client note',true,'${users.ownerA.id}','${users.ownerA.id}'),('${ids.orgA}','${ids.projectA1}','${ids.fileHidden}','Internal render','INTERNAL_RENDER_NOTE',false,'${users.ownerA.id}','${users.ownerA.id}');
-insert into public.studio_finance_entries(organization_id,project_id,entry_type,title,description,category,amount,is_client_visible,created_by,updated_by) values
-('${ids.orgA}','${ids.projectA1}','income','Visible payment','Client payment','project_fee',1000,true,'${users.ownerA.id}','${users.ownerA.id}'),('${ids.orgA}','${ids.projectA1}','expense','Personnel cost','INTERNAL_MARGIN_NOTE','personnel',999,false,'${users.ownerA.id}','${users.ownerA.id}');
+insert into public.studio_finance_entries(organization_id,project_id,entry_type,title,description,category,amount,status,due_date,is_client_visible,created_by,updated_by) values
+('${ids.orgA}','${ids.projectA1}','income','Visible paid payment','Client paid payment','project_fee',1000,'collected','2025-01-15',true,'${users.ownerA.id}','${users.ownerA.id}'),
+('${ids.orgA}','${ids.projectA1}','progress_payment','Visible waiting payment','Client waiting payment','progress_payment',2000,'waiting','2030-01-15',true,'${users.ownerA.id}','${users.ownerA.id}'),
+('${ids.orgA}','${ids.projectA1}','invoice','Visible overdue payment','Client overdue payment','invoice',3000,'waiting','2020-01-15',true,'${users.ownerA.id}','${users.ownerA.id}'),
+('${ids.orgA}','${ids.projectA1}','expense','Personnel cost','INTERNAL_MARGIN_NOTE','personnel',999,'waiting',null,false,'${users.ownerA.id}','${users.ownerA.id}');
 insert into public.studio_notifications(organization_id,project_id,source_type,channel,template_name,recipient_snapshot,provider_message_id,created_by) values
 ('${ids.orgA}','${ids.projectA1}','custom','client_portal','client-update','{"phone":"SECRET"}','${marker}-provider','${users.ownerA.id}'),('${ids.orgA}','${ids.projectA1}','custom','email','internal-update','{"email":"SECRET"}',null,'${users.ownerA.id}'),('${ids.orgA}','${ids.projectA2}','custom','client_portal','other-project','{}',null,'${users.ownerA.id}');
 update public.studio_project_obligations set title='Visible process',description='INTERNAL_PROCESS_NOTE',is_client_visible=true,updated_by='${users.ownerA.id}' where project_id='${ids.projectA1}' and entity_type='application';
@@ -205,7 +208,8 @@ commit;`);
   };
   assert.deepEqual(projections.renders.map((x) => x.title), ["Visible render"]);
   assert.deepEqual(projections.files.map((x) => x.display_name), ["Visible"]);
-  assert.deepEqual(projections.finance.map((x) => x.title), ["Visible payment"]);
+  assert.deepEqual(projections.finance.map((x) => x.title).sort(), ["Visible overdue payment", "Visible paid payment", "Visible waiting payment"]);
+  assert.deepEqual(projections.finance.map((x) => x.status).sort(), ["collected", "waiting", "waiting"]);
   assert.deepEqual(projections.notifications.map((x) => x.template_name), ["client-update"]);
   assert.equal(projections.stages.some((x) => x.title === "Client visible stage"), true);
   assert.deepEqual(projections.processes.map((x) => x.title), ["Visible process"]);

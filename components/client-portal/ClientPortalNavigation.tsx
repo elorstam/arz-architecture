@@ -8,7 +8,7 @@ const items=[
  {href:"/client/renders",label:"Renderlar",icon:"render" as const},
  {href:"/client/files",label:"Dosyalar",icon:"files" as const},
  {href:"/client/documents",label:"Evraklar",icon:"file-text" as const},
- {label:"Finans / Ödemeler",icon:"payments" as const,badge:"Yakında",disabled:true},
+ {href:"/client/finance",label:"Finans / Ödemeler",icon:"payments" as const},
  {label:"Bildirimler",icon:"notifications" as const,badge:"Yakında",disabled:true},
  {label:"Profil",icon:"user" as const,badge:"Yakında",disabled:true},
 ] as const;
