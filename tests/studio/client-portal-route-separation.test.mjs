@@ -5,6 +5,7 @@ import test from "node:test";
 const read=path=>readFileSync(new URL(`../../${path}`,import.meta.url),"utf8");
 const context=read("lib/client-portal/get-client-portal-context.ts");
 const clientLayout=read("app/client/layout.tsx");
+const clientPage=read("app/client/page.tsx");
 const studioLayout=read("app/studio/(protected)/layout.tsx");
 const loginRoute=read("app/api/studio/auth/login/route.ts");
 const loginForm=read("components/studio/StudioLoginForm.tsx");
@@ -22,6 +23,7 @@ test("client layout requires authentication membership and one active project",(
  assert.match(clientLayout,/getClientPortalContext/);
  assert.match(clientLayout,/if\(!context\?\.user\)redirect\("\/studio\/login"\)/);
  assert.match(clientLayout,/if\(!context\.membership\|\|!context\.project\)notFound\(\)/);
+ assert.match(clientPage,/notFound\(\)/);
 });
 
 test("client role never renders the Studio shell",()=>{
