@@ -4,7 +4,7 @@ import { readFileSync } from "node:fs";
 import { generateFeeWhatsAppMessage, validateEditableFeeMessage } from "../../lib/studio/notifications/fee-message-generator.ts";
 
 const migration = readFileSync("supabase/migrations/018_update_project_system_folders.sql", "utf8");
-const rollback = readFileSync("supabase/migrations/018_update_project_system_folders.rollback.sql", "utf8");
+const rollback = readFileSync("supabase/rollbacks/018_update_project_system_folders.rollback.sql", "utf8");
 const constants = readFileSync("lib/studio/files/file-constants.ts", "utf8");
 const drive = readFileSync("lib/studio/files/storage/google-drive-mapping.ts", "utf8");
 const filesUi = readFileSync("components/studio/files/StudioProjectFilesPage.tsx", "utf8");

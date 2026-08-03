@@ -3,7 +3,7 @@ import {readFile} from "node:fs/promises";
 import test from "node:test";
 
 const migration=await readFile(new URL("../../supabase/migrations/003_studio_leads.sql",import.meta.url),"utf8");
-const rollback=await readFile(new URL("../../supabase/migrations/003_studio_leads.rollback.sql",import.meta.url),"utf8");
+const rollback=await readFile(new URL("../../supabase/rollbacks/003_studio_leads.rollback.sql",import.meta.url),"utf8");
 const repository=await readFile(new URL("../../lib/studio/crm/lead-repository.ts",import.meta.url),"utf8");
 const actions=await readFile(new URL("../../app/studio/(protected)/crm/actions.ts",import.meta.url),"utf8");
 const mapper=await readFile(new URL("../../lib/studio/crm/lead-mappers.ts",import.meta.url),"utf8");

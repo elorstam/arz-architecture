@@ -29,7 +29,7 @@ ortamından kaldırın. Password reset arayüzü bu ilk dilime dahil değildir v
 sonraki auth/davet aşamasına bırakılmıştır.
 
 Geri dönüş için önce bu sürümde oluşan Studio verilerini yedekleyin, ardından
-`supabase/migrations/001_studio_core_foundation.rollback.sql` dosyasını kontrollü
+`supabase/rollbacks/001_studio_core_foundation.rollback.sql` dosyasını kontrollü
 olarak çalıştırın. Rollback yalnız yeni Studio tablolarını hedefler; CMS
 tablolarına dokunmaz.
 

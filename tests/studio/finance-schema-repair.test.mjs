@@ -6,7 +6,7 @@ const read=path=>readFile(path,"utf8");
 
 test("026 finance schema repair is additive, repeat-safe and transaction balanced",async()=>{
   const sql=await read("supabase/migrations/026_fix_finance_schema.sql");
-  const rollback=await read("supabase/migrations/026_fix_finance_schema.rollback.sql");
+  const rollback=await read("supabase/rollbacks/026_fix_finance_schema.rollback.sql");
   assert.match(sql,/begin;/i); assert.match(sql,/commit;/i);
   for(const column of ["paid_amount","receipt_file_id","invoice_file_id","contract_file_id","agreed_amount"]){assert.match(sql,new RegExp(`add column if not exists ${column}`));}
   assert.match(sql,/create table if not exists public\.studio_project_finance_profiles/i);

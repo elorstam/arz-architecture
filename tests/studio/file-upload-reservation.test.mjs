@@ -5,7 +5,7 @@ import {validateUploadFile} from "../../lib/studio/files/file-validation.ts";
 
 const read=path=>readFileSync(path,"utf8");
 const migration=read("supabase/migrations/010_fix_file_upload_reservation.sql");
-const rollback=read("supabase/migrations/010_fix_file_upload_reservation.rollback.sql");
+const rollback=read("supabase/rollbacks/010_fix_file_upload_reservation.rollback.sql");
 const repository=read("lib/studio/files/file-repository.ts");
 const errors=read("lib/studio/files/file-errors.ts");
 const versionMigration=read("supabase/migrations/009_studio_file_versions.sql");

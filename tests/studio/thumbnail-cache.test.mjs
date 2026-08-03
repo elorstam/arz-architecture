@@ -19,7 +19,7 @@ test("migration 021 creates a private, organization-scoped thumbnail cache", asy
 test("migration backfills ready versions as pending without deleting historical thumbnails", async () => {
   const [sql, rollback] = await Promise.all([
     read("supabase/migrations/021_thumbnail_cache.sql"),
-    read("supabase/migrations/021_thumbnail_cache.rollback.sql"),
+    read("supabase/rollbacks/021_thumbnail_cache.rollback.sql"),
   ]);
   assert.match(sql, /from public\.studio_project_file_versions v\s+where v\.status='ready'/i);
   assert.match(sql, /on conflict\(file_version_id\) do nothing/i);

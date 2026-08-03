@@ -2,7 +2,7 @@ import assert from "node:assert/strict";
 import {readFile} from "node:fs/promises";
 import test from "node:test";
 const migration=await readFile(new URL("../../supabase/migrations/005_studio_files.sql",import.meta.url),"utf8");
-const rollback=await readFile(new URL("../../supabase/migrations/005_studio_files.rollback.sql",import.meta.url),"utf8");
+const rollback=await readFile(new URL("../../supabase/rollbacks/005_studio_files.rollback.sql",import.meta.url),"utf8");
 const repository=await readFile(new URL("../../lib/studio/files/file-repository.ts",import.meta.url),"utf8");
 const actions=await readFile(new URL("../../app/studio/(protected)/projects/[projectId]/files/actions.ts",import.meta.url),"utf8");
 const filesPage=await readFile(new URL("../../app/studio/(protected)/projects/[projectId]/files/page.tsx",import.meta.url),"utf8");

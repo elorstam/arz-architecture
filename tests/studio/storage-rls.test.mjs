@@ -3,7 +3,7 @@ import {readFile} from "node:fs/promises";
 import test from "node:test";
 
 const migration = await readFile(new URL("../../supabase/migrations/007_fix_google_drive_connection_rls.sql", import.meta.url), "utf8");
-const rollback = await readFile(new URL("../../supabase/migrations/007_fix_google_drive_connection_rls.rollback.sql", import.meta.url), "utf8");
+const rollback = await readFile(new URL("../../supabase/rollbacks/007_fix_google_drive_connection_rls.rollback.sql", import.meta.url), "utf8");
 const foundation = await readFile(new URL("../../supabase/migrations/001_studio_core_foundation.sql", import.meta.url), "utf8");
 const page = await readFile(new URL("../../app/studio/(protected)/settings/storage/page.tsx", import.meta.url), "utf8");
 

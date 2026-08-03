@@ -14,7 +14,7 @@ test("profitability formulas preserve negative profit and exclude cancelled expe
 });
 
 test("paid expense support is additive and rollback-safe",async()=>{
- const [sql,rollback]=await Promise.all([read("supabase/migrations/024_project_profitability_paid_expenses.sql"),read("supabase/migrations/024_project_profitability_paid_expenses.rollback.sql")]);for(const text of[sql,rollback]){assert.equal((text.match(/\bbegin;/gi)||[]).length,1);assert.equal((text.match(/\bcommit;/gi)||[]).length,1)}assert.match(sql,/add column if not exists paid_amount/);assert.match(sql,/create index if not exists/);assert.match(rollback,/drop column if exists paid_amount/);assert.doesNotMatch(sql,/delete from|drop table/i);
+ const [sql,rollback]=await Promise.all([read("supabase/migrations/024_project_profitability_paid_expenses.sql"),read("supabase/rollbacks/024_project_profitability_paid_expenses.rollback.sql")]);for(const text of[sql,rollback]){assert.equal((text.match(/\bbegin;/gi)||[]).length,1);assert.equal((text.match(/\bcommit;/gi)||[]).length,1)}assert.match(sql,/add column if not exists paid_amount/);assert.match(sql,/create index if not exists/);assert.match(rollback,/drop column if exists paid_amount/);assert.doesNotMatch(sql,/delete from|drop table/i);
 });
 
 test("main dashboard and project finance route reuse the finance aggregate",async()=>{

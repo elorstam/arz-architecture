@@ -3,7 +3,7 @@ import assert from "node:assert/strict";
 import { readFileSync } from "node:fs";
 
 const migration = readFileSync("supabase/migrations/016_project_stages_and_notifications.sql", "utf8");
-const rollback = readFileSync("supabase/migrations/016_project_stages_and_notifications.rollback.sql", "utf8");
+const rollback = readFileSync("supabase/rollbacks/016_project_stages_and_notifications.rollback.sql", "utf8");
 const repo = readFileSync("lib/studio/notifications/notification-repository.ts", "utf8");
 const adapter = readFileSync("lib/studio/notifications/whatsapp-adapter.ts", "utf8");
 const webhook = readFileSync("app/api/studio/whatsapp/webhook/route.ts", "utf8");

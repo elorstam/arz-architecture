@@ -4,7 +4,7 @@ import {readFileSync} from "node:fs";
 
 const read=(path)=>readFileSync(path,"utf8");
 const migration=read("supabase/migrations/009_studio_file_versions.sql");
-const rollback=read("supabase/migrations/009_studio_file_versions.rollback.sql");
+const rollback=read("supabase/rollbacks/009_studio_file_versions.rollback.sql");
 const repository=read("lib/studio/files/versions/version-repository.ts");
 const fileRepository=read("lib/studio/files/file-repository.ts");
 const upload=read("components/studio/files/StudioFileVersionUpload.tsx");

@@ -4,7 +4,7 @@ import test from "node:test";
 
 const read=path=>readFileSync(new URL(`../../${path}`,import.meta.url),"utf8");
 const migration=read("supabase/migrations/035_client_portal_security_foundation.sql");
-const rollback=read("supabase/migrations/035_client_portal_security_foundation.rollback.sql");
+const rollback=read("supabase/rollbacks/035_client_portal_security_foundation.rollback.sql");
 
 test("migration and rollback are transaction safe and reload schema",()=>{
  for(const sql of[migration,rollback]){assert.equal((sql.match(/\bbegin;/gi)??[]).length,1);assert.equal((sql.match(/\bcommit;/gi)??[]).length,1);assert.match(sql,/notify pgrst,'reload schema'/)}
