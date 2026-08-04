@@ -502,12 +502,16 @@ export default function Navbar() {
         .contact-nav-dropdown__item:focus-visible { color: var(--nav-foreground); background: var(--nav-hover); outline: none; }
 
         html[data-theme="light"] .site-header .contact-nav-dropdown__panel {
-          color: #242421; background: #fff; border-color: #d8d6d0;
-          box-shadow: 0 14px 38px rgba(20,20,18,.12);
+          color: #242421;
+          background: rgba(255,255,255,.78);
+          border-color: rgba(255,255,255,.48);
+          box-shadow: 0 16px 42px rgba(20,20,18,.11);
+          backdrop-filter: blur(18px);
+          -webkit-backdrop-filter: blur(18px);
         }
         html[data-theme="light"] .site-header .contact-nav-dropdown__item { color:#55534e; }
         html[data-theme="light"] .site-header .contact-nav-dropdown__item:hover,
-        html[data-theme="light"] .site-header .contact-nav-dropdown__item:focus-visible { color:#171715; background:#f2f1ed; }
+        html[data-theme="light"] .site-header .contact-nav-dropdown__item:focus-visible { color:#171715; background:rgba(255,255,255,.42); }
       `}</style>
     </>
   );

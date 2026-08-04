@@ -35,7 +35,17 @@ test("contact and primary links share typography color focus and underline imple
 test("dropdown themes use navbar tokens and explicit light surface",()=>{
   assert.match(navbar,/background: color-mix\(in srgb, var\(--nav-surface\)/);
   assert.match(navbar,/border-color: var\(--nav-border\)/);
-  assert.match(navbar,/background: #fff/);assert.match(navbar,/background:#f2f1ed/);
+  assert.match(navbar,/background: rgba\(255,255,255,\.78\)/);
+  assert.match(navbar,/border-color: rgba\(255,255,255,\.48\)/);
+  assert.match(navbar,/backdrop-filter: blur\(18px\)/);
+  assert.match(navbar,/background:rgba\(255,255,255,\.42\)/);
+  assert.doesNotMatch(navbar,/contact-nav-dropdown__panel \{[^}]*background: #fff/s);
+});
+
+test("light glass tokens retain readable neutral contrast",()=>{
+  assert.match(navbar,/color: #242421/);assert.match(navbar,/color:#55534e/);assert.match(navbar,/color:#171715/);
+  const alpha=Number(navbar.match(/background: rgba\(255,255,255,\.(\d+)\)/)?.[1]??0)/100;
+  assert.ok(alpha>=.72&&alpha<=.82,"light glass alpha remains in the readable range");
 });
 
 test("mobile contact group exposes two touch-friendly normal links",()=>{
