@@ -514,13 +514,13 @@ export default function Navbar() {
         .contact-nav-dropdown__item:hover,
         .contact-nav-dropdown__item:focus-visible { color: var(--nav-foreground); background: var(--nav-hover); outline: none; }
 
-        html[data-theme="light"] .site-header[data-surface="surface"] .contact-nav-dropdown__panel {
+        html[data-theme="light"] .site-header .contact-nav-dropdown__panel {
           color: #242421; background: #fff; border-color: #d8d6d0;
           box-shadow: 0 14px 38px rgba(20,20,18,.12);
         }
-        html[data-theme="light"] .site-header[data-surface="surface"] .contact-nav-dropdown__item { color:#55534e; }
-        html[data-theme="light"] .site-header[data-surface="surface"] .contact-nav-dropdown__item:hover,
-        html[data-theme="light"] .site-header[data-surface="surface"] .contact-nav-dropdown__item:focus-visible { color:#171715; background:#f2f1ed; }
+        html[data-theme="light"] .site-header .contact-nav-dropdown__item { color:#55534e; }
+        html[data-theme="light"] .site-header .contact-nav-dropdown__item:hover,
+        html[data-theme="light"] .site-header .contact-nav-dropdown__item:focus-visible { color:#171715; background:#f2f1ed; }
       `}</style>
     </>
   );

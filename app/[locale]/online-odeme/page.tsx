@@ -2,6 +2,7 @@ import type {Metadata} from "next";
 import Link from "next/link";
 import {notFound} from "next/navigation";
 import PremiumFooter from "@/components/PremiumFooter";
+import OnlinePaymentMotion from "@/components/online-payment/OnlinePaymentMotion";
 import {locales} from "@/i18n/locales";
 import {companyLegalConfig as company,displayCompanyValue} from "@/lib/legal/company-config";
 import styles from "./OnlinePaymentPage.module.css";
@@ -25,7 +26,7 @@ const companyRows=[["Marka",company.brandName],["Resmî ticari unvan",company.le
 export default async function OnlinePaymentPage({params}:{params:Promise<{locale:string}>}){
   const{locale}=await params;if(!locales.includes(locale as (typeof locales)[number]))notFound();
   const contactHref=`/${locale}/${locale==="tr"?"iletisim":"contact"}`;
-  return <main className={styles.page} lang="tr">
+  return <main className={styles.page} lang="tr" data-payment-page><OnlinePaymentMotion />
     {locale!=="tr"&&<p className={styles.fallback}>Bu sayfanın Türkçe bilgilendirme metni gösterilmektedir.</p>}
     <section className={`${styles.shell} ${styles.hero}`}><p className={styles.eyebrow}>Online tahsilat bilgilendirmesi</p><h1 className={styles.title}>Güvenli Online Ödeme</h1><p className={styles.lead}>Onaylanmış teklif, kapora ve hakediş ödemelerinizi güvenli ödeme bağlantısı üzerinden kredi veya banka kartınızla gerçekleştirebilirsiniz.</p><p className={styles.notice}>ARZ Mimarlık internet sitesinde doğrudan standart paket veya hazır mimarlık hizmeti satışı yapılmaz. Ödeme; müşteri görüşmesi, kapsam belirleme, teklif hazırlama ve müşteri onayından sonra alınır.</p><div className={styles.actions}><Link className={styles.primary} href={contactHref}>Teklif Al</Link><a className={styles.secondary} href={`mailto:${company.email}?subject=Ödeme bağlantısı doğrulama`}>Ödeme Bağlantınızı Doğrulayın</a></div></section>
 
