@@ -48,5 +48,12 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     priority: 0.45,
     alternates: {languages: Object.fromEntries(routing.locales.map((alt) => [alt, `${siteUrl}/${alt}/yasal/${slug}`]))},
   })));
-  return [...staticPages, ...projectPages, ...blogPages, ...legalPages];
+  const onlinePaymentPages = routing.locales.map((locale) => ({
+    url: `${siteUrl}/${locale}/online-odeme`,
+    lastModified: new Date(companyLegalConfig.lastUpdatedAt),
+    changeFrequency: 'yearly' as const,
+    priority: 0.65,
+    alternates: {languages: Object.fromEntries(routing.locales.map((alt) => [alt, `${siteUrl}/${alt}/online-odeme`]))},
+  }));
+  return [...staticPages, ...projectPages, ...blogPages, ...legalPages, ...onlinePaymentPages];
 }

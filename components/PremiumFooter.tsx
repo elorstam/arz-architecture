@@ -94,6 +94,7 @@ export default function PremiumFooter() {
             <div>
               <p className="text-[9px] uppercase tracking-[0.32em] text-white/30">Yasal</p>
               <nav aria-label="Yasal sayfalar" className="mt-6 flex flex-col items-start gap-3">
+                <Link href={`/${locale}/online-odeme`} className="text-xs font-medium leading-5 text-white/80 transition-colors duration-300 hover:text-white focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-white">Online Ödeme</Link>
                 {legalFooterLinks.map((item) => <Link key={item.slug} href={`/${locale}/yasal/${item.slug}`} className="text-xs leading-5 text-white/55 transition-colors duration-300 hover:text-white focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-white">{item.label}</Link>)}
               </nav>
             </div>
