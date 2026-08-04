@@ -5,10 +5,15 @@ const read=path=>readFile(new URL(`../../${path}`,import.meta.url),"utf8");
 const[page,css,motion]=await Promise.all([read("app/[locale]/online-odeme/page.tsx"),read("app/[locale]/online-odeme/OnlinePaymentPage.module.css"),read("components/online-payment/OnlinePaymentMotion.tsx")]);
 
 test("online payment page uses scoped light and dark theme tokens",()=>{
-  assert.match(css,/--payment-bg:#080808/);assert.match(css,/:global\(html\[data-theme="light"\]\) \.page/);
-  assert.match(css,/--payment-bg:#f7f7f5/);assert.match(css,/--payment-fg:#171715/);assert.match(css,/--payment-card:#fff/);
+  assert.match(css,/--payment-bg:rgb\(var\(--theme-bg\)\)/);assert.match(css,/--payment-fg:rgb\(var\(--theme-fg\)\)/);
+  assert.match(css,/:global\(html\[data-theme="light"\]\) \.page/);assert.match(css,/--payment-card:#fff/);
   assert.match(css,/background:var\(--payment-bg\)/);assert.match(css,/color:var\(--payment-fg\)/);
   assert.match(page,/data-payment-page/);
+});
+
+test("commercial grid has no painted empty-cell background",()=>{
+  assert.match(css,/\.company\{display:grid;gap:1px;background:transparent\}/);
+  assert.match(css,/\.company div\{background:var\(--payment-card\);border:1px solid var\(--payment-border\)/);
 });
 
 test("GSAP reuses public context and ScrollTrigger cleanup pattern",()=>{

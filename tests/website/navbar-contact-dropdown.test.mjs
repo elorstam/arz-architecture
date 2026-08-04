@@ -9,6 +9,7 @@ test("standalone payment CTA is removed and contact keeps desktop nav position",
   assert.doesNotMatch(navbar,/CreditCard|online-payment-nav-action|navControlClasses/);
   assert.match(navbar,/if\(item\.key==="contact"\)return <ContactNavDropdown/);
   assert.match(navbar,/paymentHref=\{onlinePaymentHref\}/);
+  assert.match(navbar,/triggerClassName=\{navbarItemClassName\(active\|\|isOnlinePaymentActive\)\}/);
 });
 
 test("dropdown provides locale-aware quote and payment menu links",()=>{
@@ -16,6 +17,7 @@ test("dropdown provides locale-aware quote and payment menu links",()=>{
   assert.match(dropdown,/>Teklif Al</);assert.match(dropdown,/>Online Ödeme</);
   assert.match(navbar,/contactHref=\{getHref\("\/contact"\)\}/);
   assert.match(navbar,/const onlinePaymentHref = `\/\$\{locale\}\/online-odeme`/);
+  assert.doesNotMatch(dropdown,/<span aria-hidden>→<\/span>/);
 });
 
 test("desktop interactions support hover click outside focus arrows and escape",()=>{

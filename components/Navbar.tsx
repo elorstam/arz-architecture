@@ -38,6 +38,8 @@ const navigationItems = [
 
 const instagramUrl = "https://www.instagram.com/arzmimarliknet/";
 const linkedinUrl = "https://www.linkedin.com/company/90222590";
+const navbarItemBaseClassName="group relative py-3 text-[12px] font-normal uppercase tracking-[0.11em] transition-[color,transform] duration-500 ease-[cubic-bezier(0.22,1,0.36,1)] 2xl:text-[14px] 2xl:tracking-[0.13em]";
+const navbarItemClassName=(active:boolean)=>`${navbarItemBaseClassName} ${active?"text-white/90":"text-white/62 hover:-translate-y-px hover:text-white/90"}`;
 
 export default function Navbar() {
   const pathname = usePathname();
@@ -184,18 +186,14 @@ export default function Navbar() {
             {navigationItems.map((item) => {
               const active = isActive(item.href);
 
-              if(item.key==="contact")return <ContactNavDropdown key={item.key} label={t("items.contact")} contactHref={getHref("/contact")} paymentHref={onlinePaymentHref} active={active||isOnlinePaymentActive}/>;
+              if(item.key==="contact")return <ContactNavDropdown key={item.key} label={t("items.contact")} contactHref={getHref("/contact")} paymentHref={onlinePaymentHref} active={active||isOnlinePaymentActive} triggerClassName={navbarItemClassName(active||isOnlinePaymentActive)}/>;
 
               return (
                 <Link
                   key={item.key}
                   href={getHref(item.href)}
                   scroll
-                  className={`group relative py-3 text-[12px] font-normal uppercase tracking-[0.11em] transition-[color,transform] duration-500 ease-[cubic-bezier(0.22,1,0.36,1)] 2xl:text-[14px] 2xl:tracking-[0.13em] ${
-                    active
-                      ? "text-white/90"
-                      : "text-white/62 hover:-translate-y-px hover:text-white/90"
-                  }`}
+                  className={navbarItemClassName(active)}
                 >
                   <span className="block whitespace-nowrap">
                     {t(`items.${item.key}`)}
