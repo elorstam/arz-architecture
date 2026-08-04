@@ -10,7 +10,8 @@ test("daily plan uses one six-column row from the xl breakpoint",()=>{
 });
 
 test("daily plan cards remain compact without a minimum width",()=>{
-  assert.match(source,/h-\[112px\]/);
+  assert.match(source,/min-h-\[132px\]/);
   assert.match(source,/!rounded-\[18px\]/);
   assert.doesNotMatch(source,/min-w-\[[^\]]+\]/);
+  assert.doesNotMatch(source,/item\.context[^<]*<\/p>.*truncate/);
 });

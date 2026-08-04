@@ -8,7 +8,7 @@ JWT ve PostgreSQL RLS ile korunur.
 
 1. `.env.example` dosyasını `.env.local` olarak kopyalayın ve Studio
    değişkenlerini doldurun.
-2. `supabase/migrations/001_studio_core_foundation.sql` dosyasını Supabase SQL
+2. `supabase/rollbacks/001_studio_core_foundation.sql` dosyasını Supabase SQL
    Editor veya mevcut migration aracınızla uygulayın.
 3. Supabase Authentication ayarlarında **public signup** özelliğini kapatın.
 4. Authentication yöntemi olarak email/password kullanın. İlk owner bootstrap

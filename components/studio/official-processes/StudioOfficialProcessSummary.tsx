@@ -7,7 +7,7 @@ export default async function StudioOfficialProcessSummary({ projectId }: { proj
     summary = summarizeOfficialProcesses(await listOfficialProcesses(projectId));
   } catch {
     return (
-      <section className="mt-5 rounded-xl border border-dashed bg-[#faf8f3] p-5" role="status">
+      <section className="mt-5 rounded-xl border border-dashed border-[var(--studio-border)] bg-[var(--studio-workspace)] p-5" role="status">
         <h2 className="text-lg font-semibold">Harç ve Evraklar</h2>
         <p className="mt-2 text-sm text-[#68716f]">Modül henüz hazırlanmadı. Migration 014 uygulandıktan sonra süreç özeti burada görünecek.</p>
         <Link href={`/studio/projects/${projectId}/official-processes`} className="mt-3 inline-block text-sm font-semibold text-[#8a6c32] underline">Harç ve Evraklar sayfasını aç</Link>

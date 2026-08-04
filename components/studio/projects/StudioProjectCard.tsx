@@ -12,16 +12,16 @@ import type {StudioIconName} from "@/components/studio/StudioIcons";
 function projectTypeVisual(category:string):{icon:StudioIconName;tone:StudioIconTone}{
  const value=category.toLocaleLowerCase("tr-TR");
  if(value.includes("villa"))return{icon:"house",tone:"green"};
- if(value.includes("dükkan")||value.includes("mağaza"))return{icon:"store",tone:"amber"};
+ if(value.includes("dükkan")||value.includes("mağaza"))return{icon:"store",tone:"orange"};
  if(value.includes("depo")||value.includes("antrepo"))return{icon:"warehouse",tone:"slate"};
  if(value.includes("fabrika")||value.includes("sanayi"))return{icon:"factory",tone:"red"};
- if(value.includes("kafe")||value.includes("cafe"))return{icon:"coffee",tone:"gold"};
+ if(value.includes("kafe")||value.includes("cafe"))return{icon:"coffee",tone:"orange"};
  if(value.includes("restoran"))return{icon:"utensils",tone:"red"};
  if(value.includes("otel"))return{icon:"hotel",tone:"purple"};
  if(value.includes("iç mimari"))return{icon:"armchair",tone:"purple"};
  if(value.includes("görselleştirme")||value.includes("render"))return{icon:"image",tone:"blue"};
  if(value.includes("ofis"))return{icon:"briefcase",tone:"blue"};
- if(value.includes("ticari"))return{icon:"building",tone:"gold"};
+ if(value.includes("ticari"))return{icon:"building",tone:"blue"};
  return{icon:"building",tone:"blue"};
 }
 

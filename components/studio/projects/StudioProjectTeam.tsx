@@ -1,18 +1,6 @@
 import type {ProjectTeamMember} from "@/components/studio/projects/StudioProjectData";
+import {StudioBadge,StudioCard,StudioEmptyState,StudioSectionHeader} from "@/components/studio/ui";
 
-export default function StudioProjectTeam({members}: {members: ProjectTeamMember[]}) {
-  return (
-    <section aria-labelledby="team-title" className="rounded-xl border border-[#dedad1] bg-white p-5 shadow-[0_4px_18px_rgba(32,39,46,.03)]">
-      <h2 id="team-title" className="text-[13px] font-semibold text-[#2d353b]">Proje Ekibi</h2>
-      <div className="mt-4 space-y-3">
-        {!members.length?<p className="text-[9px] leading-4 text-[#969792]">Henüz sorumlu kullanıcı atanmadı.</p>:null}
-        {members.map((member) => (
-          <div key={`${member.name}-${member.role}`} className="flex items-center gap-3">
-            <span className="grid h-8 w-8 shrink-0 place-items-center rounded-full bg-[#f0ece4] text-[8px] font-semibold text-[#7c673f]">{member.initials}</span>
-            <div className="min-w-0"><p className="truncate text-[10px] font-semibold text-[#464d51]">{member.name}</p><p className="mt-0.5 truncate text-[8px] text-[#969792]">{member.role}</p></div>
-          </div>
-        ))}
-      </div>
-    </section>
-  );
+export default function StudioProjectTeam({members}:{members:ProjectTeamMember[]}){
+ return <StudioCard as="section" className="h-full p-4"><StudioSectionHeader title="Proje Ekibi" description="Sorumluluk ve ekip durumu" icon="clients" count={members.length}/>{members.length?<div className="mt-3 divide-y divide-[#e7ecf3]">{members.map(member=><div key={`${member.name}-${member.role}`} className="grid min-h-[58px] grid-cols-[40px_minmax(0,1fr)_auto] items-center gap-3 py-2"><span className="grid h-10 w-10 place-items-center rounded-full bg-[#eef3f8] text-[11px] font-semibold text-[#526b7a]">{member.initials}</span><div className="min-w-0"><p className="truncate text-[13px] font-semibold text-[#1e293b]">{member.name}</p><p className="truncate text-[11px] text-[#64748b]">{member.role} · Proje sorumluluğu</p></div><StudioBadge variant="success">Aktif</StudioBadge></div>)}</div>:<div className="mt-3"><StudioEmptyState icon="clients" title="Ekip üyesi atanmadı" description="Bu projede henüz sorumlu kullanıcı bulunmuyor."/></div>}</StudioCard>;
 }

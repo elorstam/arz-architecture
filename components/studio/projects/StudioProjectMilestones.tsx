@@ -1,28 +1,12 @@
-import type {ProjectMilestone} from "@/components/studio/projects/StudioProjectData";
+import type {StudioProject} from "@/components/studio/projects/StudioProjectData";
+import {StudioCard,StudioEmptyState,StudioIconSurface,StudioSectionHeader} from "@/components/studio/ui";
 
-const stateStyles: Record<ProjectMilestone["state"], string> = {
-  completed: "border-[#718076] bg-[#718076]",
-  current: "border-[#ad9360] bg-[#ad9360] shadow-[0_0_0_4px_rgba(173,147,96,.14)]",
-  upcoming: "border-[#cfcac0] bg-white",
-};
-
-export default function StudioProjectMilestones({items}: {items: ProjectMilestone[]}) {
-  return (
-    <section aria-labelledby="milestones-title" className="rounded-xl border border-[#dedad1] bg-white shadow-[0_4px_18px_rgba(32,39,46,.03)]">
-      <div className="border-b border-[#ece9e3] px-5 py-5"><h2 id="milestones-title" className="text-[14px] font-semibold text-[#2d353b]">Önemli Tarihler</h2><p className="mt-1 text-[9px] text-[#989994]">Proje kilometre taşları</p></div>
-      <div className="px-5 py-2">
-        {!items.length?<p className="py-10 text-center text-[9px] text-[#9b9c97]">Henüz kilometre taşı eklenmedi.</p>:null}
-        {items.map((item, index) => (
-          <article key={item.title} className="relative flex gap-4 py-4">
-            {index < items.length - 1 ? <span className="absolute left-[5px] top-8 h-[calc(100%-1rem)] w-px bg-[#dedad1]" /> : null}
-            <span className={`relative z-10 mt-1 h-3 w-3 shrink-0 rounded-full border-2 ${stateStyles[item.state]}`} />
-            <div className="min-w-0 flex-1">
-              <div className="flex flex-wrap items-center justify-between gap-2"><h3 className="text-[10px] font-semibold text-[#3e464b]">{item.title}</h3><time className="text-[8px] text-[#9a9b96]">{item.date}</time></div>
-              <p className="mt-1 text-[8px] leading-4 text-[#858985]">{item.description}</p>
-            </div>
-          </article>
-        ))}
-      </div>
-    </section>
-  );
+export default function StudioProjectMilestones({project}:{project:StudioProject}){
+ const dates=[
+  {title:"Başlangıç",date:project.startDate,description:"Proje başlangıç tarihi",state:"completed" as const},
+  ...project.milestones,
+  {title:project.nextMilestone||"Sıradaki adım",date:project.nextMilestoneDate,description:"Beklenen sonraki kilometre taşı",state:"current" as const},
+  {title:"Teslim",date:project.targetDate,description:"Hedef proje teslimi",state:"upcoming" as const},
+ ].filter(item=>item.date&&item.date!=="—");
+ return <StudioCard as="section" className="h-full overflow-hidden p-0"><div className="p-4"><StudioSectionHeader title="Önemli Tarihler" description="Proje takvimi ve kilometre taşları" icon="calendar" count={dates.length}/></div>{dates.length?<div className="max-h-[300px] overflow-y-auto border-t border-[#e7ecf3] px-4">{dates.map((item,index)=><article key={`${item.title}-${index}`} className="relative grid min-h-[58px] grid-cols-[36px_minmax(0,1fr)_auto] items-center gap-3 border-b border-[#e7ecf3] py-2 last:border-0"><StudioIconSurface icon={item.state==="completed"?"check":item.state==="current"?"activity":"clock"} tone={item.state==="completed"?"green":item.state==="current"?"blue":"slate"} size="sm"/><div className="min-w-0"><h3 className="truncate text-[12px] font-semibold text-[#1e293b]">{item.title}</h3><p className="truncate text-[11px] text-[#82909a]">{item.description}</p></div><time className="shrink-0 text-[11px] font-medium text-[#64748b]">{item.date}</time></article>)}</div>:<StudioEmptyState icon="calendar" title="Önemli tarih bulunmuyor" description="Bu proje için takvim bilgisi bulunmuyor."/>}</StudioCard>;
 }

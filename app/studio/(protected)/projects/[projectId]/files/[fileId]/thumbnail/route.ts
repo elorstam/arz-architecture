@@ -5,7 +5,7 @@ export const dynamic = "force-dynamic";
 function placeholder(status: string) {
   const labels: Record<string, string> = { pending: "Thumbnail hazırlanıyor", generating: "Thumbnail oluşturuluyor", failed: "Thumbnail kullanılamıyor", unsupported: "Önizleme desteklenmiyor" };
   const message = labels[status] ?? "Thumbnail bulunamadı";
-  return new Response(`<svg xmlns="http://www.w3.org/2000/svg" width="640" height="480" viewBox="0 0 640 480"><rect width="640" height="480" fill="#ece9e2"/><path d="M245 160h150v160H245z" fill="none" stroke="#aa9569" stroke-width="8"/><text x="320" y="360" text-anchor="middle" font-family="sans-serif" font-size="20" fill="#4d5558">${message}</text></svg>`, { status: 200, headers: { "Content-Type": "image/svg+xml; charset=utf-8", "Cache-Control": "private, no-store", "Content-Security-Policy": "default-src 'none'; sandbox", "X-Content-Type-Options": "nosniff" } });
+  return new Response(`<svg xmlns="http://www.w3.org/2000/svg" width="640" height="480" viewBox="0 0 640 480"><rect width="640" height="480" fill="#eef2f7"/><path d="M245 160h150v160H245z" fill="none" stroke="#60738a" stroke-width="8"/><text x="320" y="360" text-anchor="middle" font-family="sans-serif" font-size="20" fill="#475569">${message}</text></svg>`, { status: 200, headers: { "Content-Type": "image/svg+xml; charset=utf-8", "Cache-Control": "private, no-store", "Content-Security-Policy": "default-src 'none'; sandbox", "X-Content-Type-Options": "nosniff" } });
 }
 
 export async function GET(request: Request, { params }: { params: Promise<{ projectId: string; fileId: string }> }) {

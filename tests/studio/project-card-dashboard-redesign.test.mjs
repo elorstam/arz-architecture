@@ -31,6 +31,6 @@ test("project grid, milestones and empty state stay compact and responsive",()=>
  assert.match(page,/StudioEmptyState/);
  assert.match(timeline,/h-2\.5 w-2\.5 flex-1 rounded-full/);
  assert.match(timeline,/title=\{`\$\{item\.fullTitle\}/);
- assert.match(timeline,/Şu an:/);
+ assert.match(timeline,/�?u an:/);
  assert.match(timeline,/Sonraki:/);
 });

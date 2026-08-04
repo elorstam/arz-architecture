@@ -37,7 +37,7 @@ export default function StudioDashboard({userName, organizationName, dateLabel, 
     {count:crmSummary.awaitingQuote,label:"Teklif hazırlanacaklar",context:"CRM teklif akışı",icon:"receipt" as const,priority:"normal" as const,href:"/studio/crm"},
   ];
   return (
-    <section className="studio-dashboard-v3 mx-auto min-w-0 max-w-[1540px] px-4 py-4 sm:px-6 sm:py-5 lg:px-6">
+    <section className="studio-dashboard-v3 mx-auto min-w-0 max-w-[1600px] px-4 py-3 sm:px-5 sm:py-4 lg:px-6">
       <StudioWelcome userName={userName} organizationName={organizationName} dateLabel={dateLabel} />
       <StudioDailyFocus items={dailyPlan} />
       <div className="dashboard-operation-grid grid w-full min-w-0 auto-rows-[410px] grid-cols-1 items-stretch gap-3 md:grid-cols-2 xl:h-[410px] xl:grid-cols-[1.35fr_1fr_1fr] [&>*]:min-w-0 [&>*]:overflow-hidden"><StudioProjectOverview projects={projects} officialProcessesByProject={officialProcessesByProject}/><StudioPermitSummary items={officialProcesses}/><StudioActivityFeed items={activityItems}/></div>

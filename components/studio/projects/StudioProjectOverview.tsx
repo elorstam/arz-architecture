@@ -3,58 +3,22 @@ import StudioProjectActivity from "@/components/studio/projects/StudioProjectAct
 import StudioProjectClientCard from "@/components/studio/projects/StudioProjectClientCard";
 import StudioProjectMilestones from "@/components/studio/projects/StudioProjectMilestones";
 import StudioProjectTeam from "@/components/studio/projects/StudioProjectTeam";
-import {StudioCard} from "@/components/studio/ui";
+import {StudioBadge,StudioCard,StudioEmptyState,StudioIconSurface,StudioSectionHeader} from "@/components/studio/ui";
 
-export default function StudioProjectOverview({project}: {project: StudioProject}) {
-  return (
-    <div className="mt-5 grid min-w-0 gap-5 xl:grid-cols-[minmax(0,1.55fr)_minmax(280px,.55fr)]">
-      <div className="min-w-0 space-y-5">
-        <StudioCard as="section" className="p-5 sm:p-6">
-          <div className="grid gap-6 lg:grid-cols-2">
-            <div>
-              <p className="text-[8px] font-semibold uppercase tracking-[.14em] text-[#a08859]">Proje Özeti</p>
-              <h2 id="project-summary-title" className="mt-2 text-[15px] font-semibold text-[#2d353b]">Mimari kapsam</h2>
-              <p className="mt-3 text-[10px] leading-5 text-[#6f7472]">{project.summary}</p>
-            </div>
-            <div className="border-t border-[#e9e5dd] pt-5 lg:border-l lg:border-t-0 lg:pl-6 lg:pt-0">
-              <p className="text-[8px] font-semibold uppercase tracking-[.14em] text-[#a08859]">Mevcut Faz</p>
-              <h2 className="mt-2 text-[15px] font-semibold text-[#2d353b]">{project.stage}</h2>
-              <p className="mt-3 text-[10px] leading-5 text-[#6f7472]">{project.currentPhase}</p>
-            </div>
-          </div>
-          <dl className="mt-6 grid gap-3 border-t border-[#ece9e3] pt-5 sm:grid-cols-3">
-            <div><dt className="text-[8px] text-[#aaa69e]">Başlangıç</dt><dd className="mt-1 text-[10px] font-medium text-[#51585c]">{project.startDate}</dd></div>
-            <div><dt className="text-[8px] text-[#aaa69e]">Hedef teslim</dt><dd className="mt-1 text-[10px] font-medium text-[#51585c]">{project.targetDate}</dd></div>
-            <div><dt className="text-[8px] text-[#aaa69e]">Proje yılı</dt><dd className="mt-1 text-[10px] font-medium text-[#51585c]">{project.year}</dd></div>
-          </dl>
-        </StudioCard>
+export default function StudioProjectOverview({project}:{project:StudioProject}){
+ return <div className="mt-4 space-y-4">
+  <div className="grid min-w-0 items-stretch gap-4 lg:grid-cols-2 xl:grid-cols-3">
+   <StudioCard as="section" className="h-full p-4"><StudioSectionHeader title="Proje Özeti" description="Kapsam ve mevcut çalışma fazı" icon="building"/><p className="mt-4 text-[13px] leading-6 text-[#56636b]">{project.summary||"Proje özeti henüz eklenmedi."}</p><div className="mt-4 border-t border-[#e7ecf3] pt-3"><div className="flex items-center justify-between gap-3"><span className="text-[11px] text-[#82909a]">Mevcut faz</span><StudioBadge variant="info">{project.stage}</StudioBadge></div><p className="mt-2 text-[12px] leading-5 text-[#64748b]">{project.currentPhase||"Faz açıklaması bulunmuyor."}</p></div></StudioCard>
+   <StudioCard as="section" className="h-full p-4"><StudioSectionHeader title="Sıradaki Adım" description="Yaklaşan proje aksiyonu" icon="chevron-right"/><div className="mt-4 flex items-start gap-3"><StudioIconSurface icon="calendar" tone="blue" size="lg"/><div className="min-w-0"><p className="text-[11px] text-[#82909a]">Şu anki aşama</p><p className="mt-0.5 truncate text-[13px] font-semibold text-[#1e293b]">{project.stage}</p><p className="mt-3 text-[11px] text-[#82909a]">Sonraki aşama</p><p className="mt-0.5 truncate text-[14px] font-semibold text-[#1e293b]">{project.nextMilestone||"Belirtilmedi"}</p></div></div><div className="mt-4 grid grid-cols-2 gap-3 border-t border-[#e7ecf3] pt-3 text-[11px]"><div><p className="text-[#82909a]">Beklenen tarih</p><p className="mt-1 font-semibold text-[#334155]">{project.nextMilestoneDate}</p></div><div><p className="text-[#82909a]">Durum</p><div className="mt-1"><StudioBadge variant="warning">{project.status}</StudioBadge></div></div></div><div className="mt-3 flex items-center justify-between text-[11px]"><span className="text-[#64748b]">İlerleme</span><strong>%{project.progress}</strong></div><div className="mt-1.5 h-1.5 overflow-hidden rounded-full bg-[#e8eef4]"><span className="block h-full rounded-full bg-[#4f8fac]" style={{width:`${project.progress}%`}}/></div></StudioCard>
+   <StudioProjectTeam members={project.team}/>
+  </div>
 
-        <section aria-label="Gelecek proje iş akışları" className="grid gap-3 sm:grid-cols-2 xl:grid-cols-4">
-          {["Revizyonlar","Renderlar","Görevler","Teslimler"].map(label=><article key={label} className="rounded-xl border border-dashed border-[#d8d3ca] bg-white/55 p-4"><p className="text-[9px] font-semibold text-[#676c69]">{label}</p><p className="mt-2 text-[8px] leading-4 text-[#a09f99]">Bu iş akışı sonraki fazda açılacak.</p></article>)}
-        </section>
+  <div className="grid min-w-0 items-stretch gap-4 lg:grid-cols-2 xl:grid-cols-3">
+   <StudioProjectClientCard client={project.client} location={project.location}/>
+   <StudioProjectMilestones project={project}/>
+   <StudioProjectActivity items={project.activities}/>
+  </div>
 
-        <div className="grid min-w-0 gap-5 lg:grid-cols-2">
-          <StudioProjectMilestones items={project.milestones} />
-          <StudioProjectActivity items={project.activities} />
-        </div>
-      </div>
-
-      <aside className="min-w-0 space-y-5">
-        <section aria-labelledby="next-milestone-title" className="rounded-xl border border-[#27333e] bg-[#17222c] p-5 text-white shadow-[0_10px_28px_rgba(25,34,43,.1)]">
-          <p className="text-[8px] font-semibold uppercase tracking-[.16em] text-[#d1b477]">Sıradaki Adım</p>
-          <h2 id="next-milestone-title" className="mt-3 text-[15px] font-semibold">{project.nextMilestone}</h2>
-          <p className="mt-2 text-[9px] text-white/45">{project.nextMilestoneDate}</p>
-          <p className="mt-4 border-t border-white/10 pt-4 text-[9px] leading-4 text-white/55">Ekip sorumlusu: {project.responsible?.name??"Henüz atanmadı"}</p>
-        </section>
-        <StudioProjectTeam members={project.team} />
-        <StudioProjectClientCard client={project.client} />
-        <section aria-labelledby="notes-title" className="rounded-xl border border-[#dedad1] bg-[#faf8f3] p-5">
-          <div className="flex items-center justify-between gap-3"><h2 id="notes-title" className="text-[13px] font-semibold text-[#2d353b]">Proje Notları</h2><span className="text-[7px] uppercase tracking-[.1em] text-[#ad966a]">Salt okunur</span></div>
-          <ul className="mt-4 space-y-3">
-            {project.notes.map((note) => <li key={note} className="border-l-2 border-[#c6aa73] pl-3 text-[9px] leading-4 text-[#6f7472]">{note}</li>)}
-          </ul>
-        </section>
-      </aside>
-    </div>
-  );
+  <StudioCard as="section" className="p-4"><StudioSectionHeader title="Proje Notları" description="Projeye ait salt okunur notlar" icon="file-text" count={project.notes.length}/>{project.notes.length?<div className="mt-4 grid gap-3 md:grid-cols-2 xl:grid-cols-3">{project.notes.map((note,index)=><StudioCard as="article" key={`${index}-${note}`} className="bg-[#f8fafc] p-4 shadow-none"><div className="flex items-center justify-between gap-3 text-[11px] text-[#82909a]"><span>Proje notu</span><span>Tarih —</span></div><p className="mt-3 text-[13px] leading-5 text-[#475569]">{note}</p><p className="mt-3 text-[11px] text-[#94a3b8]">Yazan kişi bilgisi mevcut değil</p></StudioCard>)}</div>:<div className="mt-4"><StudioEmptyState icon="file-text" title="Proje notu bulunmuyor" description="Bu proje için kayıtlı not bulunmuyor."/></div>}</StudioCard>
+ </div>;
 }

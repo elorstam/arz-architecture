@@ -31,7 +31,7 @@ export default function StudioFeeWhatsAppButton(props: Props) {
     {open ? <div role="dialog" aria-modal="true" aria-labelledby={`fee-ai-title-${props.id}`} className="fixed inset-0 z-50 grid place-items-center overflow-y-auto bg-black/50 p-4">
       <div className="w-full max-w-2xl rounded-xl bg-white p-5 shadow-xl sm:p-6">
         <h3 id={`fee-ai-title-${props.id}`} className="text-xl font-semibold">AI WhatsApp Mesaj Önizlemesi</h3>
-        <dl className="mt-4 grid gap-3 rounded-lg bg-[#f8f6f1] p-4 text-sm sm:grid-cols-2">
+        <dl className="mt-4 grid gap-3 rounded-lg bg-[var(--studio-surface-muted)] p-4 text-sm sm:grid-cols-2">
           <div><dt className="font-semibold">Gönderilecek müşteri</dt><dd className="mt-1 break-words">{props.customerName || "—"}</dd></div>
           <div><dt className="font-semibold">Telefon</dt><dd className="mt-1">{props.customerPhone || "—"}</dd></div>
           <div className="sm:col-span-2"><dt className="font-semibold">Tahakkuk PDF’i</dt><dd className="mt-1 break-all">{props.assessmentName ?? "Belge bağlı değil"}</dd></div>
