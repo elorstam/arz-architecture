@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import { useLocale, useTranslations } from "next-intl";
+import { companyLegalConfig } from "@/lib/legal/company-config";
 
 const instagramUrl = "https://www.instagram.com/arzmimarliknet/";
 const linkedinUrl = "https://www.linkedin.com/company/90222590";
@@ -104,23 +105,21 @@ export default function PremiumFooter() {
 
               <div className="mt-6 flex flex-col items-start gap-4">
                 <a
-                  href="tel:+905425704429"
+                  href={`tel:${companyLegalConfig.phone?.replace(/\s/g, "")}`}
                   className="text-sm leading-6 text-white/60 transition-colors duration-300 hover:text-white"
                 >
-                  +90 542 570 44 29
+                  {companyLegalConfig.phone}
                 </a>
 
                 <a
-                  href="mailto:info@arzmimarlik.net"
+                  href={`mailto:${companyLegalConfig.email}`}
                   className="text-sm leading-6 text-white/60 transition-colors duration-300 hover:text-white"
                 >
-                  info@arzmimarlik.net
+                  {companyLegalConfig.email}
                 </a>
 
-                <p className="text-sm leading-6 text-white/40">
-                  Sancaktepe
-                  <br />
-                  İstanbul
+                <p className="whitespace-pre-line text-sm leading-6 text-white/40">
+                  {companyLegalConfig.registeredAddress}
                 </p>
               </div>
             </div>
