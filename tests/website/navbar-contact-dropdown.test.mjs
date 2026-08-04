@@ -3,13 +3,14 @@ import {readFile} from "node:fs/promises";
 import test from "node:test";
 
 const read=path=>readFile(new URL(`../../${path}`,import.meta.url),"utf8");
-const [navbar,dropdown]=await Promise.all([read("components/Navbar.tsx"),read("components/ContactNavDropdown.tsx")]);
+const [navbar,dropdown,primaryItem]=await Promise.all([read("components/Navbar.tsx"),read("components/ContactNavDropdown.tsx"),read("components/NavbarPrimaryItem.tsx")]);
 
 test("standalone payment CTA is removed and contact keeps desktop nav position",()=>{
   assert.doesNotMatch(navbar,/CreditCard|online-payment-nav-action|navControlClasses/);
   assert.match(navbar,/if\(item\.key==="contact"\)return <ContactNavDropdown/);
   assert.match(navbar,/paymentHref=\{onlinePaymentHref\}/);
-  assert.match(navbar,/triggerClassName=\{navbarItemClassName\(active\|\|isOnlinePaymentActive\)\}/);
+  assert.match(navbar,/<NavbarPrimaryItem/);assert.match(dropdown,/<NavbarPrimaryItem/);
+  assert.doesNotMatch(dropdown,/<button/);assert.match(primaryItem,/forwardRef<HTMLAnchorElement/);
 });
 
 test("dropdown provides locale-aware quote and payment menu links",()=>{
@@ -24,6 +25,11 @@ test("desktop interactions support hover click outside focus arrows and escape",
   for(const token of ["onMouseEnter","onMouseLeave","onFocusCapture","onClick","pointerdown","ArrowDown","Escape","firstItemRef","closeAndFocus"]){assert.match(dropdown,new RegExp(token));}
   assert.match(dropdown,/aria-haspopup="menu"/);assert.match(dropdown,/aria-expanded=\{open\}/);
   assert.match(dropdown,/top-full[^\n]+pt-2/);assert.match(dropdown,/absolute left-1\/2/);
+});
+
+test("contact and primary links share typography color focus and underline implementation",()=>{
+  for(const token of ["font-normal","leading-normal","tracking-[0.11em]","text-white/62","hover:text-white/90","focus-visible:text-white/90","bottom-[2px]","duration-500","group-focus-visible:w-full"]){assert.ok(primaryItem.includes(token),token);}
+  assert.match(dropdown,/ml-1 text-\[12px\] leading-none opacity-70/);
 });
 
 test("dropdown themes use navbar tokens and explicit light surface",()=>{
