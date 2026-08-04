@@ -5,8 +5,10 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useEffect, useState } from "react";
 import { useLocale, useTranslations } from "next-intl";
+import { CreditCard } from "lucide-react";
 import ThemeToggle from "@/components/ThemeToggle";
 import LanguageSwitcher from "@/components/LanguageSwitcher";
+import { navControlClasses } from "@/lib/nav-control";
 import {
   getNavbarSurfaceState,
   navbarSurfaceData,
@@ -146,6 +148,9 @@ export default function Navbar() {
     );
   };
 
+  const onlinePaymentHref = `/${locale}/online-odeme`;
+  const isOnlinePaymentActive = pathname === onlinePaymentHref;
+
   if (pathname.startsWith("/admin") || pathname.startsWith("/studio")) {
     return null;
   }
@@ -208,6 +213,16 @@ export default function Navbar() {
           </nav>
 
           <div className="ml-auto hidden items-center gap-3 xl:flex 2xl:gap-5">
+            <Link
+              href={onlinePaymentHref}
+              aria-label="Güvenli Online Ödeme"
+              aria-current={isOnlinePaymentActive ? "page" : undefined}
+              className={navControlClasses("online-payment-nav-action gap-2 px-3 2xl:px-4")}
+            >
+              <CreditCard aria-hidden="true" className="h-[17px] w-[17px]" strokeWidth={1.5} />
+              <span className="hidden whitespace-nowrap text-[10px] font-medium uppercase tracking-[0.12em] min-[1440px]:inline">Güvenli Online Ödeme</span>
+            </Link>
+
             <ThemeToggle />
 
             <LanguageSwitcher surfaceState={surfaceState} />
@@ -361,6 +376,17 @@ export default function Navbar() {
         }}
       >
         <div className="flex min-h-[100dvh] flex-col px-6 pb-[calc(2rem+env(safe-area-inset-bottom))] pt-[105px] font-sans sm:px-8 md:px-10">
+          <Link
+            href={onlinePaymentHref}
+            aria-label="Güvenli Online Ödeme"
+            aria-current={isOnlinePaymentActive ? "page" : undefined}
+            onClick={() => setMenuOpen(false)}
+            className={navControlClasses("online-payment-nav-action online-payment-nav-action--mobile mb-6 w-full gap-3 px-5")}
+          >
+            <CreditCard aria-hidden="true" className="h-[18px] w-[18px]" strokeWidth={1.5} />
+            <span className="text-[11px] font-medium uppercase tracking-[0.14em]">Güvenli Online Ödeme</span>
+          </Link>
+
           <nav className="mobile-menu-border flex flex-col border-t">
             {navigationItems.map((item, index) => {
               const active = isActive(item.href);
@@ -492,6 +518,56 @@ export default function Navbar() {
         html[data-theme="dark"] .mobile-menu-line,
         html.dark .mobile-menu-line {
           background: rgba(255, 255, 255, 0.88);
+        }
+
+        .online-payment-nav-action {
+          color: rgba(255, 255, 255, 0.9) !important;
+          background: rgba(255, 255, 255, 0.055) !important;
+          border-color: rgba(255, 255, 255, 0.24) !important;
+        }
+
+        .online-payment-nav-action:hover,
+        .online-payment-nav-action:focus-visible,
+        .online-payment-nav-action[aria-current="page"] {
+          color: #fff !important;
+          background: rgba(255, 255, 255, 0.11) !important;
+          border-color: rgba(255, 255, 255, 0.52) !important;
+          outline: none;
+        }
+
+        .online-payment-nav-action:focus-visible {
+          box-shadow: 0 0 0 2px rgba(255, 255, 255, 0.32) !important;
+        }
+
+        .online-payment-nav-action[aria-disabled="true"] {
+          pointer-events: none;
+          opacity: 0.42;
+        }
+
+        html[data-theme="light"] .site-header .online-payment-nav-action,
+        html[data-theme="light"] .mobile-menu-surface .online-payment-nav-action {
+          color: #242421 !important;
+          background: #fff !important;
+          border-color: #d8d6d0 !important;
+        }
+
+        html[data-theme="light"] .site-header .online-payment-nav-action:hover,
+        html[data-theme="light"] .site-header .online-payment-nav-action:focus-visible,
+        html[data-theme="light"] .site-header .online-payment-nav-action[aria-current="page"],
+        html[data-theme="light"] .mobile-menu-surface .online-payment-nav-action:hover,
+        html[data-theme="light"] .mobile-menu-surface .online-payment-nav-action:focus-visible,
+        html[data-theme="light"] .mobile-menu-surface .online-payment-nav-action[aria-current="page"] {
+          color: #111 !important;
+          background: #f2f1ed !important;
+          border-color: #aaa79f !important;
+        }
+
+        html[data-theme="light"] .online-payment-nav-action:focus-visible {
+          box-shadow: 0 0 0 2px rgba(20, 20, 18, 0.2) !important;
+        }
+
+        .online-payment-nav-action--mobile {
+          min-height: 2.75rem;
         }
       `}</style>
     </>
