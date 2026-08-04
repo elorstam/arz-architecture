@@ -5,10 +5,9 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useEffect, useState } from "react";
 import { useLocale, useTranslations } from "next-intl";
-import { CreditCard } from "lucide-react";
 import ThemeToggle from "@/components/ThemeToggle";
 import LanguageSwitcher from "@/components/LanguageSwitcher";
-import { navControlClasses } from "@/lib/nav-control";
+import ContactNavDropdown from "@/components/ContactNavDropdown";
 import {
   getNavbarSurfaceState,
   navbarSurfaceData,
@@ -181,22 +180,11 @@ export default function Navbar() {
             />
           </Link>
 
-          <Link
-            href={onlinePaymentHref}
-            aria-label="Güvenli Online Ödeme"
-            aria-current={isOnlinePaymentActive ? "page" : undefined}
-            className={navControlClasses("online-payment-nav-action ml-5 hidden w-[108px] gap-2 px-3 md:inline-flex xl:ml-6")}
-          >
-            <CreditCard aria-hidden="true" className="h-[17px] w-[17px] shrink-0" strokeWidth={1.5} />
-            <span className="text-left text-[9px] font-medium uppercase leading-[1.2] tracking-[0.11em]">
-              <span className="block">Güvenli</span>
-              <span className="block whitespace-nowrap">Online Ödeme</span>
-            </span>
-          </Link>
-
           <nav className="absolute left-1/2 hidden -translate-x-1/2 items-center gap-8 font-sans xl:flex 2xl:gap-14">
             {navigationItems.map((item) => {
               const active = isActive(item.href);
+
+              if(item.key==="contact")return <ContactNavDropdown key={item.key} label={t("items.contact")} contactHref={getHref("/contact")} paymentHref={onlinePaymentHref} active={active||isOnlinePaymentActive}/>;
 
               return (
                 <Link
@@ -379,20 +367,11 @@ export default function Navbar() {
         }}
       >
         <div className="flex min-h-[100dvh] flex-col px-6 pb-[calc(2rem+env(safe-area-inset-bottom))] pt-[105px] font-sans sm:px-8 md:px-10">
-          <Link
-            href={onlinePaymentHref}
-            aria-label="Güvenli Online Ödeme"
-            aria-current={isOnlinePaymentActive ? "page" : undefined}
-            onClick={() => setMenuOpen(false)}
-            className={navControlClasses("online-payment-nav-action online-payment-nav-action--mobile mb-6 w-full gap-3 px-5")}
-          >
-            <CreditCard aria-hidden="true" className="h-[18px] w-[18px]" strokeWidth={1.5} />
-            <span className="text-[11px] font-medium uppercase tracking-[0.14em]">Güvenli Online Ödeme</span>
-          </Link>
-
           <nav className="mobile-menu-border flex flex-col border-t">
             {navigationItems.map((item, index) => {
               const active = isActive(item.href);
+
+              if(item.key==="contact")return <div key={item.key} className="mobile-menu-border border-b py-7"><div className="flex items-center gap-5 md:gap-8"><span className="mobile-menu-muted shrink-0 text-[9px] tracking-[0.28em] md:text-[10px]">{String(index+1).padStart(2,"0")}</span><span className="text-[clamp(2.1rem,9vw,3.7rem)] font-normal leading-none tracking-[-0.025em] opacity-80 md:text-[clamp(3rem,7vw,5rem)]">{t("items.contact")}</span></div><div className="ml-9 mt-5 grid gap-1 md:ml-14"><Link href={getHref("/contact")} onClick={()=>setMenuOpen(false)} className="mobile-menu-secondary flex min-h-11 items-center justify-between border-t border-current/15 text-[12px] uppercase tracking-[.12em]"><span>Teklif Al</span><span aria-hidden>→</span></Link><Link href={onlinePaymentHref} onClick={()=>setMenuOpen(false)} className="mobile-menu-secondary flex min-h-11 items-center justify-between border-t border-current/15 text-[12px] uppercase tracking-[.12em]"><span>Online Ödeme</span><span aria-hidden>→</span></Link></div></div>;
 
               return (
                 <Link
@@ -523,55 +502,25 @@ export default function Navbar() {
           background: rgba(255, 255, 255, 0.88);
         }
 
-        .online-payment-nav-action {
-          color: rgba(255, 255, 255, 0.9) !important;
-          background: rgba(255, 255, 255, 0.055) !important;
-          border-color: rgba(255, 255, 255, 0.24) !important;
+        .contact-nav-dropdown__panel {
+          color: var(--nav-foreground);
+          background: color-mix(in srgb, var(--nav-surface) 94%, #090909 6%);
+          border-color: var(--nav-border);
+          backdrop-filter: blur(var(--nav-blur));
+          -webkit-backdrop-filter: blur(var(--nav-blur));
         }
 
-        .online-payment-nav-action:hover,
-        .online-payment-nav-action:focus-visible,
-        .online-payment-nav-action[aria-current="page"] {
-          color: #fff !important;
-          background: rgba(255, 255, 255, 0.11) !important;
-          border-color: rgba(255, 255, 255, 0.52) !important;
-          outline: none;
-        }
+        .contact-nav-dropdown__item { color: var(--nav-muted); }
+        .contact-nav-dropdown__item:hover,
+        .contact-nav-dropdown__item:focus-visible { color: var(--nav-foreground); background: var(--nav-hover); outline: none; }
 
-        .online-payment-nav-action:focus-visible {
-          box-shadow: 0 0 0 2px rgba(255, 255, 255, 0.32) !important;
+        html[data-theme="light"] .site-header[data-surface="surface"] .contact-nav-dropdown__panel {
+          color: #242421; background: #fff; border-color: #d8d6d0;
+          box-shadow: 0 14px 38px rgba(20,20,18,.12);
         }
-
-        .online-payment-nav-action[aria-disabled="true"] {
-          pointer-events: none;
-          opacity: 0.42;
-        }
-
-        html[data-theme="light"] .site-header .online-payment-nav-action,
-        html[data-theme="light"] .mobile-menu-surface .online-payment-nav-action {
-          color: #242421 !important;
-          background: #fff !important;
-          border-color: #d8d6d0 !important;
-        }
-
-        html[data-theme="light"] .site-header .online-payment-nav-action:hover,
-        html[data-theme="light"] .site-header .online-payment-nav-action:focus-visible,
-        html[data-theme="light"] .site-header .online-payment-nav-action[aria-current="page"],
-        html[data-theme="light"] .mobile-menu-surface .online-payment-nav-action:hover,
-        html[data-theme="light"] .mobile-menu-surface .online-payment-nav-action:focus-visible,
-        html[data-theme="light"] .mobile-menu-surface .online-payment-nav-action[aria-current="page"] {
-          color: #111 !important;
-          background: #f2f1ed !important;
-          border-color: #aaa79f !important;
-        }
-
-        html[data-theme="light"] .online-payment-nav-action:focus-visible {
-          box-shadow: 0 0 0 2px rgba(20, 20, 18, 0.2) !important;
-        }
-
-        .online-payment-nav-action--mobile {
-          min-height: 2.75rem;
-        }
+        html[data-theme="light"] .site-header[data-surface="surface"] .contact-nav-dropdown__item { color:#55534e; }
+        html[data-theme="light"] .site-header[data-surface="surface"] .contact-nav-dropdown__item:hover,
+        html[data-theme="light"] .site-header[data-surface="surface"] .contact-nav-dropdown__item:focus-visible { color:#171715; background:#f2f1ed; }
       `}</style>
     </>
   );
