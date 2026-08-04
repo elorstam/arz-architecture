@@ -14,6 +14,17 @@ const pageLinks = [
   {key: "contact", href: "/contact"},
 ] as const;
 
+export const legalFooterLinks = [
+  {label: "Ön Bilgilendirme", slug: "on-bilgilendirme-formu"},
+  {label: "Mesafeli Hizmet Sözleşmesi", slug: "mesafeli-hizmet-sozlesmesi"},
+  {label: "İptal ve İade", slug: "iptal-cayma-iade-kosullari"},
+  {label: "Hizmet Teslim Koşulları", slug: "hizmet-teslim-ve-ifa-kosullari"},
+  {label: "KVKK", slug: "kvkk-aydinlatma-metni"},
+  {label: "Gizlilik ve Çerez", slug: "gizlilik-ve-cerez-politikasi"},
+  {label: "Ödeme ve Güvenlik", slug: "odeme-ve-guvenlik"},
+  {label: "Ticari Bilgiler", slug: "ticari-bilgiler"},
+] as const;
+
 export default function PremiumFooter() {
   const locale = useLocale();
   const t = useTranslations("Footer");
@@ -56,7 +67,7 @@ export default function PremiumFooter() {
             </p>
           </div>
 
-          <div className="grid gap-10 sm:grid-cols-2">
+          <div className="grid gap-10 sm:grid-cols-2 lg:grid-cols-3">
             <div>
               <p className="text-[9px] uppercase tracking-[0.32em] text-white/30">
                 {t("pagesTitle")}
@@ -76,6 +87,13 @@ export default function PremiumFooter() {
                     </span>
                   </Link>
                 ))}
+              </nav>
+            </div>
+
+            <div>
+              <p className="text-[9px] uppercase tracking-[0.32em] text-white/30">Yasal</p>
+              <nav aria-label="Yasal sayfalar" className="mt-6 flex flex-col items-start gap-3">
+                {legalFooterLinks.map((item) => <Link key={item.slug} href={`/${locale}/yasal/${item.slug}`} className="text-xs leading-5 text-white/55 transition-colors duration-300 hover:text-white focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-white">{item.label}</Link>)}
               </nav>
             </div>
 

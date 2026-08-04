@@ -2,6 +2,8 @@ import type {MetadataRoute} from 'next';
 import {routing} from '@/i18n/routing';
 import {getManagedProjects} from '@/lib/project-store';
 import {getPosts} from '@/lib/post-store';
+import {companyLegalConfig} from '@/lib/legal/company-config';
+import {legalSlugs} from '@/lib/legal/legal-content';
 
 const siteUrl = (process.env.NEXT_PUBLIC_SITE_URL || 'https://arzmimarlik.net').replace(/\/$/, '');
 
@@ -39,5 +41,12 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const blogPages = routing.locales.flatMap((locale) =>
     posts.map((post)=>({url:`${siteUrl}/${locale}/blog/${post.slugs[locale]||post.slugs.tr}`,lastModified:post.updatedAt?new Date(post.updatedAt):now,changeFrequency:'monthly' as const,priority:0.7,alternates:{languages:Object.fromEntries(routing.locales.map(alt=>[alt,`${siteUrl}/${alt}/blog/${post.slugs[alt]||post.slugs.tr}`]))}})),
   );
-  return [...staticPages, ...projectPages, ...blogPages];
+  const legalPages = routing.locales.flatMap((locale) => legalSlugs.map((slug) => ({
+    url: `${siteUrl}/${locale}/yasal/${slug}`,
+    lastModified: new Date(companyLegalConfig.lastUpdatedAt),
+    changeFrequency: 'yearly' as const,
+    priority: 0.45,
+    alternates: {languages: Object.fromEntries(routing.locales.map((alt) => [alt, `${siteUrl}/${alt}/yasal/${slug}`]))},
+  })));
+  return [...staticPages, ...projectPages, ...blogPages, ...legalPages];
 }
