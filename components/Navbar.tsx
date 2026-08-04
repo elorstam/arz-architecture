@@ -181,6 +181,19 @@ export default function Navbar() {
             />
           </Link>
 
+          <Link
+            href={onlinePaymentHref}
+            aria-label="Güvenli Online Ödeme"
+            aria-current={isOnlinePaymentActive ? "page" : undefined}
+            className={navControlClasses("online-payment-nav-action ml-5 hidden w-[108px] gap-2 px-3 md:inline-flex xl:ml-6")}
+          >
+            <CreditCard aria-hidden="true" className="h-[17px] w-[17px] shrink-0" strokeWidth={1.5} />
+            <span className="text-left text-[9px] font-medium uppercase leading-[1.2] tracking-[0.11em]">
+              <span className="block">Güvenli</span>
+              <span className="block whitespace-nowrap">Online Ödeme</span>
+            </span>
+          </Link>
+
           <nav className="absolute left-1/2 hidden -translate-x-1/2 items-center gap-8 font-sans xl:flex 2xl:gap-14">
             {navigationItems.map((item) => {
               const active = isActive(item.href);
@@ -213,16 +226,6 @@ export default function Navbar() {
           </nav>
 
           <div className="ml-auto hidden items-center gap-3 xl:flex 2xl:gap-5">
-            <Link
-              href={onlinePaymentHref}
-              aria-label="Güvenli Online Ödeme"
-              aria-current={isOnlinePaymentActive ? "page" : undefined}
-              className={navControlClasses("online-payment-nav-action gap-2 px-3 2xl:px-4")}
-            >
-              <CreditCard aria-hidden="true" className="h-[17px] w-[17px]" strokeWidth={1.5} />
-              <span className="hidden whitespace-nowrap text-[10px] font-medium uppercase tracking-[0.12em] min-[1440px]:inline">Güvenli Online Ödeme</span>
-            </Link>
-
             <ThemeToggle />
 
             <LanguageSwitcher surfaceState={surfaceState} />

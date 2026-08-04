@@ -4,12 +4,14 @@ import test from "node:test";
 
 const navbar=await readFile(new URL("../../components/Navbar.tsx",import.meta.url),"utf8");
 
-test("desktop utility order places online payment before theme and language",()=>{
-  const utility=navbar.slice(navbar.indexOf('className="ml-auto hidden'),navbar.indexOf('<button\n            type="button"',navbar.indexOf('className="ml-auto hidden')));
-  assert.ok(utility.indexOf("onlinePaymentHref")<utility.indexOf("<ThemeToggle"));
-  assert.ok(utility.indexOf("<ThemeToggle")<utility.indexOf("<LanguageSwitcher"));
-  assert.ok(utility.indexOf("<LanguageSwitcher")<utility.indexOf("instagramUrl"));
-  assert.ok(utility.indexOf("instagramUrl")<utility.indexOf("linkedinUrl"));
+test("desktop order places online payment immediately after logo and keeps utilities ordered",()=>{
+  const desktop=navbar.slice(navbar.indexOf('className="relative mx-auto flex h-[72px]'),navbar.indexOf('id="mobile-navigation"'));
+  assert.ok(desktop.indexOf("localizedHomeHref")<desktop.indexOf("onlinePaymentHref"));
+  assert.ok(desktop.indexOf("onlinePaymentHref")<desktop.indexOf('<nav className="absolute left-1/2'));
+  assert.ok(desktop.indexOf('<nav className="absolute left-1/2')<desktop.indexOf("<ThemeToggle"));
+  assert.ok(desktop.indexOf("<ThemeToggle")<desktop.indexOf("<LanguageSwitcher"));
+  assert.ok(desktop.indexOf("<LanguageSwitcher")<desktop.indexOf("instagramUrl"));
+  assert.ok(desktop.indexOf("instagramUrl")<desktop.indexOf("linkedinUrl"));
 });
 
 test("action has icon, accessible state and keyboard focus",()=>{
@@ -34,8 +36,9 @@ test("mobile menu exposes action before primary navigation and preserves close b
   assert.match(mobile,/online-payment-nav-action--mobile/);
 });
 
-test("tablet and compact desktop avoid label overflow",()=>{
-  assert.match(navbar,/hidden whitespace-nowrap[^\n]+min-\[1440px\]:inline/);
-  assert.match(navbar,/xl:flex/);
+test("tablet and compact desktop use a two-line fixed-width action without overflow",()=>{
+  assert.match(navbar,/ml-5 hidden w-\[108px\][^\n]+md:inline-flex xl:ml-6/);
+  assert.match(navbar,/<span className="block">Güvenli<\/span>/);
+  assert.match(navbar,/<span className="block whitespace-nowrap">Online Ödeme<\/span>/);
   assert.match(navbar,/w-full gap-3 px-5/);
 });
