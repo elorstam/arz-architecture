@@ -309,6 +309,7 @@ export default function ProjectsGrid({projects}: {projects: Project[]}) {
                   fill
                   priority={index < 2}
                   sizes="(max-width: 767px) 100vw, 50vw"
+                  unoptimized
                   className="object-cover transition-transform duration-[1200ms] ease-[cubic-bezier(0.22,1,0.36,1)] group-hover:scale-[1.045]"
                 />
 
@@ -374,6 +375,7 @@ export default function ProjectsGrid({projects}: {projects: Project[]}) {
                 fill
                 priority
                 sizes="100vw"
+                unoptimized
                 className="object-cover"
               />
 
