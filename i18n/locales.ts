@@ -1,7 +1,13 @@
 export const locales = ["tr", "en", "de", "fr", "es", "nl", "ja", "zh", "ko", "ar"] as const;
+
 export type AppLocale = (typeof locales)[number];
 
 export const defaultLocale: AppLocale = "tr";
+
+export const translationLocales = locales.filter(
+  (locale): locale is Exclude<AppLocale, "tr"> => locale !== defaultLocale,
+);
+
 export const rtlLocales: AppLocale[] = ["ar"];
 
 export const localeNames: Record<AppLocale, string> = {

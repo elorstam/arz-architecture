@@ -1,2 +1,60 @@
-import {NextResponse} from 'next/server';import {isAdmin} from '@/lib/admin-auth';import {translateStrings} from '@/lib/ai-cms';import {OpenAIRequestError} from '@/lib/ai-project';
-export async function POST(r:Request){if(!await isAdmin())return NextResponse.json({error:'Yetkisiz'},{status:401});try{const {source,locales}=await r.json();if(!source||!Array.isArray(locales)||locales.length>3)return NextResponse.json({error:'Kaynak ve en fazla üç dil gerekli.'},{status:400});return NextResponse.json(await translateStrings(source,locales));}catch(e){const x=e instanceof OpenAIRequestError?e:new OpenAIRequestError('Site çevirileri tamamlanamadı.',500,String(e));console.error('Site translations AI failed',{status:x.status,message:x.message,detail:x.detail});return NextResponse.json({error:x.message},{status:x.status===504?504:502});}}
+import { NextResponse } from "next/server";
+
+import { isAdmin } from "@/lib/admin-auth";
+import { translateStrings } from "@/lib/ai-cms";
+import {
+  OpenAIRequestError,
+} from "@/lib/ai-project";
+
+export async function POST(request: Request) {
+  if (!(await isAdmin())) {
+    return NextResponse.json(
+      { error: "Yetkisiz" },
+      { status: 401 },
+    );
+  }
+
+  try {
+    const { source, locales } = await request.json();
+
+    if (
+      !source ||
+      typeof source !== "object" ||
+      !Array.isArray(locales) ||
+      locales.length === 0 ||
+      locales.length > 3
+    ) {
+      return NextResponse.json(
+        {
+          error:
+            "Kaynak metinler ve en fazla üç hedef dil gerekli.",
+        },
+        { status: 400 },
+      );
+    }
+
+    return NextResponse.json(
+      await translateStrings(source, locales),
+    );
+  } catch (error) {
+    const normalized =
+      error instanceof OpenAIRequestError
+        ? error
+        : new OpenAIRequestError(
+            "Site çevirileri tamamlanamadı.",
+            500,
+            String(error),
+          );
+
+    console.error("Site translations AI failed", {
+      status: normalized.status,
+      message: normalized.message,
+      detail: normalized.detail,
+    });
+
+    return NextResponse.json(
+      { error: normalized.message },
+      { status: normalized.status === 504 ? 504 : 502 },
+    );
+  }
+}
