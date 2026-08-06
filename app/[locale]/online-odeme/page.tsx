@@ -1,4 +1,5 @@
 import type {Metadata} from "next";
+import Image from "next/image";
 import Link from "next/link";
 import {notFound} from "next/navigation";
 import PremiumFooter from "@/components/PremiumFooter";
@@ -28,7 +29,37 @@ export default async function OnlinePaymentPage({params}:{params:Promise<{locale
   const contactHref=`/${locale}/${locale==="tr"?"iletisim":"contact"}`;
   return <main className={styles.page} lang="tr" data-payment-page><OnlinePaymentMotion />
     {locale!=="tr"&&<p className={styles.fallback}>Bu sayfanın Türkçe bilgilendirme metni gösterilmektedir.</p>}
-    <section className={`${styles.shell} ${styles.hero}`}><p className={styles.eyebrow}>Online tahsilat bilgilendirmesi</p><h1 className={styles.title}>Güvenli Online Ödeme</h1><p className={styles.lead}>Onaylanmış teklif, kapora ve hakediş ödemelerinizi güvenli ödeme bağlantısı üzerinden kredi veya banka kartınızla gerçekleştirebilirsiniz.</p><p className={styles.notice}>ARZ Mimarlık internet sitesinde doğrudan standart paket veya hazır mimarlık hizmeti satışı yapılmaz. Ödeme; müşteri görüşmesi, kapsam belirleme, teklif hazırlama ve müşteri onayından sonra alınır.</p><div className={styles.actions}><Link className={styles.primary} href={contactHref}>Teklif Al</Link><a className={styles.secondary} href={`mailto:${company.email}?subject=Ödeme bağlantısı doğrulama`}>Ödeme Bağlantınızı Doğrulayın</a></div></section>
+    <section className={`${styles.shell} ${styles.hero}`}>
+      <p className={styles.eyebrow}>Online tahsilat bilgilendirmesi</p>
+      <h1 className={styles.title}>Güvenli Online Ödeme</h1>
+      <p className={styles.lead}>Onaylanmış teklif, kapora ve hakediş ödemelerinizi güvenli ödeme bağlantısı üzerinden kredi veya banka kartınızla gerçekleştirebilirsiniz.</p>
+      <p className={styles.notice}>ARZ Mimarlık internet sitesinde doğrudan standart paket veya hazır mimarlık hizmeti satışı yapılmaz. Ödeme; müşteri görüşmesi, kapsam belirleme, teklif hazırlama ve müşteri onayından sonra alınır.</p>
+
+      <div className={styles.actions}>
+        <Link className={styles.primary} href={contactHref}>Teklif Al</Link>
+        <a className={styles.secondary} href={`mailto:${company.email}?subject=Ödeme bağlantısı doğrulama`}>Ödeme Bağlantınızı Doğrulayın</a>
+
+        <div className={styles.iyzicoAction} aria-label="iyzico ile Öde">
+          <Image
+            src="/images/payments/iyzico_ile_ode_horizontal_white.png"
+            alt="iyzico ile Öde"
+            width={220}
+            height={44}
+            className={styles.paymentLogo}
+            priority
+          />
+        </div>
+      </div>
+
+      <div className={styles.paymentTrust}>
+        <p className={styles.paymentText}>
+          Ödemeler, lisanslı ödeme kuruluşu <strong>iyzico</strong> altyapısı üzerinden güvenli şekilde gerçekleştirilmektedir.
+        </p>
+        <p className={styles.paymentSmall}>
+          Kart bilgileriniz ARZ Mimarlık tarafından görüntülenmez ve saklanmaz.
+        </p>
+      </div>
+    </section>
 
     <section className={`${styles.shell} ${styles.section}`} aria-labelledby="surec"><header className={styles.sectionHeader}><p className={styles.kicker}>Nasıl çalışır?</p><h2 id="surec" className={styles.heading}>Tekliften hizmet başlangıcına şeffaf süreç</h2></header><ol className={styles.steps}>{steps.map(step=><li className={styles.step} key={step}><h3>{step}</h3></li>)}</ol></section>
 
@@ -46,6 +77,6 @@ export default async function OnlinePaymentPage({params}:{params:Promise<{locale
 
     <section className={`${styles.shell} ${styles.section}`} aria-labelledby="sirket"><header className={styles.sectionHeader}><p className={styles.kicker}>Ticari bilgiler</p><h2 id="sirket" className={styles.heading}>ARZ Mimarlık</h2></header><dl className={styles.company}>{companyRows.map(([label,value])=><div key={label}><dt>{label}</dt><dd>{displayCompanyValue(value,label)}</dd></div>)}</dl></section>
 
-    <section className={`${styles.shell} ${styles.finalCta}`}><p className={styles.kicker}>Projeniz için</p><h2 className={styles.heading}>Önce kapsamı birlikte belirleyelim</h2><div className={styles.actions}><Link className={styles.primary} href={contactHref}>Teklif Al</Link><a className={styles.secondary} href={`mailto:${company.email}?subject=Ödeme bağlantısı doğrulama`}>Ödeme Bağlantınızı Doğrulayın</a></div></section><PremiumFooter />
+    <PremiumFooter />
   </main>;
 }

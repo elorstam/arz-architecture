@@ -1,29 +1,55 @@
 "use client";
 
+import Image from "next/image";
 import Link from "next/link";
 import { useLocale, useTranslations } from "next-intl";
+
 import { companyLegalConfig } from "@/lib/legal/company-config";
 
 const instagramUrl = "https://www.instagram.com/arzmimarliknet/";
 const linkedinUrl = "https://www.linkedin.com/company/90222590";
 
 const pageLinks = [
-  {key: "home", href: "/"},
-  {key: "about", href: "/about"},
-    {key: "projects", href: "/projects"},
-    {key: "blog", href: "/blog"},
-  {key: "contact", href: "/contact"},
+  { key: "home", href: "/" },
+  { key: "about", href: "/about" },
+  { key: "projects", href: "/projects" },
+  { key: "blog", href: "/blog" },
+  { key: "contact", href: "/contact" },
 ] as const;
 
 export const legalFooterLinks = [
-  {label: "Ön Bilgilendirme", slug: "on-bilgilendirme-formu"},
-  {label: "Mesafeli Hizmet Sözleşmesi", slug: "mesafeli-hizmet-sozlesmesi"},
-  {label: "İptal ve İade", slug: "iptal-cayma-iade-kosullari"},
-  {label: "Hizmet Teslim Koşulları", slug: "hizmet-teslim-ve-ifa-kosullari"},
-  {label: "KVKK", slug: "kvkk-aydinlatma-metni"},
-  {label: "Gizlilik ve Çerez", slug: "gizlilik-ve-cerez-politikasi"},
-  {label: "Ödeme ve Güvenlik", slug: "odeme-ve-guvenlik"},
-  {label: "Ticari Bilgiler", slug: "ticari-bilgiler"},
+  {
+    label: "Ön Bilgilendirme",
+    slug: "on-bilgilendirme-formu",
+  },
+  {
+    label: "Mesafeli Hizmet Sözleşmesi",
+    slug: "mesafeli-hizmet-sozlesmesi",
+  },
+  {
+    label: "İptal ve İade",
+    slug: "iptal-cayma-iade-kosullari",
+  },
+  {
+    label: "Hizmet Teslim Koşulları",
+    slug: "hizmet-teslim-ve-ifa-kosullari",
+  },
+  {
+    label: "KVKK",
+    slug: "kvkk-aydinlatma-metni",
+  },
+  {
+    label: "Gizlilik ve Çerez",
+    slug: "gizlilik-ve-cerez-politikasi",
+  },
+  {
+    label: "Ödeme ve Güvenlik",
+    slug: "odeme-ve-guvenlik",
+  },
+  {
+    label: "Ticari Bilgiler",
+    slug: "ticari-bilgiler",
+  },
 ] as const;
 
 export default function PremiumFooter() {
@@ -31,11 +57,23 @@ export default function PremiumFooter() {
   const t = useTranslations("Footer");
 
   const getHref = (href: string) => {
-    if (href === "/") return `/${locale}`;
+    if (href === "/") {
+      return `/${locale}`;
+    }
+
     const routes: Record<string, Record<string, string>> = {
-      tr: {"/about": "/hakkimizda", "/projects": "/projeler", "/contact": "/iletisim"},
-      en: {"/about": "/about", "/projects": "/projects", "/contact": "/contact"}
+      tr: {
+        "/about": "/hakkimizda",
+        "/projects": "/projeler",
+        "/contact": "/iletisim",
+      },
+      en: {
+        "/about": "/about",
+        "/projects": "/projects",
+        "/contact": "/contact",
+      },
     };
+
     return `/${locale}${routes[locale]?.[href] ?? href}`;
   };
 
@@ -92,10 +130,30 @@ export default function PremiumFooter() {
             </div>
 
             <div>
-              <p className="text-[9px] uppercase tracking-[0.32em] text-white/30">Yasal</p>
-              <nav aria-label="Yasal sayfalar" className="mt-6 flex flex-col items-start gap-3">
-                <Link href={`/${locale}/online-odeme`} className="text-xs font-medium leading-5 text-white/80 transition-colors duration-300 hover:text-white focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-white">Online Ödeme</Link>
-                {legalFooterLinks.map((item) => <Link key={item.slug} href={`/${locale}/yasal/${item.slug}`} className="text-xs leading-5 text-white/55 transition-colors duration-300 hover:text-white focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-white">{item.label}</Link>)}
+              <p className="text-[9px] uppercase tracking-[0.32em] text-white/30">
+                Yasal
+              </p>
+
+              <nav
+                aria-label="Yasal sayfalar"
+                className="mt-6 flex flex-col items-start gap-3"
+              >
+                <Link
+                  href={`/${locale}/online-odeme`}
+                  className="text-xs font-medium leading-5 text-white/80 transition-colors duration-300 hover:text-white focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-white"
+                >
+                  Online Ödeme
+                </Link>
+
+                {legalFooterLinks.map((item) => (
+                  <Link
+                    key={item.slug}
+                    href={`/${locale}/yasal/${item.slug}`}
+                    className="text-xs leading-5 text-white/55 transition-colors duration-300 hover:text-white focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-white"
+                  >
+                    {item.label}
+                  </Link>
+                ))}
               </nav>
             </div>
 
@@ -127,13 +185,44 @@ export default function PremiumFooter() {
           </div>
         </div>
 
-        <div className="flex flex-col gap-6 border-t border-white/10 py-7 md:flex-row md:items-center md:justify-between">
-          <div className="flex flex-wrap items-center gap-x-7 gap-y-3 text-[9px] uppercase tracking-[0.22em] text-white/25">
+        <div className="grid gap-7 border-t border-white/10 py-7 md:grid-cols-[1fr_auto_1fr] md:items-center">
+          <div className="flex flex-wrap items-center justify-center gap-x-7 gap-y-3 text-[9px] uppercase tracking-[0.22em] text-white/25 md:justify-start">
             <p>{t("copyright")}</p>
             <p>{t("rights")}</p>
           </div>
 
-          <div className="flex flex-wrap items-center gap-x-6 gap-y-3">
+          <div
+            className="flex flex-col items-center justify-center gap-2"
+            aria-label="Güvenli ödeme altyapısı"
+          >
+            <p className="text-center text-[8px] uppercase tracking-[0.24em] text-white/30">
+              Güvenli ödeme altyapısı
+            </p>
+
+            <div className="paymentLogo paymentLogoColored">
+              <Image
+                src="/images/payments/logo-band-colored.png"
+                alt="iyzico ile Öde, Mastercard, Visa, American Express ve Troy"
+                width={520}
+                height={60}
+                className="h-auto w-[220px] object-contain md:w-[250px]"
+                sizes="(max-width: 767px) 220px, 250px"
+              />
+            </div>
+
+            <div className="paymentLogo paymentLogoWhite">
+              <Image
+                src="/images/payments/logo-band-white1.png"
+                alt="iyzico ile Öde, Mastercard, Visa, American Express ve Troy"
+                width={520}
+                height={60}
+                className="h-auto w-[220px] object-contain md:w-[250px]"
+                sizes="(max-width: 767px) 220px, 250px"
+              />
+            </div>
+          </div>
+
+          <div className="flex flex-wrap items-center justify-center gap-x-6 gap-y-3 md:justify-end">
             <a
               href={instagramUrl}
               target="_blank"
@@ -166,6 +255,28 @@ export default function PremiumFooter() {
           </div>
         </div>
       </div>
+
+      <style jsx>{`
+        .paymentLogo {
+          line-height: 0;
+        }
+
+        .paymentLogoColored {
+          display: block;
+        }
+
+        .paymentLogoWhite {
+          display: none;
+        }
+
+        :global(html[data-theme="dark"]) .paymentLogoColored {
+          display: none;
+        }
+
+        :global(html[data-theme="dark"]) .paymentLogoWhite {
+          display: block;
+        }
+      `}</style>
     </footer>
   );
 }
