@@ -191,6 +191,7 @@ export default function ProjectDetail({
             alt={localizedProject.coverAlt}
             fill
             priority
+            unoptimized
             sizes="100vw"
             className="object-cover"
           />
@@ -350,6 +351,7 @@ export default function ProjectDetail({
                     src={image.src}
                     alt={image.alt}
                     fill
+                    unoptimized
                     sizes="100vw"
                     className={
                       image.contain ? "object-contain" : "object-cover"
