@@ -1,89 +1,167 @@
 "use client";
 
-import {useEffect} from "react";
+import { useEffect, useRef } from "react";
 
-const IDLE_TIMEOUT_MS = 5 * 60 * 1000;
-const ACTIVITY_THROTTLE_MS = 1000;
-const ACTIVITY_KEY = "arz-admin-last-activity";
-const LOGOUT_KEY = "arz-admin-logout";
-const CHANNEL_NAME = "arz-admin-session";
-const activityEvents: Array<keyof WindowEventMap> = [
-  "mousemove", "mousedown", "keydown", "scroll", "touchstart", "click",
-];
+const IDLE_TIMEOUT_MS = 2 * 60 * 60 * 1000; // 2 saat
+const CHECK_INTERVAL_MS = 30 * 1000; // 30 saniyede bir kontrol
+const ACTIVITY_WRITE_INTERVAL_MS = 15 * 1000;
+
+const LAST_ACTIVITY_KEY = "arz-admin-last-activity";
+const LOGOUT_EVENT_KEY = "arz-admin-logout-event";
 
 export default function AdminIdleLogout() {
+  const loggingOutRef = useRef(false);
+  const lastActivityWriteRef = useRef(0);
+
   useEffect(() => {
-    let timer: ReturnType<typeof setTimeout> | undefined;
-    let lastRecordedAt = 0;
-    let loggingOut = false;
-    const channel = typeof BroadcastChannel === "undefined"
-      ? null
-      : new BroadcastChannel(CHANNEL_NAME);
+    const logout = async () => {
+      if (loggingOutRef.current) {
+        return;
+      }
 
-    const goToIdleLogin = () => window.location.replace("/admin/login?reason=idle");
-    const logout = async (notifyOtherTabs = true) => {
-      if (loggingOut) return;
-      loggingOut = true;
-      if (timer) clearTimeout(timer);
+      loggingOutRef.current = true;
+
       try {
-        await fetch("/api/admin/logout", {method: "POST"});
+        await fetch("/api/admin/logout", {
+          method: "POST",
+          credentials: "same-origin",
+        });
       } catch {
-        // Navigation still continues when the server session is already gone.
+        // Logout endpoint başarısız olsa bile login ekranına yönlendir.
       }
-      if (notifyOtherTabs) {
-        const value = String(Date.now());
-        window.localStorage.setItem(LOGOUT_KEY, value);
-        channel?.postMessage({type: "logout", value});
+
+      try {
+        window.localStorage.setItem(
+          LOGOUT_EVENT_KEY,
+          String(Date.now()),
+        );
+      } catch {
+        // localStorage kullanılamıyorsa sessiz devam et.
       }
-      goToIdleLogin();
+
+      window.location.href = "/admin/login";
     };
-    const schedule = (lastActivity: number) => {
-      if (timer) clearTimeout(timer);
-      timer = setTimeout(
-        () => void logout(),
-        Math.max(0, IDLE_TIMEOUT_MS - (Date.now() - lastActivity)),
-      );
-    };
-    const recordActivity = () => {
+
+    const writeActivity = (force = false) => {
       const now = Date.now();
-      if (now - lastRecordedAt < ACTIVITY_THROTTLE_MS) return;
-      lastRecordedAt = now;
-      window.localStorage.setItem(ACTIVITY_KEY, String(now));
-      schedule(now);
-    };
-    const handleStorage = (event: StorageEvent) => {
-      if (event.key === LOGOUT_KEY && event.newValue) void logout(false);
-      if (event.key === ACTIVITY_KEY && event.newValue) {
-        const timestamp = Number(event.newValue);
-        if (Number.isFinite(timestamp)) schedule(timestamp);
+
+      if (
+        !force &&
+        now - lastActivityWriteRef.current <
+          ACTIVITY_WRITE_INTERVAL_MS
+      ) {
+        return;
+      }
+
+      lastActivityWriteRef.current = now;
+
+      try {
+        window.localStorage.setItem(
+          LAST_ACTIVITY_KEY,
+          String(now),
+        );
+      } catch {
+        // localStorage kullanılamıyorsa timer yine çalışabilir.
       }
     };
-    const handleChannel = (event: MessageEvent<{type?: string}>) => {
-      if (event.data?.type === "logout") void logout(false);
+
+    const getLastActivity = () => {
+      try {
+        const value = Number(
+          window.localStorage.getItem(LAST_ACTIVITY_KEY),
+        );
+
+        if (Number.isFinite(value) && value > 0) {
+          return value;
+        }
+      } catch {
+        // localStorage yoksa bu sekmenin son aktivitesini kullan.
+      }
+
+      return lastActivityWriteRef.current || Date.now();
     };
 
-    for (const eventName of activityEvents) {
-      window.addEventListener(eventName, recordActivity, {passive: true});
-    }
-    window.addEventListener("storage", handleStorage);
-    channel?.addEventListener("message", handleChannel);
+    const checkIdle = () => {
+      const lastActivity = getLastActivity();
+      const idleFor = Date.now() - lastActivity;
 
-    const storedActivity = Number(window.localStorage.getItem(ACTIVITY_KEY));
-    const initialActivity =
-      Number.isFinite(storedActivity) && Date.now() - storedActivity < IDLE_TIMEOUT_MS
-        ? storedActivity
-        : Date.now();
-    window.localStorage.setItem(ACTIVITY_KEY, String(initialActivity));
-    schedule(initialActivity);
+      if (idleFor >= IDLE_TIMEOUT_MS) {
+        void logout();
+      }
+    };
+
+    const handleActivity = () => {
+      writeActivity();
+    };
+
+    const handleVisibilityChange = () => {
+      if (document.visibilityState === "visible") {
+        checkIdle();
+      }
+    };
+
+    const handleStorage = (event: StorageEvent) => {
+      if (event.key === LOGOUT_EVENT_KEY && event.newValue) {
+        window.location.href = "/admin/login";
+      }
+    };
+
+    /*
+     * Yeni admin oturumu açıldığında eski localStorage zamanı
+     * yüzünden anında logout olmaması için aktiviteyi sıfırla.
+     */
+    writeActivity(true);
+
+    const activityEvents: Array<keyof WindowEventMap> = [
+      "pointerdown",
+      "keydown",
+      "scroll",
+      "wheel",
+      "touchstart",
+    ];
+
+    activityEvents.forEach((eventName) => {
+      window.addEventListener(
+        eventName,
+        handleActivity,
+        { passive: true },
+      );
+    });
+
+    document.addEventListener(
+      "visibilitychange",
+      handleVisibilityChange,
+    );
+
+    window.addEventListener(
+      "storage",
+      handleStorage,
+    );
+
+    const interval = window.setInterval(
+      checkIdle,
+      CHECK_INTERVAL_MS,
+    );
 
     return () => {
-      if (timer) clearTimeout(timer);
-      for (const eventName of activityEvents) {
-        window.removeEventListener(eventName, recordActivity);
-      }
-      window.removeEventListener("storage", handleStorage);
-      channel?.removeEventListener("message", handleChannel);
-      channel?.close();
+      activityEvents.forEach((eventName) => {
+        window.removeEventListener(
+          eventName,
+          handleActivity,
+        );
+      });
+
+      document.removeEventListener(
+        "visibilitychange",
+        handleVisibilityChange,
+      );
+
+      window.removeEventListener(
+        "storage",
+        handleStorage,
+      );
+
+      window.clearInterval(interval);
     };
   }, []);
 
