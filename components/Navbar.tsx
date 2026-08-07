@@ -185,7 +185,19 @@ export default function Navbar() {
             {navigationItems.map((item) => {
               const active = isActive(item.href);
 
-              if(item.key==="contact")return <ContactNavDropdown key={item.key} label={t("items.contact")} contactHref={getHref("/contact")} paymentHref={onlinePaymentHref} active={active||isOnlinePaymentActive}/>;
+              if (item.key === "contact") {
+                return (
+                  <ContactNavDropdown
+                    key={item.key}
+                    label={t("items.contact")}
+                    quoteLabel={t("quote")}
+                    paymentLabel={t("onlinePayment")}
+                    contactHref={getHref("/contact")}
+                    paymentHref={onlinePaymentHref}
+                    active={active || isOnlinePaymentActive}
+                  />
+                );
+              }
 
               return (
                 <NavbarPrimaryItem
@@ -358,7 +370,44 @@ export default function Navbar() {
             {navigationItems.map((item, index) => {
               const active = isActive(item.href);
 
-              if(item.key==="contact")return <div key={item.key} className="mobile-menu-border border-b py-7"><div className="flex items-center gap-5 md:gap-8"><span className="mobile-menu-muted shrink-0 text-[9px] tracking-[0.28em] md:text-[10px]">{String(index+1).padStart(2,"0")}</span><span className="text-[clamp(2.1rem,9vw,3.7rem)] font-normal leading-none tracking-[-0.025em] opacity-80 md:text-[clamp(3rem,7vw,5rem)]">{t("items.contact")}</span></div><div className="ml-9 mt-5 grid gap-1 md:ml-14"><Link href={getHref("/contact")} onClick={()=>setMenuOpen(false)} className="mobile-menu-secondary flex min-h-11 items-center justify-between border-t border-current/15 text-[12px] uppercase tracking-[.12em]"><span>Teklif Al</span><span aria-hidden>→</span></Link><Link href={onlinePaymentHref} onClick={()=>setMenuOpen(false)} className="mobile-menu-secondary flex min-h-11 items-center justify-between border-t border-current/15 text-[12px] uppercase tracking-[.12em]"><span>Online Ödeme</span><span aria-hidden>→</span></Link></div></div>;
+              if (item.key === "contact") {
+                return (
+                  <div
+                    key={item.key}
+                    className="mobile-menu-border border-b py-7"
+                  >
+                    <div className="flex items-center gap-5 md:gap-8">
+                      <span className="mobile-menu-muted shrink-0 text-[9px] tracking-[0.28em] md:text-[10px]">
+                        {String(index + 1).padStart(2, "0")}
+                      </span>
+
+                      <span className="text-[clamp(2.1rem,9vw,3.7rem)] font-normal leading-none tracking-[-0.025em] opacity-80 md:text-[clamp(3rem,7vw,5rem)]">
+                        {t("items.contact")}
+                      </span>
+                    </div>
+
+                    <div className="ml-9 mt-5 grid gap-1 md:ml-14">
+                      <Link
+                        href={getHref("/contact")}
+                        onClick={() => setMenuOpen(false)}
+                        className="mobile-menu-secondary flex min-h-11 items-center justify-between border-t border-current/15 text-[12px] uppercase tracking-[.12em]"
+                      >
+                        <span>{t("quote")}</span>
+                        <span aria-hidden>→</span>
+                      </Link>
+
+                      <Link
+                        href={onlinePaymentHref}
+                        onClick={() => setMenuOpen(false)}
+                        className="mobile-menu-secondary flex min-h-11 items-center justify-between border-t border-current/15 text-[12px] uppercase tracking-[.12em]"
+                      >
+                        <span>{t("onlinePayment")}</span>
+                        <span aria-hidden>→</span>
+                      </Link>
+                    </div>
+                  </div>
+                );
+              }
 
               return (
                 <Link

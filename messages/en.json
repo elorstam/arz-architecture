@@ -10,7 +10,10 @@
       "contact": "Contact"
     },
     "logoAriaLabel": "ARZ Architecture home page",
+    
     "openMenu": "Open menu",
+    "quote": "Get a Quote",
+"onlinePayment": "Online Payment",
     "closeMenu": "Close menu",
     "socialMedia": "Social Media",
     "brand": "ARZ Architecture",

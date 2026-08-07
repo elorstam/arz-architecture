@@ -1,82 +1,467 @@
-import type {Metadata} from "next";
+import type { Metadata } from "next";
 import Image from "next/image";
 import Link from "next/link";
-import {notFound} from "next/navigation";
+import { notFound } from "next/navigation";
+
 import PremiumFooter from "@/components/PremiumFooter";
 import OnlinePaymentMotion from "@/components/online-payment/OnlinePaymentMotion";
-import {locales} from "@/i18n/locales";
-import {companyLegalConfig as company,displayCompanyValue} from "@/lib/legal/company-config";
+import { locales } from "@/i18n/locales";
+import {
+  companyLegalConfig as company,
+  displayCompanyValue,
+} from "@/lib/legal/company-config";
+import { getSiteMessages } from "@/lib/site-translation-store";
+
 import styles from "./OnlinePaymentPage.module.css";
 
-const title="Güvenli Online Ödeme | ARZ Mimarlık";
-const description="ARZ Mimarlık onaylanmış teklif, kapora ve hakediş ödemelerinin güvenli online ödeme bağlantılarıyla nasıl gerçekleştirildiğini inceleyin.";
-export const metadata:Metadata={title,description,robots:{index:true,follow:true},alternates:{canonical:"https://arzmimarlik.net/tr/online-odeme",languages:Object.fromEntries(locales.map(locale=>[locale,`https://arzmimarlik.net/${locale}/online-odeme`]))},openGraph:{title,description,type:"website",url:"https://arzmimarlik.net/tr/online-odeme",locale:"tr_TR",siteName:company.brandName}};
-export function generateStaticParams(){return locales.map(locale=>({locale}));}
+type PageProps = {
+  params: Promise<{ locale: string }>;
+};
 
-const steps=["Proje görüşmesi yapılır","Hizmet kapsamı belirlenir","Teklif hazırlanır","Teklif müşteri tarafından onaylanır","Güvenli ödeme bağlantısı paylaşılır","Kapora veya hakediş kartla ödenir","Ödeme kaydı oluşturulur","Hizmet başlar veya proje devam eder"];
-const paymentTypes=["Kapora","Ara ödeme","Hakediş","Kalan bakiye","Onaylanmış teklif ödemesi","Mükerrer veya eksik ödeme düzeltmesi"];
-const pricing=["Hizmet veya proje adı","Ödeme açıklaması","Net hizmet bedeli","İndirim varsa indirim tutarı veya oranı","KDV dahil / hariç durumu","KDV oranı","KDV tutarı","Ara toplam","Ödenecek toplam","Para birimi","Vade veya ödeme tarihi","İptal/iade koşullarına bağlantı"];
-const legalLinks=[
-  ["İptal, Cayma ve İade Koşulları","iptal-cayma-iade-kosullari"],["Mesafeli Hizmet Sözleşmesi","mesafeli-hizmet-sozlesmesi"],["Ön Bilgilendirme Formu","on-bilgilendirme-formu"],["Hizmet Teslim ve İfa Koşulları","hizmet-teslim-ve-ifa-kosullari"],["Ödeme ve Güvenlik","odeme-ve-guvenlik"],["KVKK Aydınlatma Metni","kvkk-aydinlatma-metni"],
-] as const;
-const services=[
-  ["Mimari Proje ve Danışmanlık","İhtiyaç programından tasarım kararlarına uzanan proje özelinde mimari destek."],["İç Mimarlık ve Tasarım","Mekân işlevi, malzeme, detay ve kullanıcı deneyimini birlikte ele alan tasarım hizmeti."],["Villa ve Konut Projeleri","Yaşam biçimi, arsa koşulları ve bütçeye göre geliştirilen özgün konut çözümleri."],["Ticari Mekân ve Ofis Projeleri","Marka kimliği, operasyon ve kullanıcı akışına göre tasarlanan çalışma ve satış alanları."],["3D Mimari Görselleştirme","Tasarım kararlarını anlaşılır kılan proje özelinde iç ve dış mekân görselleri."],["Ruhsat ve Uygulama Projesi Hizmetleri","İlgili proje kapsamı ve resmî süreçlere göre planlanan teknik dokümantasyon desteği."],
-] as const;
-const companyRows=[["Marka",company.brandName],["Resmî ticari unvan",company.legalName],["Şirket türü",company.companyType],["Vergi dairesi",company.taxOffice],["Vergi numarası",company.taxNumber],["Adres",company.registeredAddress],["Telefon",company.phone],["E-posta",company.email],["Web",company.websiteUrl]] as const;
+export function generateStaticParams() {
+  return locales.map((locale) => ({ locale }));
+}
 
-export default async function OnlinePaymentPage({params}:{params:Promise<{locale:string}>}){
-  const{locale}=await params;if(!locales.includes(locale as (typeof locales)[number]))notFound();
-  const contactHref=`/${locale}/${locale==="tr"?"iletisim":"contact"}`;
-  return <main className={styles.page} lang="tr" data-payment-page><OnlinePaymentMotion />
-    {locale!=="tr"&&<p className={styles.fallback}>Bu sayfanın Türkçe bilgilendirme metni gösterilmektedir.</p>}
-    <section className={`${styles.shell} ${styles.hero}`}>
-      <p className={styles.eyebrow}>Online tahsilat bilgilendirmesi</p>
-      <h1 className={styles.title}>Güvenli Online Ödeme</h1>
-      <p className={styles.lead}>Onaylanmış teklif, kapora ve hakediş ödemelerinizi güvenli ödeme bağlantısı üzerinden kredi veya banka kartınızla gerçekleştirebilirsiniz.</p>
-      <p className={styles.notice}>ARZ Mimarlık internet sitesinde doğrudan standart paket veya hazır mimarlık hizmeti satışı yapılmaz. Ödeme; müşteri görüşmesi, kapsam belirleme, teklif hazırlama ve müşteri onayından sonra alınır.</p>
+export async function generateMetadata({
+  params,
+}: PageProps): Promise<Metadata> {
+  const { locale } = await params;
 
-      <div className={styles.actions}>
-        <Link className={styles.primary} href={contactHref}>Teklif Al</Link>
-        <a className={styles.secondary} href={`mailto:${company.email}?subject=Ödeme bağlantısı doğrulama`}>Ödeme Bağlantınızı Doğrulayın</a>
+  if (!locales.includes(locale as (typeof locales)[number])) {
+    return {};
+  }
 
-        <div className={styles.iyzicoAction} aria-label="iyzico ile Öde">
-          <Image
-            src="/images/payments/iyzico_ile_ode_horizontal_white.png"
-            alt="iyzico ile Öde"
-            width={220}
-            height={44}
-            className={styles.paymentLogo}
-            priority
-          />
+  const messages = await getSiteMessages(locale);
+  const title =
+    messages["payment.meta.title"] ||
+    "Güvenli Online Ödeme | ARZ Mimarlık";
+  const description =
+    messages["payment.meta.description"] ||
+    "ARZ Mimarlık güvenli online ödeme bilgilendirmesi.";
+
+  return {
+    title,
+    description,
+    robots: {
+      index: true,
+      follow: true,
+    },
+    alternates: {
+      canonical: `https://arzmimarlik.net/${locale}/online-odeme`,
+      languages: Object.fromEntries(
+        locales.map((item) => [
+          item,
+          `https://arzmimarlik.net/${item}/online-odeme`,
+        ]),
+      ),
+    },
+    openGraph: {
+      title,
+      description,
+      type: "website",
+      url: `https://arzmimarlik.net/${locale}/online-odeme`,
+      siteName: company.brandName,
+    },
+  };
+}
+
+export default async function OnlinePaymentPage({
+  params,
+}: PageProps) {
+  const { locale } = await params;
+
+  if (!locales.includes(locale as (typeof locales)[number])) {
+    notFound();
+  }
+
+  const messages = await getSiteMessages(locale);
+  const t = (key: string) => messages[key] || key;
+
+  const contactHref = `/${locale}/${
+    locale === "tr" ? "iletisim" : "contact"
+  }`;
+
+  const steps = Array.from(
+    { length: 8 },
+    (_, index) => t(`payment.process.step${index + 1}`),
+  );
+
+  const paymentTypes = [
+    t("payment.types.deposit"),
+    t("payment.types.interim"),
+    t("payment.types.progress"),
+    t("payment.types.balance"),
+    t("payment.types.approvedQuote"),
+    t("payment.types.correction"),
+  ];
+
+  const pricing = Array.from(
+    { length: 12 },
+    (_, index) => t(`payment.pricing.item${index + 1}`),
+  );
+
+  const securityItems = Array.from(
+    { length: 6 },
+    (_, index) => t(`payment.security.item${index + 1}`),
+  );
+
+  const legalLinks = [
+    [t("payment.legal.refund"), "iptal-cayma-iade-kosullari"],
+    [t("payment.legal.distance"), "mesafeli-hizmet-sozlesmesi"],
+    [t("payment.legal.preinfo"), "on-bilgilendirme-formu"],
+    [t("payment.legal.delivery"), "hizmet-teslim-ve-ifa-kosullari"],
+    [t("payment.legal.security"), "odeme-ve-guvenlik"],
+    [t("payment.legal.kvkk"), "kvkk-aydinlatma-metni"],
+  ] as const;
+
+  const services = [
+    [
+      t("payment.services.arch.title"),
+      t("payment.services.arch.copy"),
+    ],
+    [
+      t("payment.services.interior.title"),
+      t("payment.services.interior.copy"),
+    ],
+    [
+      t("payment.services.villa.title"),
+      t("payment.services.villa.copy"),
+    ],
+    [
+      t("payment.services.commercial.title"),
+      t("payment.services.commercial.copy"),
+    ],
+    [
+      t("payment.services.render.title"),
+      t("payment.services.render.copy"),
+    ],
+    [
+      t("payment.services.permit.title"),
+      t("payment.services.permit.copy"),
+    ],
+  ] as const;
+
+  const companyRows = [
+    [t("payment.company.brand"), company.brandName],
+    [t("payment.company.legalName"), company.legalName],
+    [t("payment.company.type"), company.companyType],
+    [t("payment.company.taxOffice"), company.taxOffice],
+    [t("payment.company.taxNumber"), company.taxNumber],
+    [t("payment.company.address"), company.registeredAddress],
+    [t("payment.company.phone"), company.phone],
+    [t("payment.company.email"), company.email],
+    [t("payment.company.web"), company.websiteUrl],
+  ] as const;
+
+  return (
+    <main
+      className={styles.page}
+      lang={locale}
+      data-payment-page
+    >
+      <OnlinePaymentMotion />
+
+      <section className={`${styles.shell} ${styles.hero}`}>
+        <p className={styles.eyebrow}>
+          {t("payment.hero.eyebrow")}
+        </p>
+
+        <h1 className={styles.title}>
+          {t("payment.hero.title")}
+        </h1>
+
+        <p className={styles.lead}>
+          {t("payment.hero.lead")}
+        </p>
+
+        <p className={styles.notice}>
+          {t("payment.hero.notice")}
+        </p>
+
+        <div className={styles.actions}>
+          <Link className={styles.primary} href={contactHref}>
+            {t("payment.actions.quote")}
+          </Link>
+
+          <a
+            className={styles.secondary}
+            href={`mailto:${company.email}?subject=${encodeURIComponent(
+              t("payment.actions.verify"),
+            )}`}
+          >
+            {t("payment.actions.verify")}
+          </a>
+
+          <div
+            className={styles.iyzicoAction}
+            aria-label={
+              locale === "tr"
+                ? "iyzico ile Öde"
+                : "Pay with iyzico"
+            }
+          >
+            <Image
+              src={
+                locale === "tr"
+                  ? "/images/payments/iyzico_ile_ode_horizontal_white.png"
+                  : "/images/payments/pay_with_iyzico_horizontal_white.png"
+              }
+              alt={
+                locale === "tr"
+                  ? "iyzico ile Öde"
+                  : "Pay with iyzico"
+              }
+              width={220}
+              height={44}
+              className={styles.paymentLogo}
+              priority
+            />
+          </div>
         </div>
-      </div>
 
-      <div className={styles.paymentTrust}>
-        <p className={styles.paymentText}>
-          Ödemeler, lisanslı ödeme kuruluşu <strong>iyzico</strong> altyapısı üzerinden güvenli şekilde gerçekleştirilmektedir.
-        </p>
-        <p className={styles.paymentSmall}>
-          Kart bilgileriniz ARZ Mimarlık tarafından görüntülenmez ve saklanmaz.
-        </p>
-      </div>
-    </section>
+        <div className={styles.paymentTrust}>
+          <p className={styles.paymentText}>
+            {t("payment.trust.text")}
+          </p>
 
-    <section className={`${styles.shell} ${styles.section}`} aria-labelledby="surec"><header className={styles.sectionHeader}><p className={styles.kicker}>Nasıl çalışır?</p><h2 id="surec" className={styles.heading}>Tekliften hizmet başlangıcına şeffaf süreç</h2></header><ol className={styles.steps}>{steps.map(step=><li className={styles.step} key={step}><h3>{step}</h3></li>)}</ol></section>
+          <p className={styles.paymentSmall}>
+            {t("payment.trust.security")}
+          </p>
+        </div>
+      </section>
 
-    <section className={`${styles.shell} ${styles.section}`} aria-labelledby="odeme-turleri"><header className={styles.sectionHeader}><p className={styles.kicker}>Tahsilat modeli</p><h2 id="odeme-turleri" className={styles.heading}>Online ödeme hangi amaçlarla kullanılır?</h2><p className={styles.intro}>Her bağlantı, müşteriyle mutabık kalınan teklif veya ödeme planındaki belirli bir tahsilat için hazırlanır.</p></header><div className={styles.cards}>{paymentTypes.map(type=><article className={styles.card} key={type}><h3>{type}</h3><p>Proje özelinde belirlenen ve onaylanan ödeme planına göre tahsil edilir.</p></article>)}</div></section>
+      <section
+        className={`${styles.shell} ${styles.section}`}
+        aria-labelledby="surec"
+      >
+        <header className={styles.sectionHeader}>
+          <p className={styles.kicker}>
+            {t("payment.process.kicker")}
+          </p>
+          <h2 id="surec" className={styles.heading}>
+            {t("payment.process.heading")}
+          </h2>
+        </header>
 
-    <section className={`${styles.shell} ${styles.section}`} aria-labelledby="link-modeli"><div className={styles.split}><div><header className={styles.sectionHeader}><p className={styles.kicker}>Ödeme bağlantısı modeli</p><h2 id="link-modeli" className={styles.heading}>Yalnız mutabık kalınan teklif için</h2></header><p className={styles.intro}>Ödeme bağlantıları yalnız ARZ Mimarlık tarafından, müşteriyle mutabık kalınan teklif veya ödeme planına göre oluşturulur. Üyelik zorunluluğu olmadan ödeme alınabilir.</p><ul className={styles.list}><li>Belirli bir ödeme açıklaması için oluşturulur.</li><li>Belirli bir tutar taşır.</li><li>Yalnız lisanslı ödeme kuruluşunun güvenli ödeme ekranına yönlendirir.</li><li>Kart numarası ve CVV bilgileri ARZ Mimarlık tarafından görüntülenmez veya saklanmaz.</li></ul></div><aside className={styles.check}><strong>Ödeme öncesi kontrol</strong><p>Bağlantıdaki proje/hizmet adını, tutarı, KDV bilgisini, ödeme açıklamasını ve şirket unvanını kontrol ediniz.</p><p>Şüpheli bağlantılarda <a href={`mailto:${company.email}`}>{company.email}</a> veya <a href={`tel:${company.phone?.replace(/\s/g,"")}`}>{company.phone}</a> üzerinden ARZ Mimarlık ile iletişime geçiniz.</p></aside></div></section>
+        <ol className={styles.steps}>
+          {steps.map((step) => (
+            <li className={styles.step} key={step}>
+              <h3>{step}</h3>
+            </li>
+          ))}
+        </ol>
+      </section>
 
-    <section className={`${styles.shell} ${styles.section}`} aria-labelledby="fiyat"><div className={styles.split}><header className={styles.sectionHeader}><p className={styles.kicker}>Fiyatlandırma</p><h2 id="fiyat" className={styles.heading}>Tutar ve KDV bilgisi açıkça gösterilir</h2><p className={styles.intro}>Bu sayfa dinamik hesaplama veya ödeme linki üretmez. Gerçek değerler, oluşturulan ödeme bağlantısında işlem öncesinde sunulur.</p></header><ul className={styles.list}>{pricing.map(item=><li key={item}>{item}</li>)}</ul></div></section>
+      <section
+        className={`${styles.shell} ${styles.section}`}
+        aria-labelledby="odeme-turleri"
+      >
+        <header className={styles.sectionHeader}>
+          <p className={styles.kicker}>
+            {t("payment.types.kicker")}
+          </p>
+          <h2 id="odeme-turleri" className={styles.heading}>
+            {t("payment.types.heading")}
+          </h2>
+          <p className={styles.intro}>
+            {t("payment.types.intro")}
+          </p>
+        </header>
 
-    <section className={`${styles.shell} ${styles.section}`} aria-labelledby="guvenlik"><div className={styles.security}><header className={styles.sectionHeader}><p className={styles.kicker}>Güvenlik</p><h2 id="guvenlik" className={styles.heading}>Kart verileri ARZ Mimarlık’ta tutulmaz</h2></header><ul><li>Site HTTPS/TLS ile korunur.</li><li>Kart bilgileri ARZ Mimarlık sunucularında saklanmaz.</li><li>Ödeme lisanslı ödeme kuruluşunun güvenli altyapısında tamamlanır.</li><li>Sağlayıcı destekliyorsa 3D Secure uygulanır.</li><li>Ödeme sonucu müşteriye ve ARZ Mimarlık’a bildirilir.</li><li>Şüpheli veya mükerrer işlemler incelenir.</li></ul></div></section>
+        <div className={styles.cards}>
+          {paymentTypes.map((type) => (
+            <article className={styles.card} key={type}>
+              <h3>{type}</h3>
+              <p>{t("payment.types.cardText")}</p>
+            </article>
+          ))}
+        </div>
+      </section>
 
-    <section className={`${styles.shell} ${styles.section}`} aria-labelledby="hizmetler"><header className={styles.sectionHeader}><p className={styles.kicker}>Hizmetler</p><h2 id="hizmetler" className={styles.heading}>Her proje kendi kapsamıyla fiyatlandırılır</h2></header><div className={styles.services}>{services.map(([name,copy])=><article className={styles.service} key={name}><h3>{name}</h3><p>{copy}</p><p>Hizmet proje özelinde fiyatlandırılır; ödeme teklif onayından sonra alınır.</p><Link href={contactHref}>Teklif Al</Link></article>)}</div></section>
+      <section
+        className={`${styles.shell} ${styles.section}`}
+        aria-labelledby="link-modeli"
+      >
+        <div className={styles.split}>
+          <div>
+            <header className={styles.sectionHeader}>
+              <p className={styles.kicker}>
+                {t("payment.link.kicker")}
+              </p>
+              <h2 id="link-modeli" className={styles.heading}>
+                {t("payment.link.heading")}
+              </h2>
+            </header>
 
-    <section className={`${styles.shell} ${styles.section}`} aria-labelledby="iade"><div className={styles.split}><div><header className={styles.sectionHeader}><p className={styles.kicker}>İptal ve iade</p><h2 id="iade" className={styles.heading}>Hizmet aşamasına göre değerlendirme</h2></header><p className={styles.intro}>İptal, cayma ve iade koşulları; hizmetin başlayıp başlamamasına, tamamlanmış proje aşamalarına, müşteri için özel olarak hazırlanmış çalışmalara ve ilgili sözleşmeye göre değerlendirilir.</p></div><nav className={styles.legalLinks} aria-label="Ödeme ile ilgili yasal metinler">{legalLinks.map(([label,slug])=><Link href={`/${locale}/yasal/${slug}`} key={slug}><span>{label}</span><span aria-hidden>→</span></Link>)}</nav></div></section>
+            <p className={styles.intro}>
+              {t("payment.link.intro")}
+            </p>
 
-    <section className={`${styles.shell} ${styles.section}`} aria-labelledby="sirket"><header className={styles.sectionHeader}><p className={styles.kicker}>Ticari bilgiler</p><h2 id="sirket" className={styles.heading}>ARZ Mimarlık</h2></header><dl className={styles.company}>{companyRows.map(([label,value])=><div key={label}><dt>{label}</dt><dd>{displayCompanyValue(value,label)}</dd></div>)}</dl></section>
+            <ul className={styles.list}>
+              <li>{t("payment.link.item1")}</li>
+              <li>{t("payment.link.item2")}</li>
+              <li>{t("payment.link.item3")}</li>
+              <li>{t("payment.link.item4")}</li>
+            </ul>
+          </div>
 
-    <PremiumFooter />
-  </main>;
+          <aside className={styles.check}>
+            <strong>{t("payment.link.checkTitle")}</strong>
+
+            <p>{t("payment.link.checkText")}</p>
+
+            <p>
+              {t("payment.link.suspiciousBefore")}{" "}
+              <a href={`mailto:${company.email}`}>
+                {company.email}
+              </a>{" "}
+              {t("payment.link.suspiciousBetween")}{" "}
+              <a
+                href={`tel:${company.phone?.replace(/\s/g, "")}`}
+              >
+                {company.phone}
+              </a>{" "}
+              {t("payment.link.suspiciousAfter")}
+            </p>
+          </aside>
+        </div>
+      </section>
+
+      <section
+        className={`${styles.shell} ${styles.section}`}
+        aria-labelledby="fiyat"
+      >
+        <div className={styles.split}>
+          <header className={styles.sectionHeader}>
+            <p className={styles.kicker}>
+              {t("payment.pricing.kicker")}
+            </p>
+            <h2 id="fiyat" className={styles.heading}>
+              {t("payment.pricing.heading")}
+            </h2>
+            <p className={styles.intro}>
+              {t("payment.pricing.intro")}
+            </p>
+          </header>
+
+          <ul className={styles.list}>
+            {pricing.map((item) => (
+              <li key={item}>{item}</li>
+            ))}
+          </ul>
+        </div>
+      </section>
+
+      <section
+        className={`${styles.shell} ${styles.section}`}
+        aria-labelledby="guvenlik"
+      >
+        <div className={styles.security}>
+          <header className={styles.sectionHeader}>
+            <p className={styles.kicker}>
+              {t("payment.security.kicker")}
+            </p>
+            <h2 id="guvenlik" className={styles.heading}>
+              {t("payment.security.heading")}
+            </h2>
+          </header>
+
+          <ul>
+            {securityItems.map((item) => (
+              <li key={item}>{item}</li>
+            ))}
+          </ul>
+        </div>
+      </section>
+
+      <section
+        className={`${styles.shell} ${styles.section}`}
+        aria-labelledby="hizmetler"
+      >
+        <header className={styles.sectionHeader}>
+          <p className={styles.kicker}>
+            {t("payment.services.kicker")}
+          </p>
+          <h2 id="hizmetler" className={styles.heading}>
+            {t("payment.services.heading")}
+          </h2>
+        </header>
+
+        <div className={styles.services}>
+          {services.map(([name, copy]) => (
+            <article className={styles.service} key={name}>
+              <h3>{name}</h3>
+              <p>{copy}</p>
+              <p>{t("payment.services.note")}</p>
+              <Link href={contactHref}>
+                {t("payment.actions.quote")}
+              </Link>
+            </article>
+          ))}
+        </div>
+      </section>
+
+      <section
+        className={`${styles.shell} ${styles.section}`}
+        aria-labelledby="iade"
+      >
+        <div className={styles.split}>
+          <div>
+            <header className={styles.sectionHeader}>
+              <p className={styles.kicker}>
+                {t("payment.refund.kicker")}
+              </p>
+              <h2 id="iade" className={styles.heading}>
+                {t("payment.refund.heading")}
+              </h2>
+            </header>
+
+            <p className={styles.intro}>
+              {t("payment.refund.intro")}
+            </p>
+          </div>
+
+          <nav
+            className={styles.legalLinks}
+            aria-label={t("payment.legal.aria")}
+          >
+            {legalLinks.map(([label, slug]) => (
+              <Link
+                href={`/${locale}/yasal/${slug}`}
+                key={slug}
+              >
+                <span>{label}</span>
+                <span aria-hidden>→</span>
+              </Link>
+            ))}
+          </nav>
+        </div>
+      </section>
+
+      <section
+        className={`${styles.shell} ${styles.section}`}
+        aria-labelledby="sirket"
+      >
+        <header className={styles.sectionHeader}>
+          <p className={styles.kicker}>
+            {t("payment.company.kicker")}
+          </p>
+          <h2 id="sirket" className={styles.heading}>
+            ARZ Mimarlık
+          </h2>
+        </header>
+
+        <dl className={styles.company}>
+          {companyRows.map(([label, value]) => (
+            <div key={label}>
+              <dt>{label}</dt>
+              <dd>{displayCompanyValue(value, label)}</dd>
+            </div>
+          ))}
+        </dl>
+      </section>
+
+      <PremiumFooter />
+    </main>
+  );
 }

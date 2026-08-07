@@ -9,6 +9,12 @@
       "projects": "Projeler",
       "contact": "İletişim"
     },
+      "quote": "Teklif Al",
+  "onlinePayment": "Online Ödeme",
+  "logoAriaLabel": "ARZ Mimarlık ana sayfa",
+  "openMenu": "Menüyü aç",
+  "closeMenu": "Menüyü kapat"
+},
     "logoAriaLabel": "ARZ Mimarlık ana sayfa",
     "openMenu": "Menüyü aç",
     "closeMenu": "Menüyü kapat",
