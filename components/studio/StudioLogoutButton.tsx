@@ -11,8 +11,9 @@ export default function StudioLogoutButton({compact = false}: {compact?: boolean
 
   async function logout() {
     setLoading(true);
-    await fetch("/api/studio/auth/logout", {method: "POST"}).catch(() => null);
-    router.replace("/studio/login");
+    const response=await fetch("/api/studio/auth/logout", {method: "POST"}).catch(() => null);
+    const result=response?await response.json().catch(()=>({})):{};
+    router.replace(result.destination||"/studio/login");
     router.refresh();
   }
 

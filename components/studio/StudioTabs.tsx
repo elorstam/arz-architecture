@@ -1,13 +1,19 @@
 "use client";
 
 import Link from "next/link";
+import {usePathname} from "next/navigation";
 import {useEffect,useRef} from "react";
 import {StudioIcon,type StudioIconName} from "@/components/studio/StudioIcons";
+import {clientNavigationPath} from "@/lib/routing/app-domains";
 
 export type StudioTabItem={href?:string;label:string;icon?:StudioIconName;badge?:string;disabled?:boolean};
 export type StudioTabsVariant="default"|"icon-navigation"|"workspace-navigation";
 
-export default function StudioTabs({items,active,ariaLabel,variant="default"}:{items:readonly StudioTabItem[];active:string;ariaLabel:string;variant?:StudioTabsVariant}){
+export default function StudioTabs({items:rawItems,active:rawActive,ariaLabel,variant="default"}:{items:readonly StudioTabItem[];active:string;ariaLabel:string;variant?:StudioTabsVariant}){
+ const pathname=usePathname();
+ const externalize=(value:string)=>value.startsWith("/studio")?clientNavigationPath("studio",value,pathname):value.startsWith("/client")?clientNavigationPath("client",value,pathname):value;
+ const items=rawItems.map(item=>item.href?{...item,href:externalize(item.href)}:item);
+ const active=externalize(rawActive);
  const activeItemRef=useRef<HTMLAnchorElement>(null);
  const viewportRef=useRef<HTMLDivElement>(null);
  const iconNavigation=variant==="icon-navigation";

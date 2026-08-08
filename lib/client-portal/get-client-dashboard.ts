@@ -5,7 +5,7 @@ export type ClientStage={id:string;project_id:string;title:string;description:st
 export type ClientRender={id:string;project_id:string;title:string;category:string|null;description:string|null;logical_file_id:string|null;presented_at:string|null;created_at:string};
 export type ClientFile={id:string;project_id:string;display_name:string;extension:string;mime_type:string;file_size:number;category:string;created_at:string};
 export type ClientFinance={id:string;project_id:string;entry_type:string;title:string;description:string|null;amount:number;currency:string;due_date:string|null;status:string;document_file_id:string|null;created_at:string};
-export type ClientNotification={id:string;project_id:string;source_type:string;source_id:string|null;status:string;template_name:string;sent_at:string|null;delivered_at:string|null;read_at:string|null;created_at:string};
+export type ClientNotification={id:string;project_id:string;project_name:string;source_type:string;source_id:string|null;status:string;template_name:string;title:string;body:string;sent_at:string|null;delivered_at:string|null;read_at:string|null;created_at:string};
 export type ClientProcess={id:string;project_id:string;entity_type:string;title:string;status:string;amount:number|null;due_date:string|null;responsible_party:string|null;updated_at:string};
 type Panel<T>={data:T[];error:boolean};
 

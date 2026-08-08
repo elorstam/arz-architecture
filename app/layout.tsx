@@ -1,12 +1,14 @@
 import type { Metadata } from "next";
 import "./globals.css";
 
-import Navbar from "@/components/Navbar";
+import PublicSiteChrome from "@/components/PublicSiteChrome";
 import ScrollToTop from "@/components/ScrollToTop";
 import { GoogleAnalytics } from "@next/third-parties/google";
 import { NextIntlClientProvider } from "next-intl";
 import { getLocale, getMessages } from "next-intl/server";
 import Script from "next/script";
+import {headers} from "next/headers";
+import {scopeForHostname} from "@/lib/routing/app-domains";
 
 const siteUrl = (process.env.NEXT_PUBLIC_SITE_URL || "https://arzmimarlik.net").replace(/\/$/, "");
 
@@ -168,6 +170,8 @@ export default async function RootLayout({
 }>) {
   const locale = await getLocale();
   const messages = await getMessages();
+  const requestHeaders = await headers();
+  const hostScope = scopeForHostname(requestHeaders.get("x-forwarded-host") || requestHeaders.get("host"));
 
   return (
     <html lang={locale} data-theme="dark" suppressHydrationWarning>
@@ -187,7 +191,7 @@ export default async function RootLayout({
 
         <NextIntlClientProvider messages={messages}>
           <ScrollToTop />
-          <Navbar />
+          <PublicSiteChrome internalAppHost={hostScope === "studio" || hostScope === "client"} />
 
           <main>{children}</main>
         </NextIntlClientProvider>

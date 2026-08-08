@@ -39,7 +39,7 @@ test("global and project finance contexts remain explicit",()=>{
 });
 
 test("Studio workspace uses the neutral dashboard surface palette",()=>{
-  assert.match(studioShell,/bg-\[#f7f9fc\]/);
+  assert.match(studioShell,/className="studio-root min-h-screen overflow-x-hidden"/);
   assert.match(globalCss,/--studio-bg: #f7f9fc/);
   assert.match(globalCss,/--studio-surface-muted: #f3f6fa/);
   assert.match(globalCss,/--studio-border: #e3e9ef/);

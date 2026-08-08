@@ -152,3 +152,15 @@ Supabase'deki `translations` alanı JSONB'dir. `tr`, `en`, `de`, `fr`, `es`, `nl
 ### SEO
 
 Sitemap artık CMS'teki yayınlanmış projelerden dinamik oluşturulur. Her proje için canonical, hreflang, Open Graph ve Twitter metadata üretilir. Site URL'si `NEXT_PUBLIC_SITE_URL` üzerinden yönetilir.
+
+## Production subdomain routing
+
+Tek Next.js/Vercel projesi üç host kullanır:
+
+- `arzmimarlik.net`: public website
+- `portal.arzmimarlik.net`: ARZ Studio (`app/studio` internal route tree)
+- `client.arzmimarlik.net`: Client Portal (`app/client` internal route tree)
+
+Production ortamında `NEXT_PUBLIC_SITE_URL`, `NEXT_PUBLIC_STUDIO_URL` ve `NEXT_PUBLIC_CLIENT_PORTAL_URL` tanımlanmalıdır. Vercel projesine iki subdomain eklenmeli ve DNS kayıtları Vercel'in her domain için gösterdiği hedefe yönlendirilmelidir.
+
+Supabase Authentication URL Configuration redirect allowlist içinde en az `https://portal.arzmimarlik.net/**` ve `https://client.arzmimarlik.net/**` bulunmalıdır. Local geliştirme için kullanılan `http://localhost:3000/**` kayıtları silinmemelidir. Google Drive OAuth callback production değeri `https://portal.arzmimarlik.net/settings/storage/callback` olmalıdır.

@@ -2,11 +2,13 @@ import {cookies} from "next/headers";
 import {NextResponse} from "next/server";
 
 import {saveGoogleConnection, type GoogleDriveCallbackErrorCode} from "../actions";
+import {appDestination} from "@/lib/routing/app-domains";
 
 const storageSettingsPath = "/studio/settings/storage";
 
 function redirectWithResult(request: Request, key: "connected" | "error", value: string) {
-  const destination = new URL(storageSettingsPath, request.url);
+  const host=request.headers.get("x-forwarded-host")||request.headers.get("host");
+  const destination = new URL(appDestination("studio",storageSettingsPath,host), request.url);
   destination.searchParams.set(key, value);
   return NextResponse.redirect(destination);
 }

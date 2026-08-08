@@ -1,6 +1,7 @@
 import {NextResponse} from "next/server";
 import {createStudioServerClient} from "@/lib/studio/supabase/server";
 import {studioLoginSchema} from "@/lib/studio/validation/auth";
+import {appDestination} from "@/lib/routing/app-domains";
 export async function POST(request:Request){
  try{
   const body=studioLoginSchema.safeParse(await request.json().catch(()=>null));
@@ -15,6 +16,7 @@ export async function POST(request:Request){
    return NextResponse.json({error:"Bu kullanıcı için aktif Studio üyeliği bulunmuyor."},{status:403});
   }
   await supabase.rpc("studio_record_activity",{target_organization_id:membership.organization_id,event_entity_type:"auth",event_entity_id:null,event_action:"auth.login",event_summary:"Studio login completed.",event_metadata:{}});
-  return NextResponse.json({success:true,destination:membership.role==="client"?"/client":"/studio"});
+  const host=request.headers.get("x-forwarded-host")||request.headers.get("host");
+  return NextResponse.json({success:true,destination:membership.role==="client"?appDestination("client","/client",host):appDestination("studio","/studio",host)});
  }catch(error){console.error("Studio login failed",error);return NextResponse.json({error:"Studio giriş servisi şu anda kullanılamıyor."},{status:503});}
 }

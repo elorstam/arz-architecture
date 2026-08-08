@@ -1,11 +1,14 @@
 import {redirect} from "next/navigation";
+import type {Metadata} from "next";
 import localFont from "next/font/local";
 
 import StudioShell from "@/components/studio/StudioShell";
 import {getStudioContext, type StudioRole} from "@/lib/studio/auth/get-studio-context";
 import {createStudioServerClient} from "@/lib/studio/supabase/server";
+import {serverAppPath} from "@/lib/routing/server-app-path";
 
 export const dynamic = "force-dynamic";
+export const metadata:Metadata={robots:{index:false,follow:false}};
 
 const studioFont = localFont({
   src: [
@@ -25,12 +28,13 @@ const roleLabels: Record<StudioRole, string> = {
 };
 
 export default async function StudioProtectedLayout({children}: {children: React.ReactNode}) {
+  const studioLogin=await serverAppPath("studio","/studio/login");
   const context = await getStudioContext().catch((error) => {
     console.error("Studio context could not be loaded.", error);
     return null;
   });
 
-  if (!context?.user) redirect("/studio/login");
+  if (!context?.user) redirect(studioLogin);
 
   if (!context.membership) {
     const supabase = await createStudioServerClient();
@@ -43,10 +47,10 @@ export default async function StudioProtectedLayout({children}: {children: React
       event_metadata: {},
     });
     await supabase.auth.signOut();
-    redirect("/studio/login?reason=access-denied");
+    redirect(`${studioLogin}?reason=access-denied`);
   }
 
-  if (context.membership.role === "client") redirect("/client");
+  if (context.membership.role === "client") redirect(await serverAppPath("client","/client"));
 
   const organization = Array.isArray(context.membership.organizations)
     ? context.membership.organizations[0]

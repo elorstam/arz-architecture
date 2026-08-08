@@ -151,7 +151,11 @@ export default function Navbar() {
   const onlinePaymentHref = `/${locale}/online-odeme`;
   const isOnlinePaymentActive = pathname === onlinePaymentHref;
 
-  if (pathname.startsWith("/admin") || pathname.startsWith("/studio")) {
+  if (
+    pathname.startsWith("/admin") ||
+    pathname.startsWith("/studio") ||
+    pathname.startsWith("/client")
+  ) {
     return null;
   }
 

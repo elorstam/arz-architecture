@@ -21,13 +21,13 @@ test("client context is distinct and resolves projects only through canonical RP
 
 test("client layout requires authentication membership and one active project",()=>{
  assert.match(clientLayout,/getClientPortalContext/);
- assert.match(clientLayout,/if\(!context\?\.user\)redirect\("\/client\/login\?next=/);
- assert.match(clientLayout,/if\(!context\.membership\|\|!context\.project\)redirect\("\/client\/login\?error=access"\)/);
+ assert.match(clientLayout,/serverAppPath\("client","\/client\/login"\)/);
+ assert.match(clientLayout,/if\(!context\.membership\|\|!context\.project\)redirect\(`\$\{clientLogin\}\?error=access`\)/);
  assert.match(clientPage,/notFound\(\)/);
 });
 
 test("client role never renders the Studio shell",()=>{
- const clientGuard=studioLayout.indexOf('if (context.membership.role === "client") redirect("/client")');
+ const clientGuard=studioLayout.indexOf('if (context.membership.role === "client") redirect(await serverAppPath("client","/client"))');
  const shell=studioLayout.indexOf("<StudioShell");
  assert.ok(clientGuard>0&&shell>clientGuard);
  assert.match(studioLayout,/owner: "Studio Sahibi"/);
@@ -36,9 +36,9 @@ test("client role never renders the Studio shell",()=>{
 
 test("login destination is role aware and cannot be supplied by the request",()=>{
  assert.match(loginRoute,/select\("organization_id,status,role"\)/);
- assert.match(loginRoute,/membership\.role==="client"\?"\/client":"\/studio"/);
+ assert.match(loginRoute,/membership\.role==="client"\?appDestination\("client","\/client",host\):appDestination\("studio","\/studio",host\)/);
  assert.doesNotMatch(loginRoute,/body\.data\.(destination|role|redirect)/);
- assert.match(loginForm,/result\.destination==="\/client"\?"\/client":"\/studio"/);
+ assert.match(loginForm,/router\.replace\(result\.destination\|\|"\/studio"\)/);
 });
 
 test("session refresh covers both Studio and client route namespaces",()=>{

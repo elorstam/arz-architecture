@@ -335,6 +335,13 @@ html[data-theme="light"] .language-switcher-trigger {
 
 /* ARZ Studio visual system --------------------------------------------- */
 .studio-root {
+  /* Studio and Client Portal are always light workspaces. Keep the public-site
+     theme utility remapping from turning bg-white/text-black surfaces inverse. */
+  --theme-bg: 9 9 9;
+  --theme-bg-deep: 7 7 7;
+  --theme-fg: 255 255 255;
+  --theme-inverse-bg: 255 255 255;
+  --theme-inverse-fg: 9 9 9;
   --studio-bg: #f7f9fc;
   --studio-surface: #fff;
   --studio-surface-soft: #f8fafc;
@@ -790,6 +797,52 @@ html[data-theme="light"] .site-header .language-switcher__menu {
 @media (prefers-reduced-motion:reduce) {
   .studio-root .studio-dashboard-v3 * { transition:none!important; transform:none!important; }
 }
+
+/* Studio owns its theme inside this boundary. Public utility remapping remains
+   neutralized by the base tokens above; Client Portal has a separate scope. */
+html[data-theme="dark"] .studio-root:not(.client-portal) {
+  --studio-bg:#0f1720;
+  --studio-workspace:#0f1720;
+  --studio-surface:#17212b;
+  --studio-surface-soft:#192530;
+  --studio-surface-muted:#1c2935;
+  --studio-text:#e8eef4;
+  --studio-text-primary:#f2f6fa;
+  --studio-text-secondary:#c1ccd6;
+  --studio-text-muted:#91a0ae;
+  --studio-border:#2c3a47;
+  --studio-border-strong:#3a4b59;
+  --studio-navy:#315d77;
+  color-scheme:dark;
+  background:var(--studio-workspace);
+  color:var(--studio-text);
+}
+html[data-theme="dark"] .studio-root:not(.client-portal) .studio-shell-header { border-color:var(--studio-border); background:rgb(23 33 43/.92); }
+html[data-theme="dark"] .studio-root:not(.client-portal) .studio-theme-toggle { border-color:var(--studio-border); background:var(--studio-surface-muted)!important; color:var(--studio-text-primary); }
+html[data-theme="dark"] .studio-root:not(.client-portal) :where(.studio-card,.studio-card-v2,.studio-root-surface,.studio-toolbar-v2,.studio-tabs--icon-navigation,.studio-project-tabs-v2,.studio-modal,.studio-drawer,.studio-action-menu>div) { border-color:var(--studio-border); background:var(--studio-surface); color:var(--studio-text); }
+html[data-theme="dark"] .studio-root:not(.client-portal) :where(.studio-page-title,.studio-section-title,.studio-card-title,.studio-kpi-value,.studio-section-header h2,.studio-modal h2,.studio-drawer h2,.studio-empty-v2 h3) { color:var(--studio-text-primary); }
+html[data-theme="dark"] .studio-root:not(.client-portal) :where(.studio-page-description,.studio-helper-text,.studio-kpi-detail,.studio-section-header p,.studio-empty-v2 p,.studio-meta-label,.studio-form-label) { color:var(--studio-text-muted); }
+html[data-theme="dark"] .studio-root:not(.client-portal) :where(.studio-control input,.studio-control textarea,.studio-control select,.studio-field,.studio-filter-input,.studio-filter-select) { border-color:var(--studio-border-strong); background:var(--studio-surface-muted); color:var(--studio-text-primary); }
+html[data-theme="dark"] .studio-root:not(.client-portal) :where(input,textarea)::placeholder { color:#8392a0; }
+html[data-theme="dark"] .studio-root:not(.client-portal) :where(.studio-button--secondary,.studio-button--outline,.studio-button--icon) { border-color:var(--studio-border); background:var(--studio-surface); color:var(--studio-text-secondary); }
+html[data-theme="dark"] .studio-root:not(.client-portal) :where(.studio-button--secondary,.studio-button--outline,.studio-button--icon):hover { border-color:var(--studio-border-strong); background:var(--studio-surface-muted); color:var(--studio-text-primary); }
+html[data-theme="dark"] .studio-root:not(.client-portal) :where(.studio-button--ghost,.studio-icon-button--ghost,.studio-icon-button--subtle) { color:var(--studio-text-muted); }
+html[data-theme="dark"] .studio-root:not(.client-portal) :where(.studio-button--ghost,.studio-icon-button):hover { background:var(--studio-surface-muted); color:var(--studio-text-primary); }
+html[data-theme="dark"] .studio-root:not(.client-portal) :where(.studio-tab-inactive,.studio-tab--workspace-navigation.studio-tab-inactive) { border-color:var(--studio-border); background:transparent; color:var(--studio-text-muted); }
+html[data-theme="dark"] .studio-root:not(.client-portal) :where(.studio-tab-inactive,.studio-tab--workspace-navigation.studio-tab-inactive):hover { background:var(--studio-surface-muted); color:var(--studio-text-primary); }
+html[data-theme="dark"] .studio-root:not(.client-portal) .studio-tab--workspace-navigation .studio-tab__icon-surface { background:var(--studio-surface-muted); color:var(--studio-text-muted); box-shadow:inset 0 0 0 1px var(--studio-border); }
+html[data-theme="dark"] .studio-root:not(.client-portal) :where(.studio-empty-v2,.studio-empty-state,.studio-dashboard-empty) { border-color:var(--studio-border); background:var(--studio-workspace); color:var(--studio-text-muted); }
+html[data-theme="dark"] .studio-root:not(.client-portal) :where(.studio-badge--neutral,.studio-badge--archived,.studio-badge--outline,.studio-count) { border-color:var(--studio-border); background:var(--studio-surface-muted); color:var(--studio-text-secondary); }
+html[data-theme="dark"] .studio-root:not(.client-portal) :where(.studio-skeleton) { background:linear-gradient(90deg,var(--studio-surface-muted) 25%,var(--studio-border) 37%,var(--studio-surface-muted) 63%); background-size:400% 100%; }
+html[data-theme="dark"] .studio-root:not(.client-portal) :where(table,th,td,tr) { border-color:var(--studio-border); color:inherit; }
+html[data-theme="dark"] .studio-root:not(.client-portal) :where(.studio-dashboard-v3 .studio-card-v2,.studio-dashboard-v3 .studio-kpi-v2,.studio-files-metric) { border-color:var(--studio-border); background:var(--studio-surface); color:var(--studio-text); }
+html[data-theme="dark"] .studio-root:not(.client-portal) .studio-dashboard-v3 .studio-kpi-v2 { background:linear-gradient(145deg,var(--studio-surface),var(--studio-surface-soft)); }
+html[data-theme="dark"] .studio-root:not(.client-portal) .studio-dashboard-v3 .studio-dashboard-workflow>div>div:first-child { background:var(--studio-surface-muted); }
+html[data-theme="dark"] .studio-root:not(.client-portal) .studio-dashboard-v3 section[aria-labelledby="activity-title"] article { border-color:var(--studio-border); background:var(--studio-surface); color:var(--studio-text); }
+html[data-theme="dark"] .studio-root:not(.client-portal) :where(.studio-files-metric__value,.studio-files-metric__title) { color:var(--studio-text-primary); }
+html[data-theme="dark"] .studio-root:not(.client-portal) .group.min-w-0.overflow-hidden.rounded-2xl.border.bg-white { border-color:var(--studio-border); background:var(--studio-surface); color:var(--studio-text); }
+html[data-theme="dark"] .studio-root:not(.client-portal) .studio-finance-page { color:var(--studio-text); }
+html[data-theme="dark"] .studio-root:not(.client-portal) .studio-finance-page :where(section.rounded-2xl,section.rounded-xl,form.rounded-2xl,div.rounded-xl.border.bg-white) { border-color:var(--studio-border); background:var(--studio-surface); color:var(--studio-text); }
 
 /* Studio finance workspace — dashboard-aligned surfaces without affecting public pages. */
 .studio-root .studio-finance-page { color:#28343c; }
