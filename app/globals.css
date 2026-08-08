@@ -844,6 +844,22 @@ html[data-theme="dark"] .studio-root:not(.client-portal) .group.min-w-0.overflow
 html[data-theme="dark"] .studio-root:not(.client-portal) .studio-finance-page { color:var(--studio-text); }
 html[data-theme="dark"] .studio-root:not(.client-portal) .studio-finance-page :where(section.rounded-2xl,section.rounded-xl,form.rounded-2xl,div.rounded-xl.border.bg-white) { border-color:var(--studio-border); background:var(--studio-surface); color:var(--studio-text); }
 
+.studio-auth-form { display:grid; width:100%; gap:1.25rem; }
+.studio-auth-form .studio-control { display:block; min-width:0; }
+.studio-auth-form .studio-control>span { display:block; margin-bottom:.5rem; color:#334155; font-size:.8125rem; font-weight:650; line-height:1.5; }
+.studio-auth-form .studio-control input { display:block; width:100%; min-width:0; min-height:2.875rem; border:1px solid #dbe3ea; border-radius:.75rem; background:#fff; padding:.7rem .85rem; color:#17232e; font:inherit; line-height:1.5; outline:none; }
+.studio-auth-form .studio-control input:focus { border-color:#7fa4b8; box-shadow:0 0 0 3px rgb(79 143 172/.14); }
+.studio-auth-form .studio-control input:-webkit-autofill { box-shadow:0 0 0 1000px #fff inset; -webkit-text-fill-color:#17232e; }
+html[data-theme="dark"] .studio-login-root { background:#0f1720!important; color:#e8eef4!important; }
+html[data-theme="dark"] .studio-login-root>.studio-card-v2 { border-color:#2c3a47!important; background:#17212b!important; color:#e8eef4; }
+html[data-theme="dark"] .studio-login-root>section>p:first-of-type { color:#91a0ae!important; }
+html[data-theme="dark"] .studio-login-root>section>h1 { color:#f2f6fa; }
+html[data-theme="dark"] .studio-login-root>section>h1+p { color:#91a0ae!important; }
+html[data-theme="dark"] .studio-login-root .studio-auth-form .studio-control>span { color:#d7e0e8; }
+html[data-theme="dark"] .studio-login-root .studio-auth-form .studio-control input { border-color:#3a4b59; background:#1c2935; color:#f2f6fa; }
+html[data-theme="dark"] .studio-login-root .studio-auth-form .studio-control input:-webkit-autofill { box-shadow:0 0 0 1000px #1c2935 inset; -webkit-text-fill-color:#f2f6fa; }
+html[data-theme="dark"] .studio-login-root .studio-auth-form [role="alert"] { background:#3a2426; color:#f2b8b5; }
+
 /* Studio finance workspace — dashboard-aligned surfaces without affecting public pages. */
 .studio-root .studio-finance-page { color:#28343c; }
 .studio-root .studio-finance-page .studio-page-header { border:0; padding-bottom:1rem; }
