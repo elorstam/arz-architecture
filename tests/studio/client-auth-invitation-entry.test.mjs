@@ -17,6 +17,22 @@ test("next validation rejects cross-origin and auth-loop targets",async()=>{
  assert.match(source,/startsWith\("\/\/"\)/);assert.match(source,/includes\("\\\\"\)/);assert.match(source,/parsed\.origin/);assert.match(source,/startsWith\(\s*"\/client"/);assert.match(source,/\/client\/invite\//);
 });
 
+test("protected client deep links preserve the proxy-verified destination",async()=>{
+ const[layout,proxy,domains,loginPage,loginApi]=await Promise.all([
+  read("app/client/(portal)/layout.tsx"),read("proxy.ts"),read("lib/routing/app-domains.ts"),read("app/client/login/page.tsx"),read("app/api/client/auth/login/route.ts"),
+ ]);
+ assert.match(domains,/CLIENT_REQUEST_PATH_HEADER = "x-arz-client-request-path"/);
+ assert.match(proxy,/requestHeaders\.delete\(CLIENT_REQUEST_PATH_HEADER\)/);
+ assert.match(proxy,/requestHeaders\.set\(CLIENT_REQUEST_PATH_HEADER, clientPath\)/);
+ assert.match(proxy,/`\$\{decision\.pathname\}\$\{request\.nextUrl\.search\}`/);
+ assert.match(proxy,/`\$\{request\.nextUrl\.pathname\}\$\{request\.nextUrl\.search\}`/);
+ assert.match(layout,/safeClientNext\(\(await headers\(\)\)\.get\(CLIENT_REQUEST_PATH_HEADER\)\?\?undefined\)/);
+ assert.match(layout,/serverAppPath\("client",requestedPath\)/);
+ assert.match(layout,/encodeURIComponent\(loginDestination\)/);
+ assert.match(loginPage,/serverAppPath\("client", safeClientNext\(query\.next\)\)/);
+ assert.match(loginApi,/appDestination\("client",safeClientNext\(input\.data\.next\),host\)/);
+});
+
 test("invitation token remains hash-only and transient",async()=>{
  const[auth,owner,form]=await Promise.all([read("lib/client-portal/auth.ts"),read("app/api/studio/projects/[projectId]/client-invitations/route.ts"),read("components/studio/projects/StudioClientInvitationLink.tsx")]);
  assert.match(auth,/createHash\(\s*"sha256"/);assert.match(auth,/\.eq\(\s*"token_hash",\s*hash/);assert.doesNotMatch(auth,/console\.(log|info|warn)/);assert.doesNotMatch(auth,/console\.error\([\s\S]{0,180}(token|hash|invited_email)/i);

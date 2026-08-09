@@ -1,0 +1,5 @@
+"use client";
+import{useState}from"react";
+import{studioButtonClass}from"@/components/studio/StudioButton";
+
+export default function ClientPaymentCheckoutButton({paymentRequestId}:{paymentRequestId:string}){const[message,setMessage]=useState("");const[pending,setPending]=useState(false);async function start(){if(pending)return;setPending(true);setMessage("");try{const response=await fetch(`/api/client/payments/${paymentRequestId}/checkout`,{method:"POST",headers:{"Content-Type":"application/json"},body:"{}"});const body=await response.json().catch(()=>null)as{error?:string;checkoutUrl?:string}|null;if(response.ok&&body?.checkoutUrl){window.location.assign(body.checkoutUrl);return;}setMessage(body?.error??"Online ödeme başlatılamadı. Lütfen tekrar deneyin.");}catch{setMessage("Online ödeme başlatılamadı. Lütfen tekrar deneyin.");}finally{setPending(false)}}return <div className="client-payment-checkout"><button type="button" onClick={start} disabled={pending} className={studioButtonClass("primary","md")}>{pending?"Hazırlanıyor…":"ÖDE"}</button>{message?<p role="status">{message}</p>:null}</div>}

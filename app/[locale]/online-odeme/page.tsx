@@ -11,6 +11,7 @@ import {
   displayCompanyValue,
 } from "@/lib/legal/company-config";
 import { getSiteMessages } from "@/lib/site-translation-store";
+import{appLoginUrl}from"@/lib/routing/app-domains";
 
 import styles from "./OnlinePaymentPage.module.css";
 
@@ -75,6 +76,7 @@ export default async function OnlinePaymentPage({
   }
 
   const messages = await getSiteMessages(locale);
+  const clientFinanceHref=appLoginUrl("client","/client/finance");
   const t = (key: string) => messages[key] || key;
 
   const contactHref = `/${locale}/${
@@ -192,8 +194,9 @@ export default async function OnlinePaymentPage({
             {t("payment.actions.verify")}
           </a>
 
-          <div
+          <Link
             className={styles.iyzicoAction}
+            href={clientFinanceHref}
             aria-label={
               locale === "tr"
                 ? "iyzico ile Öde"
@@ -216,7 +219,7 @@ export default async function OnlinePaymentPage({
               className={styles.paymentLogo}
               priority
             />
-          </div>
+          </Link>
         </div>
 
         <div className={styles.paymentTrust}>

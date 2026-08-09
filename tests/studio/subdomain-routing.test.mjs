@@ -88,6 +88,10 @@ test("navigation and auth destinations are clean only on their production host",
   assert.equal(appDestination("client","/client","client.arzmimarlik.net"),"/");
   assert.equal(appDestination("client","/client","portal.arzmimarlik.net"),"https://client.arzmimarlik.net/");
   assert.equal(appDestination("studio","/studio","localhost:3000"),"/studio");
+  for(const path of ["/client/stages","/client/files","/client/profile","/client/notifications"]){
+    assert.equal(appDestination("client",path,"localhost:3000"),path);
+    assert.equal(appDestination("client",path,"client.arzmimarlik.net"),path.slice("/client".length));
+  }
 });
 
 test("invitation links use Client Portal origin in production and keep localhost compatibility",()=>{

@@ -44,5 +44,5 @@ test("login destination is role aware and cannot be supplied by the request",()=
 test("session refresh covers both Studio and client route namespaces",()=>{
  assert.match(proxy,/request\.nextUrl\.pathname === "\/client"/);
  assert.match(proxy,/request\.nextUrl\.pathname\.startsWith\("\/client\/"\)/);
- assert.match(proxy,/refreshStudioSession\(request\)/);
+ assert.match(proxy,/refreshStudioSession\(request, \(\) => NextResponse\.next/);
 });

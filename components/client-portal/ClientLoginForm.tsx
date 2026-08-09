@@ -18,8 +18,11 @@ export default function ClientLoginForm({next,error}:{next:string;error?:string}
     event.preventDefault();setPending(true);setMessage("");
     try{
       const response=await fetch("/api/client/auth/login",{method:"POST",headers:{"content-type":"application/json"},body:JSON.stringify({email,password,next})});
-      const result=await response.json() as{error?:string;destination?:string};
+      const text=await response.text();
+      let result:{error?:string;destination?:string}={};
+      if(text){try{result=JSON.parse(text)as typeof result;}catch{if(!response.ok)throw new Error("Giriş servisi geçerli bir yanıt vermedi.");}}
       if(!response.ok)throw new Error(result.error||"Giriş yapılamadı.");
+      if(!result.destination)throw new Error("Giriş servisi geçerli bir yanıt vermedi.");
       router.replace(result.destination||clientNavigationPath("client","/client",pathname));router.refresh();
     }catch(caught){setMessage(caught instanceof Error?caught.message:"Giriş yapılamadı.");}
     finally{setPending(false);}

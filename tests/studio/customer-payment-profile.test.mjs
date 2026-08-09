@@ -1,0 +1,28 @@
+import assert from "node:assert/strict";
+import {readFileSync} from "node:fs";
+import test from "node:test";
+import {isCheckoutCustomerProfileComplete} from "../../lib/payments/customer-payment-profile.ts";
+import {mergeActiveClientPaymentProfiles} from "../../lib/studio/client-access/client-payment-profile-view.ts";
+
+const read=path=>readFileSync(path,"utf8"),migration=read("supabase/migrations/047_iyzico_payment_attempts.sql"),repository=read("lib/studio/client-access/client-payment-profile.ts"),route=read("app/api/studio/projects/[projectId]/client-payment-profile/[clientUserId]/route.ts"),ui=read("components/studio/projects/StudioClientPaymentProfiles.tsx"),checkout=read("app/api/client/payments/[paymentRequestId]/checkout/route.ts");
+const complete={buyer_full_name:"Hüseyin Cansız",buyer_email:"client@example.com",buyer_gsm_number:"+905551112233",buyer_identity_number:"12345678901",buyer_registration_address:"Örnek Mahallesi No: 1",buyer_city:"İstanbul",buyer_country:"Turkey"};
+
+test("complete checkout customer profile passes and every required omission fails",()=>{assert.equal(isCheckoutCustomerProfileComplete(complete),true);for(const field of["buyer_full_name","buyer_email","buyer_gsm_number","buyer_identity_number","buyer_registration_address","buyer_city","buyer_country"]){assert.equal(isCheckoutCustomerProfileComplete({...complete,[field]:""}),false,field);}assert.equal(isCheckoutCustomerProfileComplete({...complete,buyer_full_name:"Hüseyin"}),false);assert.equal(isCheckoutCustomerProfileComplete({...complete,buyer_identity_number:"123"}),false);});
+
+test("Studio profile RPCs are owner and active-project-client scoped",()=>{assert.match(migration,/studio_list_client_payment_billing_profiles/);assert.match(migration,/studio_upsert_client_payment_billing_profile/);assert.match(migration,/studio_has_organization_role\(v_org,array\['owner'\]\)/);assert.match(migration,/a\.organization_id=v_org and a\.project_id=p_project_id and a\.user_id=p_client_user_id and a\.revoked_at is null/);assert.match(repository,/studio_list_client_payment_billing_profiles/);assert.match(repository,/studio_upsert_client_payment_billing_profile/);assert.match(route,/saveStudioClientPaymentProfile/);});
+
+test("Client has no direct billing profile table capability",()=>{assert.match(migration,/revoke all on table public\.studio_client_payment_billing_profiles from public,anon,authenticated/);assert.doesNotMatch(migration,/grant (select|insert|update|delete) on public\.studio_client_payment_billing_profiles to authenticated/i);assert.doesNotMatch(checkout,/studio_client_payment_billing_profiles|identity_number.*json/i);});
+
+test("server validation normalizes phone and requires real buyer fields",()=>{assert.match(repository,/replace\(\/\[\\s\(\)\\-\]\/g,""\)/);assert.match(repository,/firstName:z\.string\(\)\.trim\(\)\.min\(1\)/);assert.match(repository,/lastName:z\.string\(\)\.trim\(\)\.min\(1\)/);assert.match(repository,/z\.email\(\)/);assert.match(repository,/\^\[0-9\]\{11\}\$/);assert.match(repository,/registrationAddress:z\.string\(\)\.trim\(\)\.min\(5\)/);assert.match(checkout,/isCheckoutCustomerProfileComplete\(payment\)/);});
+
+test("Studio access UI provides only the existing iyzico buyer and billing fields",()=>{for(const label of["Ad","Soyad","E-posta","Cep Telefonu","Kimlik No","Fatura Adresi","Şehir","Ülke","Posta Kodu","Kaydet"])assert.match(ui,new RegExp(label));assert.match(ui,/profiles\.map/);assert.match(ui,/client-payment-profile/);assert.doesNotMatch(ui,/shipping|kart numarası|CVV/i);});
+
+const access=(userId,overrides={})=>({accessId:`access-${userId}`,userId,fullName:`Client ${userId}`,email:`${userId}@example.com`,grantedAt:"2026-08-01T00:00:00Z",revokedAt:null,invitationStatus:"accepted",...overrides});
+const profile=(userId,overrides={})=>({userId,fullName:`Billing ${userId}`,email:`billing-${userId}@example.com`,gsmNumber:"+905551112233",identityNumber:"12345678901",registrationAddress:"Address 1",city:"Istanbul",country:"Turkey",zipCode:"34000",isComplete:true,...overrides});
+
+test("active access without a billing row still renders one prefilled form",()=>{const result=mergeActiveClientPaymentProfiles([access("a")],[]);assert.equal(result.length,1);assert.equal(result[0].userId,"a");assert.equal(result[0].email,"a@example.com");assert.equal(result[0].isComplete,false);});
+test("active access with a billing row uses saved profile values",()=>{const result=mergeActiveClientPaymentProfiles([access("a")],[profile("a")]);assert.equal(result.length,1);assert.equal(result[0].email,"billing-a@example.com");assert.equal(result[0].isComplete,true);});
+test("revoked access and pending invitation without access do not render forms",()=>{assert.deepEqual(mergeActiveClientPaymentProfiles([access("a",{revokedAt:"2026-08-02T00:00:00Z"})],[profile("a")]),[]);assert.deepEqual(mergeActiveClientPaymentProfiles([],[]),[]);});
+test("two active clients render two forms and unrelated profile rows are excluded",()=>{const result=mergeActiveClientPaymentProfiles([access("a"),access("b")],[profile("a"),profile("other")]);assert.deepEqual(result.map(item=>item.userId),["a","b"]);assert.equal(result[1].isComplete,false);});
+
+test("forward migration shares the active project-access contract",()=>{const forward=read("supabase/migrations/048_fix_client_payment_profile_active_access.sql");assert.match(forward,/from public\.studio_client_project_access a/);assert.match(forward,/a\.organization_id=v_org and a\.project_id=p_project_id and a\.revoked_at is null/);assert.match(forward,/left join public\.studio_client_payment_billing_profiles/);assert.match(forward,/a\.user_id=p_client_user_id and a\.revoked_at is null/);assert.doesNotMatch(repository,/PGRST202.*return\[\]/);});

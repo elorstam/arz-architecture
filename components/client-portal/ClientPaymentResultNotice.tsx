@@ -1,0 +1,1 @@
+export default function ClientPaymentResultNotice({result}:{result?:"success"|"failed"}){if(!result)return null;return <div className={`client-payment-result is-${result}`} role={result==="success"?"status":"alert"}>{result==="success"?"Ödemeniz başarıyla alındı.":"Ödeme tamamlanamadı. Tekrar deneyebilirsiniz."}</div>}

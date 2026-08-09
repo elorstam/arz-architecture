@@ -4,13 +4,20 @@ import type {NextRequest} from "next/server";
 
 import {routing} from "./i18n/routing";
 import {refreshStudioSession} from "./lib/studio/supabase/middleware";
-import {getHostRouteDecision} from "./lib/routing/app-domains";
+import {CLIENT_REQUEST_PATH_HEADER, getHostRouteDecision} from "./lib/routing/app-domains";
 
 const intlProxy = createMiddleware(routing);
 
 export async function proxy(request: NextRequest) {
   const host = request.headers.get("x-forwarded-host") || request.headers.get("host");
   const decision = getHostRouteDecision(host, request.nextUrl.pathname, request.nextUrl.search);
+
+  const upstreamHeaders = (clientPath?: string) => {
+    const requestHeaders = new Headers(request.headers);
+    requestHeaders.delete(CLIENT_REQUEST_PATH_HEADER);
+    if (clientPath) requestHeaders.set(CLIENT_REQUEST_PATH_HEADER, clientPath);
+    return requestHeaders;
+  };
 
   if (decision.kind === "redirect") {
     return NextResponse.redirect(decision.url, 308);
@@ -19,7 +26,12 @@ export async function proxy(request: NextRequest) {
   if (decision.kind === "rewrite") {
     const destination = request.nextUrl.clone();
     destination.pathname = decision.pathname;
-    return refreshStudioSession(request, () => NextResponse.rewrite(destination, {request}));
+    const clientPath = decision.pathname === "/client" || decision.pathname.startsWith("/client/")
+      ? `${decision.pathname}${request.nextUrl.search}`
+      : undefined;
+    return refreshStudioSession(request, () => NextResponse.rewrite(destination, {
+      request: {headers: upstreamHeaders(clientPath)},
+    }));
   }
 
   if (
@@ -29,7 +41,12 @@ export async function proxy(request: NextRequest) {
     request.nextUrl.pathname === "/client" ||
     request.nextUrl.pathname.startsWith("/client/")
   ) {
-    return refreshStudioSession(request);
+    const clientPath = request.nextUrl.pathname === "/client" || request.nextUrl.pathname.startsWith("/client/")
+      ? `${request.nextUrl.pathname}${request.nextUrl.search}`
+      : undefined;
+    return refreshStudioSession(request, () => NextResponse.next({
+      request: {headers: upstreamHeaders(clientPath)},
+    }));
   }
   return intlProxy(request);
 }

@@ -1,5 +1,7 @@
 export type ArzAppScope = "public" | "studio" | "client";
 
+export const CLIENT_REQUEST_PATH_HEADER = "x-arz-client-request-path";
+
 const DEFAULT_ORIGINS = {
   public: "https://arzmimarlik.net",
   studio: "https://portal.arzmimarlik.net",
@@ -80,6 +82,8 @@ export function appDestination(scope: Exclude<ArzAppScope, "public">, internalPa
   const clean = cleanAppPath(scope, internalPath);
   return hostScope === scope ? clean : `${appOrigin(scope)}${clean}`;
 }
+
+export function appLoginUrl(scope: Exclude<ArzAppScope,"public">,internalNext:string){const base=appBaseUrl(scope),url=new URL(base),prefix=scope==="studio"?"/studio":"/client",next=url.pathname.replace(/\/+$/,"")===prefix?internalNext:cleanAppPath(scope,internalNext);return`${base}/login?next=${encodeURIComponent(next)}`;}
 
 export function clientNavigationPath(scope: Exclude<ArzAppScope, "public">, internalPath: string, currentPathname: string) {
   const prefix = scope === "studio" ? "/studio" : "/client";

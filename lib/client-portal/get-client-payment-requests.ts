@@ -1,0 +1,5 @@
+import "server-only";
+import {createStudioServerClient}from"@/lib/studio/supabase/server";
+import type{ClientPaymentRequest}from"@/lib/payments/payment-request-types";
+
+export async function getClientPaymentRequests(projectId:string):Promise<ClientPaymentRequest[]>{const db=await createStudioServerClient();const{data,error}=await db.rpc("client_portal_list_payment_requests",{p_project_id:projectId});if(error){console.error("CLIENT_PAYMENT_REQUESTS_PROJECTION_FAILED",{code:error.code});throw new Error("client_payment_requests_unavailable");}return(data??[]).map((row:Record<string,unknown>)=>({id:String(row.id),projectId:String(row.project_id),projectName:String(row.project_name),title:String(row.title),description:String(row.description??""),paymentType:row.payment_type,amount:String(row.amount),currency:String(row.currency),dueDate:row.due_date?String(row.due_date):null,status:row.status,paymentProvider:row.payment_provider?String(row.payment_provider):null,paidAt:row.paid_at?String(row.paid_at):null,createdAt:String(row.created_at)})) as ClientPaymentRequest[];}

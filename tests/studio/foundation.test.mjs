@@ -13,7 +13,7 @@ test("mevcut next-intl matcher değeri değişmeden korunur", () => {
     /matcher:\s*\["\/\(\(\?!api\|admin\|_next\|_vercel\|\.\*\\\\\.\.\*\)\.\*\)"\]/,
   );
   assert.match(proxy, /return intlProxy\(request\)/);
-  assert.match(proxy, /refreshStudioSession\(request\)/);
+  assert.match(proxy, /refreshStudioSession\(request(?:,|\))/);
 });
 
 test("ilk dilim yalnız onaylanan Studio tablolarını ekler", () => {

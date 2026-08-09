@@ -1,0 +1,3 @@
+export type CheckoutCustomerProfile={buyer_full_name:unknown;buyer_identity_number:unknown;buyer_email:unknown;buyer_gsm_number:unknown;buyer_registration_address:unknown;buyer_city:unknown;buyer_country:unknown};
+const text=(value:unknown)=>String(value??"").trim();
+export function isCheckoutCustomerProfileComplete(profile:CheckoutCustomerProfile){const names=text(profile.buyer_full_name).split(/\s+/).filter(Boolean);return names.length>=2&&/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(text(profile.buyer_email))&&/^\+?[0-9]{10,15}$/.test(text(profile.buyer_gsm_number).replace(/[\s()\-]/g,""))&&/^[0-9]{11}$/.test(text(profile.buyer_identity_number))&&text(profile.buyer_registration_address).length>=5&&text(profile.buyer_city).length>=2&&text(profile.buyer_country).length>=2;}
