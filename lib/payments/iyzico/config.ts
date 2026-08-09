@@ -7,6 +7,12 @@ const schema=z.object({
 });
 
 export type IyzicoConfig=z.infer<typeof schema>;
+export function iyzicoConfigStatus(){
+ const baseUrl=process.env.IYZICO_BASE_URL;
+ let sandboxHost=false;
+ try{sandboxHost=new URL(baseUrl??"").hostname==="sandbox-api.iyzipay.com";}catch{}
+ return{apiKeyConfigured:Boolean(process.env.IYZICO_API_KEY),secretKeyConfigured:Boolean(process.env.IYZICO_SECRET_KEY),baseUrlConfigured:Boolean(baseUrl),callbackUrlConfigured:Boolean(process.env.IYZICO_CALLBACK_URL),sandboxHost};
+}
 export function getIyzicoConfig():IyzicoConfig|null{
  const parsed=schema.safeParse({apiKey:process.env.IYZICO_API_KEY,secretKey:process.env.IYZICO_SECRET_KEY,baseUrl:process.env.IYZICO_BASE_URL,callbackUrl:process.env.IYZICO_CALLBACK_URL});
  if(!parsed.success)return null;
