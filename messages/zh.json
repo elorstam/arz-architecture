@@ -3,6 +3,11 @@
     "languageName": "中文"
   },
   "Navbar": {
+    "portal": {
+      "label": "门户",
+      "client": "客户门户",
+      "studio": "ARZ Studio"
+    },
     "items": {
       "home": "首页",
       "about": "关于我们",

@@ -3,6 +3,11 @@
     "languageName": "العربية"
   },
   "Navbar": {
+    "portal": {
+      "label": "البوابة",
+      "client": "بوابة العملاء",
+      "studio": "ARZ Studio"
+    },
     "items": {
       "home": "الرئيسية",
       "about": "من نحن",

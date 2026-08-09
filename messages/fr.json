@@ -3,6 +3,11 @@
     "languageName": "Français"
   },
   "Navbar": {
+    "portal": {
+      "label": "Portail",
+      "client": "Portail client",
+      "studio": "ARZ Studio"
+    },
     "items": {
       "home": "Accueil",
       "about": "À propos",

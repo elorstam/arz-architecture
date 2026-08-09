@@ -3,12 +3,14 @@
 import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { useEffect, useState } from "react";
+import { Fragment, useEffect, useState } from "react";
 import { useLocale, useTranslations } from "next-intl";
 import ThemeToggle from "@/components/ThemeToggle";
 import LanguageSwitcher from "@/components/LanguageSwitcher";
 import ContactNavDropdown from "@/components/ContactNavDropdown";
 import NavbarPrimaryItem from "@/components/NavbarPrimaryItem";
+import PortalNavDropdown from "@/components/PortalNavDropdown";
+import { appBaseUrl } from "@/lib/routing/app-domains";
 import {
   getNavbarSurfaceState,
   navbarSurfaceData,
@@ -39,6 +41,8 @@ const navigationItems = [
 
 const instagramUrl = "https://www.instagram.com/arzmimarliknet/";
 const linkedinUrl = "https://www.linkedin.com/company/90222590";
+const clientPortalLoginUrl = `${appBaseUrl("client")}/login`;
+const studioLoginUrl = `${appBaseUrl("studio")}/login`;
 
 export default function Navbar() {
   const pathname = usePathname();
@@ -58,6 +62,7 @@ export default function Navbar() {
 
   const [menuOpen, setMenuOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
+  const [activeDesktopDropdown, setActiveDesktopDropdown] = useState<"portal" | "contact" | null>(null);
 
   const surfaceState = getNavbarSurfaceState(scrolled, isHomePage);
 
@@ -191,15 +196,27 @@ export default function Navbar() {
 
               if (item.key === "contact") {
                 return (
-                  <ContactNavDropdown
-                    key={item.key}
-                    label={t("items.contact")}
-                    quoteLabel={t("quote")}
-                    paymentLabel={t("onlinePayment")}
-                    contactHref={getHref("/contact")}
-                    paymentHref={onlinePaymentHref}
-                    active={active || isOnlinePaymentActive}
-                  />
+                  <Fragment key={item.key}>
+                    <PortalNavDropdown
+                      label={t("portal.label")}
+                      clientLabel={t("portal.client")}
+                      studioLabel={t("portal.studio")}
+                      clientHref={clientPortalLoginUrl}
+                      studioHref={studioLoginUrl}
+                      open={activeDesktopDropdown === "portal"}
+                      onOpenChange={(open) => setActiveDesktopDropdown((current) => open ? "portal" : current === "portal" ? null : current)}
+                    />
+                    <ContactNavDropdown
+                      label={t("items.contact")}
+                      quoteLabel={t("quote")}
+                      paymentLabel={t("onlinePayment")}
+                      contactHref={getHref("/contact")}
+                      paymentHref={onlinePaymentHref}
+                      active={active || isOnlinePaymentActive}
+                      open={activeDesktopDropdown === "contact"}
+                      onOpenChange={(open) => setActiveDesktopDropdown((current) => open ? "contact" : current === "contact" ? null : current)}
+                    />
+                  </Fragment>
                 );
               }
 
@@ -447,6 +464,33 @@ export default function Navbar() {
 
           <div className="mobile-menu-border mt-10 border-t pt-7">
             <p className="mobile-menu-muted text-[9px] font-normal uppercase tracking-[0.28em]">
+              {t("portal.label")}
+            </p>
+
+            <div className="mt-4 grid gap-1">
+              <a
+                href={clientPortalLoginUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+                onClick={() => setMenuOpen(false)}
+                className="mobile-menu-secondary flex min-h-11 items-center justify-between border-t border-current/15 text-[12px] uppercase tracking-[.12em]"
+              >
+                <span>{t("portal.client")}</span>
+                <span aria-hidden>→</span>
+              </a>
+              <a
+                href={studioLoginUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+                onClick={() => setMenuOpen(false)}
+                className="mobile-menu-secondary flex min-h-11 items-center justify-between border-y border-current/15 text-[12px] uppercase tracking-[.12em]"
+              >
+                <span>{t("portal.studio")}</span>
+                <span aria-hidden>→</span>
+              </a>
+            </div>
+
+            <p className="mobile-menu-muted mt-10 text-[9px] font-normal uppercase tracking-[0.28em]">
               {t("socialMedia")}
             </p>
 
@@ -542,29 +586,6 @@ export default function Navbar() {
           background: rgba(255, 255, 255, 0.88);
         }
 
-        .contact-nav-dropdown__panel {
-          color: var(--nav-foreground);
-          background: color-mix(in srgb, var(--nav-surface) 94%, #090909 6%);
-          border-color: var(--nav-border);
-          backdrop-filter: blur(var(--nav-blur));
-          -webkit-backdrop-filter: blur(var(--nav-blur));
-        }
-
-        .contact-nav-dropdown__item { color: var(--nav-muted); }
-        .contact-nav-dropdown__item:hover,
-        .contact-nav-dropdown__item:focus-visible { color: var(--nav-foreground); background: var(--nav-hover); outline: none; }
-
-        html[data-theme="light"] .site-header .contact-nav-dropdown__panel {
-          color: #242421;
-          background: rgba(255,255,255,.78);
-          border-color: rgba(255,255,255,.48);
-          box-shadow: 0 16px 42px rgba(20,20,18,.11);
-          backdrop-filter: blur(18px);
-          -webkit-backdrop-filter: blur(18px);
-        }
-        html[data-theme="light"] .site-header .contact-nav-dropdown__item { color:#55534e; }
-        html[data-theme="light"] .site-header .contact-nav-dropdown__item:hover,
-        html[data-theme="light"] .site-header .contact-nav-dropdown__item:focus-visible { color:#171715; background:rgba(255,255,255,.42); }
       `}</style>
     </>
   );

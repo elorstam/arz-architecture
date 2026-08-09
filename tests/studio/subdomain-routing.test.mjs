@@ -3,6 +3,7 @@ import {readFileSync} from "node:fs";
 import test from "node:test";
 
 import {
+  appBaseUrl,
   appDestination,
   clientNavigationPath,
   createClientInvitationUrl,
@@ -12,6 +13,33 @@ import {
 } from "../../lib/routing/app-domains.ts";
 
 const read=path=>readFileSync(new URL(`../../${path}`,import.meta.url),"utf8");
+
+test("app base URLs preserve local path prefixes and normalize production URLs",()=>{
+  const previous={
+    site:process.env.NEXT_PUBLIC_SITE_URL,
+    studio:process.env.NEXT_PUBLIC_STUDIO_URL,
+    client:process.env.NEXT_PUBLIC_CLIENT_PORTAL_URL,
+  };
+  try{
+    process.env.NEXT_PUBLIC_SITE_URL="http://localhost:3000/";
+    process.env.NEXT_PUBLIC_STUDIO_URL="http://localhost:3000/studio/";
+    process.env.NEXT_PUBLIC_CLIENT_PORTAL_URL="http://localhost:3000/client/";
+    assert.equal(appBaseUrl("public"),"http://localhost:3000");
+    assert.equal(appBaseUrl("studio"),"http://localhost:3000/studio");
+    assert.equal(appBaseUrl("client"),"http://localhost:3000/client");
+
+    process.env.NEXT_PUBLIC_SITE_URL="https://arzmimarlik.net/";
+    process.env.NEXT_PUBLIC_STUDIO_URL="https://portal.arzmimarlik.net/";
+    process.env.NEXT_PUBLIC_CLIENT_PORTAL_URL="https://client.arzmimarlik.net/";
+    assert.equal(appBaseUrl("public"),"https://arzmimarlik.net");
+    assert.equal(appBaseUrl("studio"),"https://portal.arzmimarlik.net");
+    assert.equal(appBaseUrl("client"),"https://client.arzmimarlik.net");
+  }finally{
+    for(const [key,value] of Object.entries({NEXT_PUBLIC_SITE_URL:previous.site,NEXT_PUBLIC_STUDIO_URL:previous.studio,NEXT_PUBLIC_CLIENT_PORTAL_URL:previous.client})){
+      if(value===undefined)delete process.env[key];else process.env[key]=value;
+    }
+  }
+});
 
 test("public production host keeps public routes and redirects legacy app prefixes",()=>{
   assert.equal(getHostRouteDecision("arzmimarlik.net","/").kind,"next");

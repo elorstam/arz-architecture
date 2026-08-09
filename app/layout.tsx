@@ -14,14 +14,26 @@ const siteUrl = (process.env.NEXT_PUBLIC_SITE_URL || "https://arzmimarlik.net").
 
 const themeScript = `
   try {
-    const stored = localStorage.getItem("arz-theme");
-    const theme = stored === "light" || stored === "dark"
-      ? stored
-      : "dark";
+    const key = "arz-theme";
+    const valid = value => value === "light" || value === "dark";
+    const cookiePart = document.cookie.split(";").map(part => part.trim()).find(part => part.startsWith(key + "="));
+    const cookieTheme = cookiePart ? decodeURIComponent(cookiePart.slice(key.length + 1)) : null;
+    let storedTheme = null;
+    try { storedTheme = localStorage.getItem(key); } catch (_) {}
+    const theme = valid(cookieTheme) ? cookieTheme : valid(storedTheme) ? storedTheme : "dark";
     document.documentElement.dataset.theme = theme;
     document.documentElement.style.colorScheme = theme;
+    try { localStorage.setItem(key, theme); } catch (_) {}
+    if (!valid(cookieTheme) && valid(storedTheme)) {
+      const hostname = location.hostname.toLowerCase();
+      const shared = hostname === "arzmimarlik.net" || hostname.endsWith(".arzmimarlik.net");
+      const domain = shared ? "; Domain=.arzmimarlik.net" : "";
+      const secure = shared || location.protocol === "https:" ? "; Secure" : "";
+      document.cookie = key + "=" + theme + "; Path=/; Max-Age=31536000; SameSite=Lax" + domain + secure;
+    }
   } catch (_) {
     document.documentElement.dataset.theme = "dark";
+    document.documentElement.style.colorScheme = "dark";
   }
 `;
 

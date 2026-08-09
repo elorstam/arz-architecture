@@ -1,4 +1,31 @@
-import Image from"next/image";import{redirect}from"next/navigation";import type{Metadata}from"next";import StudioLoginForm from"@/components/studio/StudioLoginForm";import{StudioCard}from"@/components/studio/ui";import{getStudioContext}from"@/lib/studio/auth/get-studio-context";
-export const dynamic="force-dynamic";
-export const metadata:Metadata={robots:{index:false,follow:false}};
-export default async function StudioLoginPage(){const context=await getStudioContext().catch(()=>null);if(context?.membership)redirect("/studio");return <main className="studio-login-root flex min-h-screen items-center justify-center bg-[#F7F9FC] p-5 text-[#17232e]"><StudioCard className="w-full max-w-[460px] border border-[#e4eaf0] bg-white p-7 shadow-[0_24px_70px_rgba(31,48,65,.09)] sm:p-10"><div className="flex min-h-14 items-center justify-between"><Image src="/arz-logo-final.png" alt="ARZ Mimarlık" width={116} height={38} priority/></div><p className="mt-10 text-[11px] font-semibold uppercase tracking-[.24em] text-[#6b8290]">ARZ Mimarlık</p><h1 className="mt-2 text-3xl font-semibold tracking-[-.035em]">ARZ Studio</h1><p className="mt-3 text-sm leading-6 text-[#64748b]">Ekibiniz için güvenli çalışma alanı.</p><StudioLoginForm/></StudioCard></main>}
+import Image from "next/image";
+import { redirect } from "next/navigation";
+import type { Metadata } from "next";
+
+import AuthHomeLink from "@/components/AuthHomeLink";
+import StudioLoginForm from "@/components/studio/StudioLoginForm";
+import { StudioCard } from "@/components/studio/ui";
+import { getStudioContext } from "@/lib/studio/auth/get-studio-context";
+
+export const dynamic = "force-dynamic";
+export const metadata: Metadata = { robots: { index: false, follow: false } };
+
+export default async function StudioLoginPage() {
+  const context = await getStudioContext().catch(() => null);
+  if (context?.membership) redirect("/studio");
+
+  return (
+    <main className="arz-auth-root studio-login-root flex min-h-screen items-center justify-center bg-[#F7F9FC] p-5 text-[#17232e]">
+      <AuthHomeLink />
+      <StudioCard className="w-full max-w-[460px] border border-[#e4eaf0] bg-white p-7 shadow-[0_24px_70px_rgba(31,48,65,.09)] sm:p-10">
+        <div className="flex min-h-14 items-center justify-between">
+          <Image src="/arz-logo-final.png" alt="ARZ Mimarlık" width={116} height={38} priority className="auth-login-logo h-[38px] w-[116px] object-contain object-left" />
+        </div>
+        <p className="mt-10 text-[11px] font-semibold uppercase tracking-[.24em] text-[#6b8290]">ARZ Mimarlık</p>
+        <h1 className="mt-2 text-3xl font-semibold tracking-[-.035em]">ARZ Studio</h1>
+        <p className="mt-3 text-sm leading-6 text-[#64748b]">Ekibiniz için güvenli çalışma alanı.</p>
+        <StudioLoginForm />
+      </StudioCard>
+    </main>
+  );
+}

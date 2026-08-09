@@ -3,6 +3,11 @@
     "languageName": "Español"
   },
   "Navbar": {
+    "portal": {
+      "label": "Portal",
+      "client": "Portal del cliente",
+      "studio": "ARZ Studio"
+    },
     "items": {
       "home": "Inicio",
       "about": "Nosotros",

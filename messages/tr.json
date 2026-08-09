@@ -3,6 +3,11 @@
     "languageName": "Türkçe"
   },
   "Navbar": {
+    "portal": {
+      "label": "Portal",
+      "client": "Müşteri Portalı",
+      "studio": "ARZ Studio"
+    },
     "items": {
       "home": "Anasayfa",
       "about": "Hakkımızda",

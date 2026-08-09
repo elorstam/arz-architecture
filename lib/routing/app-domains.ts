@@ -19,6 +19,22 @@ function configuredOrigin(scope: ArzAppScope) {
   }
 }
 
+export function appBaseUrl(scope: ArzAppScope) {
+  const value = scope === "public"
+    ? process.env.NEXT_PUBLIC_SITE_URL
+    : scope === "studio"
+      ? process.env.NEXT_PUBLIC_STUDIO_URL
+      : process.env.NEXT_PUBLIC_CLIENT_PORTAL_URL;
+
+  try {
+    const url = new URL(value || DEFAULT_ORIGINS[scope]);
+    const pathname = url.pathname.replace(/\/+$/, "");
+    return `${url.origin}${pathname === "/" ? "" : pathname}`;
+  } catch {
+    return DEFAULT_ORIGINS[scope];
+  }
+}
+
 export function normalizeHostname(value: string | null | undefined) {
   const candidate = (value || "").split(",", 1)[0]?.trim().toLowerCase() || "";
   if (candidate.startsWith("[")) return candidate.slice(1, candidate.indexOf("]"));

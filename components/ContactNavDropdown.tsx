@@ -2,9 +2,7 @@
 
 import Link from "next/link";
 import {
-  useEffect,
   useRef,
-  useState,
   type FocusEvent,
   type KeyboardEvent,
 } from "react";
@@ -18,6 +16,8 @@ type Props = {
   contactHref: string;
   paymentHref: string;
   active: boolean;
+  open: boolean;
+  onOpenChange: (open: boolean) => void;
 };
 
 export default function ContactNavDropdown({
@@ -27,60 +27,23 @@ export default function ContactNavDropdown({
   contactHref,
   paymentHref,
   active,
+  open,
+  onOpenChange,
 }: Props) {
-  const [open, setOpen] = useState(false);
-
   const rootRef = useRef<HTMLDivElement>(null);
   const triggerRef = useRef<HTMLAnchorElement>(null);
   const firstItemRef = useRef<HTMLAnchorElement>(null);
-  const closeTimer = useRef<ReturnType<typeof setTimeout> | null>(
-    null,
-  );
-
-  const cancelClose = () => {
-    if (closeTimer.current) {
-      clearTimeout(closeTimer.current);
-      closeTimer.current = null;
-    }
-  };
-
-  const closeSoon = () => {
-    cancelClose();
-
-    closeTimer.current = setTimeout(() => {
-      setOpen(false);
-    }, 140);
-  };
-
   const closeAndFocus = () => {
-    setOpen(false);
+    onOpenChange(false);
     triggerRef.current?.focus();
   };
-
-  useEffect(() => {
-    const outside = (event: PointerEvent) => {
-      if (
-        rootRef.current &&
-        !rootRef.current.contains(event.target as Node)
-      ) {
-        setOpen(false);
-      }
-    };
-
-    document.addEventListener("pointerdown", outside);
-
-    return () => {
-      document.removeEventListener("pointerdown", outside);
-      cancelClose();
-    };
-  }, []);
 
   const onTriggerKeyDown = (
     event: KeyboardEvent<HTMLElement>,
   ) => {
     if (event.key === "ArrowDown") {
       event.preventDefault();
-      setOpen(true);
+      onOpenChange(true);
 
       requestAnimationFrame(() => {
         firstItemRef.current?.focus();
@@ -89,7 +52,7 @@ export default function ContactNavDropdown({
 
     if (event.key === " ") {
       event.preventDefault();
-      setOpen((value) => !value);
+      onOpenChange(!open);
     }
 
     if (event.key === "Escape" && open) {
@@ -113,7 +76,7 @@ export default function ContactNavDropdown({
         event.relatedTarget as Node | null,
       )
     ) {
-      closeSoon();
+      onOpenChange(false);
     }
   };
 
@@ -122,13 +85,11 @@ export default function ContactNavDropdown({
       ref={rootRef}
       className="contact-nav-dropdown relative"
       onMouseEnter={() => {
-        cancelClose();
-        setOpen(true);
+        onOpenChange(true);
       }}
-      onMouseLeave={closeSoon}
+      onMouseLeave={() => onOpenChange(false)}
       onFocusCapture={() => {
-        cancelClose();
-        setOpen(true);
+        onOpenChange(true);
       }}
       onBlur={onBlur}
       onKeyDown={onRootKeyDown}
@@ -142,7 +103,7 @@ export default function ContactNavDropdown({
         aria-controls="contact-navigation-menu"
         onClick={(event) => {
           event.preventDefault();
-          setOpen((value) => !value);
+          onOpenChange(!open);
         }}
         onKeyDown={onTriggerKeyDown}
         endAdornment={
@@ -170,14 +131,14 @@ export default function ContactNavDropdown({
           id="contact-navigation-menu"
           role="menu"
           aria-label={label}
-          className="contact-nav-dropdown__panel overflow-hidden rounded-[2px] border"
+          className="navbar-dropdown__panel overflow-hidden rounded-[2px] border"
         >
           <Link
             ref={firstItemRef}
             role="menuitem"
             href={contactHref}
-            onClick={() => setOpen(false)}
-            className="contact-nav-dropdown__item flex min-h-11 items-center px-4 text-[11px] uppercase tracking-[.12em]"
+            onClick={() => onOpenChange(false)}
+            className="navbar-dropdown__item flex min-h-11 items-center px-4 text-[11px] uppercase tracking-[.12em]"
           >
             {quoteLabel}
           </Link>
@@ -185,8 +146,8 @@ export default function ContactNavDropdown({
           <Link
   role="menuitem"
   href={paymentHref}
-  onClick={() => setOpen(false)}
-  className="contact-nav-dropdown__item flex min-h-11 items-center px-4 text-[11px] uppercase tracking-[.12em]"
+  onClick={() => onOpenChange(false)}
+  className="navbar-dropdown__item flex min-h-11 items-center px-4 text-[11px] uppercase tracking-[.12em]"
 >
             {paymentLabel}
           </Link>

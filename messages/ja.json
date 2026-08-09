@@ -3,6 +3,11 @@
     "languageName": "日本語"
   },
   "Navbar": {
+    "portal": {
+      "label": "ポータル",
+      "client": "クライアントポータル",
+      "studio": "ARZ Studio"
+    },
     "items": {
       "home": "ホーム",
       "about": "私たちについて",

@@ -3,6 +3,11 @@
     "languageName": "한국어"
   },
   "Navbar": {
+    "portal": {
+      "label": "포털",
+      "client": "고객 포털",
+      "studio": "ARZ Studio"
+    },
     "items": {
       "home": "홈",
       "about": "회사 소개",

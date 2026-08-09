@@ -3,6 +3,11 @@
     "languageName": "Nederlands"
   },
   "Navbar": {
+    "portal": {
+      "label": "Portal",
+      "client": "Klantenportaal",
+      "studio": "ARZ Studio"
+    },
     "items": {
       "home": "Home",
       "about": "Over ons",

@@ -20,18 +20,21 @@ test("public site chrome never renders for any client route",async()=>{
 });
 
 test("public routes retain the existing navbar and public theme control",async()=>{
-  const[chrome,navbar,toggle,root]=await Promise.all([
+  const[chrome,navbar,toggle,root,themePreference]=await Promise.all([
     read("components/PublicSiteChrome.tsx"),
     read("components/Navbar.tsx"),
     read("components/ThemeToggle.tsx"),
     read("app/layout.tsx"),
+    read("lib/theme-preference.ts"),
   ]);
   assert.match(chrome,/return <Navbar\/>/);
   assert.match(navbar,/navigationItems\.map/);
   assert.match(navbar,/ThemeToggle/);
   assert.match(root,/id="theme-init"/);
-  assert.match(toggle,/localStorage\.getItem\("arz-theme"\)/);
-  assert.match(toggle,/localStorage\.setItem\("arz-theme", nextTheme\)/);
+  assert.match(toggle,/readThemePreference\(\)/);
+  assert.match(toggle,/persistThemePreference\(nextTheme\)/);
+  assert.match(themePreference,/localStorage\.getItem\(THEME_KEY\)/);
+  assert.match(themePreference,/localStorage\.setItem\(THEME_KEY, theme\)/);
 });
 
 test("client header reuses the persisted theme toggle",async()=>{

@@ -27,8 +27,9 @@ test("Studio header reuses the persisted ARZ theme toggle",async()=>{
   const[header,toggle,root]=await Promise.all([read("components/studio/StudioHeader.tsx"),read("components/ThemeToggle.tsx"),read("app/layout.tsx")]);
   assert.match(header,/ThemeToggle className="studio-theme-toggle"/);
   assert.match(toggle,/document\.documentElement\.dataset\.theme = nextTheme/);
-  assert.match(toggle,/localStorage\.setItem\("arz-theme", nextTheme\)/);
-  assert.match(root,/localStorage\.getItem\("arz-theme"\)/);
+  assert.match(toggle,/persistThemePreference\(nextTheme\)/);
+  assert.match(root,/const key = "arz-theme"/);
+  assert.match(root,/localStorage\.getItem\(key\)/);
 });
 
 test("Studio light isolation and dark variables cover shared primitives",async()=>{

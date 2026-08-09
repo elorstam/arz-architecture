@@ -3,15 +3,7 @@
 import {useEffect, useState} from "react";
 import {useTranslations} from "next-intl";
 import {navControlClasses} from "@/lib/nav-control";
-
-type Theme = "light" | "dark";
-
-function getInitialTheme(): Theme {
-  if (typeof window === "undefined") return "dark";
-  const stored = window.localStorage.getItem("arz-theme");
-  if (stored === "light" || stored === "dark") return stored;
-  return "dark";
-}
+import {persistThemePreference, readThemePreference, type Theme} from "@/lib/theme-preference";
 
 export default function ThemeToggle({className = ""}: {className?: string}) {
   const t=useTranslations("CMS");
@@ -19,7 +11,7 @@ export default function ThemeToggle({className = ""}: {className?: string}) {
   const [mounted, setMounted] = useState(false);
 
   useEffect(() => {
-    const initialTheme = getInitialTheme();
+    const initialTheme = readThemePreference();
     // Hydration is the first point at which persisted browser theme state is available.
     // eslint-disable-next-line react-hooks/set-state-in-effect
     setTheme(initialTheme);
@@ -33,7 +25,7 @@ export default function ThemeToggle({className = ""}: {className?: string}) {
     setTheme(nextTheme);
     document.documentElement.dataset.theme = nextTheme;
     document.documentElement.style.colorScheme = nextTheme;
-    window.localStorage.setItem("arz-theme", nextTheme);
+    persistThemePreference(nextTheme);
   };
 
   const isDark = mounted ? theme === "dark" : true;
