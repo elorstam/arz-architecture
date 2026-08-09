@@ -17,4 +17,4 @@ test("payment return remounts finance with no automatically selected drawer item
 
 test("finance detail drawer remains manual only",()=>{assert.match(list,/onClick=\{\(\)=>setSelected\(item\)\}/);assert.match(list,/onClose=\{\(\)=>setSelected\(null\)\}/);});
 
-test("paid records and finance totals retain their existing projections",()=>{assert.match(requests,/status==="paid"/);assert.match(requests,/paidAt/);assert.match(requests,/Ödendi/);assert.match(page,/totals\(active\)/);assert.match(page,/totals\(paid\)/);assert.match(page,/\["collected","paid"\]/);});
+test("paid records and finance totals retain their existing projections",()=>{assert.match(requests,/\["paid","refunded"\]\.includes/);assert.match(requests,/paidAt/);assert.match(requests,/Ödendi/);assert.match(page,/totals\(active\)/);assert.match(page,/totals\(paid\)/);assert.match(page,/\["collected","paid"\]/);});

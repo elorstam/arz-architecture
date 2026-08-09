@@ -30,7 +30,7 @@ test("attempt creation and finalization are bound to the configured environment"
  assert.match(repository,/p_environment:environment/);
  assert.match(callback,/attempt\.environment!==config\.environment/);
  assert.match(webhook,/attempt\.environment!==config\.environment/);
- assert.match(repository,/iyzico_finalize_payment_v2/);
+ assert.match(repository,/iyzico_finalize_payment_v3/);
  assert.match(migration,/environment<>p_environment/);
  assert.match(migration,/v_environment<>p_environment/);
  assert.match(migration,/return public\.iyzico_finalize_payment/);
@@ -43,8 +43,7 @@ test("official hosted-payment webhook V3 ordering is verified before retrieve",(
  assert.equal(verifyIyzicoWebhookV3(secret,payload,expected),true);
  assert.equal(verifyIyzicoWebhookV3(secret,payload,"bad"),false);
  assert.ok(webhook.indexOf("if(!verifyIyzicoWebhookV3")<webhook.indexOf("const attempt=await attemptForToken"));
- assert.match(webhook,/sameAmount\(result\.price,attempt\.amount\)/);
- assert.match(webhook,/result\.currency===attempt\.currency/);
+ assert.match(webhook,/verifyCheckoutResult\(result,attempt/);
  assert.match(webhook,/attempt\.status==="succeeded"/);
 });
 
@@ -89,7 +88,7 @@ test("controlled backfill uses minimum service-role grants and remains retry saf
 test("callback contract and public URLs remain server controlled",()=>{
  assert.match(env,new RegExp(`IYZICO_CALLBACK_URL=${callbackUrl.replace(/[.*+?^${}()|[\]\\]/g,"\\$&")}`));
  assert.match(callback,/retrieveCheckout/);
- assert.match(callback,/paymentStatus==="SUCCESS"/);
+ assert.match(callback,/verifyCheckoutResult\(result,attempt\)/);
  assert.match(webhook,/runtime="nodejs"/);
  assert.doesNotMatch(webhook,/auth\.getUser|buyer_|identity_number|apiKey|Authorization/);
 });

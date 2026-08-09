@@ -4,7 +4,7 @@ import{IYZICO_ENVIRONMENT_URLS,resolveIyzicoEnvironment}from"./environment";
 
 export type{IyzicoEnvironment}from"./environment";
 const HOSTS={sandbox:new URL(IYZICO_ENVIRONMENT_URLS.sandbox).hostname,live:new URL(IYZICO_ENVIRONMENT_URLS.live).hostname}as const;
-const schema=z.object({environment:z.enum(["sandbox","live"]),apiKey:z.string().min(1),secretKey:z.string().min(1),baseUrl:z.url(),callbackUrl:z.url(),livePaymentsEnabled:z.boolean()});
+const schema=z.object({environment:z.enum(["sandbox","live"]),apiKey:z.string().min(1),secretKey:z.string().min(1),baseUrl:z.url(),callbackUrl:z.url(),livePaymentsEnabled:z.boolean(),enabledInstallments:z.array(z.number().int()).min(1)});
 export type IyzicoConfig=z.infer<typeof schema>;
 
 export function iyzicoConfigStatus(){
@@ -24,4 +24,9 @@ export function getIyzicoConfig():IyzicoConfig|null{
  const callback=new URL(parsed.data.callbackUrl);
  if(callback.protocol!=="https:")return null;
  return parsed.data;
+}
+
+export function iyzicoInstallmentConfigStatus(config:Pick<IyzicoConfig,"environment"|"enabledInstallments">){
+ const raw=process.env.IYZICO_ENABLED_INSTALLMENTS;
+ return{configured:Boolean(raw?.trim()),rawPresent:raw!==undefined,parsedInstallments:[...config.enabledInstallments],environment:config.environment};
 }

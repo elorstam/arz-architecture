@@ -2,6 +2,7 @@ import {createHmac,timingSafeEqual} from "node:crypto";
 
 export const INITIALIZE_PATH="/payment/iyzipos/checkoutform/initialize/auth/ecom";
 export const RETRIEVE_PATH="/payment/iyzipos/checkoutform/auth/ecom/detail";
+export const REFUND_V2_PATH="/v2/payment/refund";
 
 export function iyzicoAuthorization(apiKey:string,secretKey:string,randomKey:string,path:string,body:string){
  const signature=createHmac("sha256",secretKey).update(randomKey+path+body,"utf8").digest("hex");
@@ -13,5 +14,6 @@ export function responseSignature(secretKey:string,values:unknown[]){return crea
 export function safeSignatureEqual(actual:unknown,expected:string){if(typeof actual!=="string"||!actual)return false;const a=Buffer.from(actual,"utf8"),b=Buffer.from(expected,"utf8");return a.length===b.length&&timingSafeEqual(a,b);}
 export function verifyInitializeSignature(secretKey:string,response:Record<string,unknown>){return safeSignatureEqual(response.signature,responseSignature(secretKey,[response.conversationId,response.token]));}
 export function verifyRetrieveSignature(secretKey:string,response:Record<string,unknown>){return safeSignatureEqual(response.signature,responseSignature(secretKey,[response.paymentStatus,response.paymentId,response.currency,response.basketId,response.conversationId,canonicalPrice(response.paidPrice),canonicalPrice(response.price),response.token]));}
+export function verifyRefundSignature(secretKey:string,response:Record<string,unknown>){return safeSignatureEqual(response.signature,responseSignature(secretKey,[response.paymentId,canonicalPrice(response.price),response.currency,response.conversationId]));}
 export function iyzicoWebhookV3Signature(secretKey:string,payload:{iyziEventType:unknown;iyziPaymentId:unknown;token:unknown;paymentConversationId:unknown;status:unknown}){const message=[secretKey,payload.iyziEventType,payload.iyziPaymentId,payload.token,payload.paymentConversationId,payload.status].map(value=>String(value??"")).join("");return createHmac("sha256",secretKey).update(message,"utf8").digest("hex");}
 export function verifyIyzicoWebhookV3(secretKey:string,payload:{iyziEventType:unknown;iyziPaymentId:unknown;token:unknown;paymentConversationId:unknown;status:unknown},signature:unknown){return safeSignatureEqual(signature,iyzicoWebhookV3Signature(secretKey,payload));}
