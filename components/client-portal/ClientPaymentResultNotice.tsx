@@ -1,1 +1,3 @@
-export default function ClientPaymentResultNotice({result}:{result?:"success"|"failed"}){if(!result)return null;return <div className={`client-payment-result is-${result}`} role={result==="success"?"status":"alert"}>{result==="success"?"Ödemeniz başarıyla alındı.":"Ödeme tamamlanamadı. Tekrar deneyebilirsiniz."}</div>}
+"use client";
+import {useEffect}from"react";
+export default function ClientPaymentResultNotice({result}:{result?:"success"|"failed"}){useEffect(()=>{if(!result)return;const url=new URL(window.location.href);url.searchParams.delete("payment");url.searchParams.delete("reason");window.history.replaceState(window.history.state,"",`${url.pathname}${url.search}${url.hash}`);},[result]);if(!result)return null;return <div className={`client-payment-result is-${result}`} role={result==="success"?"status":"alert"}>{result==="success"?"Ödemeniz başarıyla alındı.":"Ödeme tamamlanamadı. Tekrar deneyebilirsiniz."}</div>}

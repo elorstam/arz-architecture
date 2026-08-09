@@ -9,6 +9,7 @@
     "lint": "eslint",
     "migrate:projects": "node --experimental-strip-types scripts/migrate-projects-to-supabase.ts",
     "studio:bootstrap-owner": "node --env-file=.env.local --experimental-strip-types scripts/bootstrap-studio-owner.ts",
+    "payment:encrypt-profiles": "node --env-file=.env.local --experimental-strip-types scripts/backfill-payment-profile-encryption.ts",
     "test:studio": "node --experimental-strip-types --test tests/studio/*.test.mjs"
   },
   "dependencies": {
