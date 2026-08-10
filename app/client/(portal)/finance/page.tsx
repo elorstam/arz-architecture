@@ -13,5 +13,5 @@ export default async function ClientFinanceRoute({searchParams}:{searchParams:Pr
  if(!context?.user)redirect("/client/login?next=%2Fclient%2Ffinance");
  if(!context.membership||!context.project)notFound();
  const[entries,files,paymentRequests]=await Promise.all([getClientFinance(context.project.id),getClientFiles(context.project.id).catch(()=>[]),getClientPaymentRequests(context.project.id)]);
- return <><ClientPaymentResultNotice result={payment}/><ClientFinancePage key={`finance-${payment??"normal"}`} project={context.project} entries={entries} paymentRequests={paymentRequests} downloadableFileIds={files.map(file=>file.id)} today={new Date().toISOString().slice(0,10)}/></>;
+ return <><ClientPaymentResultNotice result={payment}/><ClientFinancePage project={context.project} entries={entries} paymentRequests={paymentRequests} downloadableFileIds={files.map(file=>file.id)} today={new Date().toISOString().slice(0,10)}/></>;
 }
