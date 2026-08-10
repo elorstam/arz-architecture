@@ -17,7 +17,7 @@ test("workspace navigation keeps the finance-size type while compacting layout",
 });
 
 test("studio and client navigation share the soft dark-gray active token",()=>{
-  assert.match(globals,/--studio-action-primary:\s*#626970/);
+  assert.match(globals,/--studio-action-primary:\s*#444b51/);
   assert.match(globals,/studio-tab--workspace-navigation\.studio-tab-active[^}]*background:var\(--studio-action-primary\)/);
   assert.match(clientNav,/variant="workspace-navigation"/);
   assert.match(clientCss,/client-project-navigation \.studio-tab--workspace-navigation \{ font-size:\.8125rem/);
@@ -25,7 +25,7 @@ test("studio and client navigation share the soft dark-gray active token",()=>{
 
 test("client portal raises scoped supporting typography",()=>{
   assert.match(clientCss,/\.client-portal :where\(\.studio-page-description,\.studio-section-header p,\.studio-helper-text\)/);
-  assert.match(clientCss,/\.client-portal \.studio-empty-v2 p \{ font-size:\.875rem/);
+  assert.match(clientCss,/\.client-portal \.studio-empty-v2 p \{ font-size:14px!important/);
   assert.match(clientCss,/\.client-portal :where\(\.client-project-facts dt,\.client-progress-title p\)/);
 });
 

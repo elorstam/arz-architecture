@@ -17,7 +17,7 @@ test("project routes keep one shared icon navigation without changing hrefs",()=
 test("workspace navigation is sticky scrollable and motion-safe",()=>{
   assert.match(css,/studio-project-tabs-v2 \{[^}]*position:sticky[^}]*backdrop-filter:blur\(12px\)/);
   assert.match(css,/studio-tabs--workspace-navigation \{[^}]*overflow-x:auto/);
-  assert.match(css,/--studio-action-primary:\s*#626970/);
+  assert.match(css,/--studio-action-primary:\s*#444b51/);
   assert.match(css,/studio-tab--workspace-navigation\.studio-tab-active \{[^}]*background:var\(--studio-action-primary\)[^}]*color:#fff/);
   assert.match(css,/@keyframes studio-workspace-enter/);
   assert.match(css,/prefers-reduced-motion:reduce/);

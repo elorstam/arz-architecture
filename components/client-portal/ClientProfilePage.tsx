@@ -9,6 +9,7 @@ import {useRouter} from "next/navigation";
 import {
   StudioCard,
 } from "@/components/studio/StudioDesignSystem";
+import {studioButtonClass} from "@/components/studio/StudioButton";
 import {
   StudioBadge,
   StudioPageHeader,
@@ -346,7 +347,7 @@ export default function ClientProfilePage({
                   disabled={
                     profileSaving
                   }
-                  className="rounded-xl bg-black px-5 py-3 text-sm font-medium text-white transition hover:opacity-85 disabled:cursor-not-allowed disabled:opacity-40"
+                  className={studioButtonClass("primary", "md")}
                 >
                   {profileSaving
                     ? "Kaydediliyor…"
@@ -466,7 +467,7 @@ export default function ClientProfilePage({
                   disabled={
                     passwordSaving
                   }
-                  className="rounded-xl bg-black px-5 py-3 text-sm font-medium text-white transition hover:opacity-85 disabled:cursor-not-allowed disabled:opacity-40"
+                  className={studioButtonClass("primary", "md")}
                 >
                   {passwordSaving
                     ? "Değiştiriliyor…"
