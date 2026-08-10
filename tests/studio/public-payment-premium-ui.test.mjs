@@ -15,6 +15,12 @@ test("public payment uses real ARZ and iyzico assets with isolated premium shell
  assert.match(css,/\.public-payment-card\{[^}]*width:min\(620px,calc\(100vw - 32px\)\)[^}]*background:#fff/);
 });
 
+test("ARZ mark is explicitly visible on the white payment card",()=>{
+ assert.match(page,/src="\/arz-logo-final\.png"/);
+ assert.match(css,/public-payment-brand img\{[^}]*display:block[^}]*width:36px[^}]*height:30px[^}]*opacity:1[^}]*visibility:visible[^}]*filter:brightness\(0\) saturate\(100%\)/);
+ assert.doesNotMatch(page,/public-payment-mark/);
+});
+
 test("public payment typography and branded CTA contract is readable and responsive",()=>{
  assert.match(layout,/localFont/);
  assert.match(layout,/variable:"--font-studio"/);
