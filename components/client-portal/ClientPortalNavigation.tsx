@@ -74,6 +74,7 @@ export default function ClientPortalNavigation() {
     }));
 
   return (
+    <div className="studio-project-tabs-v2 client-project-navigation">
     <StudioTabs
       items={withProject}
       active={
@@ -86,5 +87,6 @@ export default function ClientPortalNavigation() {
       ariaLabel="Client Portal navigasyonu"
       variant="workspace-navigation"
     />
+    </div>
   );
 }

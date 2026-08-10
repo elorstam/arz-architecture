@@ -33,15 +33,16 @@ test("portal shell and navigation remain shared while route content resolves",as
   assert.doesNotMatch(tabs,/prefetch=\{false\}/);
 });
 
-test("loading removal does not alter theme or auth form isolation",async()=>{
+test("loading removal preserves light-only Client theme and auth form isolation",async()=>{
   const[css,header,login,invite]=await Promise.all([
     read("app/client/client-portal.css"),
     read("components/client-portal/ClientPortalHeader.tsx"),
     read("components/client-portal/ClientLoginForm.tsx"),
     read("components/client-portal/ClientInvitationForm.tsx"),
   ]);
-  assert.match(css,/html\[data-theme="dark"\] \.client-portal\.studio-root/);
-  assert.match(header,/ThemeToggle className="client-theme-toggle"/);
+  assert.match(css,/\.client-portal\.studio-root \{[^}]*color-scheme:light/);
+  assert.doesNotMatch(css,/html\[data-theme="dark"\] \.client-(portal|route-root)/);
+  assert.doesNotMatch(header,/ThemeToggle|client-theme-toggle/);
   assert.match(login,/client-auth-form/);
   assert.match(invite,/client-auth-form/);
   assert.doesNotMatch(css,/cream|#f5f1eb/i);

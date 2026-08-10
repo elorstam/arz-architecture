@@ -47,104 +47,11 @@
   line-height: 1.4;
 }
 
-/* Client routes share the public theme preference without inheriting public chrome. */
-.client-header .client-theme-toggle {
-  flex: none;
-  border-color: #e3e9ef;
-  background: #f3f6fa;
-  color: #475569;
-}
-
-html[data-theme="dark"] .client-portal.studio-root {
-  --studio-bg: #0f1720;
-  --studio-workspace: #0f1720;
-  --studio-surface: #17212b;
-  --studio-surface-soft: #1b2732;
-  --studio-surface-muted: #1c2935;
-  --studio-text: #e8eef4;
-  --studio-text-primary: #f2f6fa;
-  --studio-text-secondary: #c1ccd6;
-  --studio-text-muted: #91a0ae;
-  --studio-border: #2c3a47;
-  --studio-border-strong: #3a4b59;
-  --studio-navy: #315d77;
-  color-scheme: dark;
-  background: var(--studio-bg);
-  color: var(--studio-text);
-}
-
-html[data-theme="dark"] .client-portal .client-header {
-  border-color: var(--studio-border);
-  background: rgb(23 33 43 / .94);
-}
-html[data-theme="dark"] .client-portal .client-header__brand > span,
-html[data-theme="dark"] .client-portal .client-project-name,
-html[data-theme="dark"] .client-portal .client-profile-menu > summary,
-html[data-theme="dark"] .client-portal .studio-page-title,
-html[data-theme="dark"] .client-portal .studio-section-header h2,
-html[data-theme="dark"] .client-portal :where(h2, h3, strong, dd) {
-  color: var(--studio-text-primary);
-}
-html[data-theme="dark"] .client-portal :where(p, span, dt, small, time),
-html[data-theme="dark"] .client-portal .studio-page-description,
-html[data-theme="dark"] .client-portal .studio-section-header p {
-  border-color: var(--studio-border);
-}
-html[data-theme="dark"] .client-portal :where(.studio-card-v2, .studio-kpi-v2, .studio-tabs--workspace-navigation, .client-panel, .client-render-card, .client-stage-item, .client-render-gallery-card, .client-upcoming-payments article, .client-notification-detail dl, .client-render-detail dl) {
-  border-color: var(--studio-border);
-  background: var(--studio-surface);
-  color: var(--studio-text);
-}
-html[data-theme="dark"] .client-portal :where(.client-progress-meter, .client-render-preview, .client-center-tabs, .client-file-detail dl, .client-document-detail dl, .client-stage-detail dl, .client-finance-detail dl, .client-upcoming-payments, .client-render-gallery-preview, .client-render-detail-preview) {
-  border-color: var(--studio-border);
-  background: var(--studio-surface-muted);
-}
-html[data-theme="dark"] .client-portal :where(.client-file-list li, .client-document-list li, .client-finance-list li, .client-notification-list li, .client-operation-list li, .client-activity-list li) {
-  border-color: var(--studio-border);
-}
-html[data-theme="dark"] .client-portal .client-notification-list li.is-unread {
-  background: linear-gradient(90deg, rgb(49 93 119 / .28), transparent 72%);
-}
-html[data-theme="dark"] .client-portal :where(input, select, textarea) {
-  border-color: var(--studio-border-strong);
-  background: var(--studio-surface-muted);
-  color: var(--studio-text-primary);
-}
-html[data-theme="dark"] .client-portal :where(input, textarea)::placeholder {
-  color: #8392a0;
-}
-html[data-theme="dark"] .client-portal .client-profile-menu > summary:hover,
-html[data-theme="dark"] .client-portal .studio-tab--workspace-navigation.studio-tab-inactive:hover {
-  background: var(--studio-surface-muted);
-}
-html[data-theme="dark"] .client-portal .client-profile-menu > div {
-  border-color: var(--studio-border);
-  background: var(--studio-surface);
-}
-html[data-theme="dark"] .client-portal .client-header .client-theme-toggle {
-  border-color: var(--studio-border);
-  background: var(--studio-surface-muted);
-  color: var(--studio-text-primary);
-}
-
-html[data-theme="dark"] .client-route-root > main {
-  background: #0f1720;
-  color: #e8eef4;
-}
-html[data-theme="dark"] .client-route-root > main .studio-card-v2 {
-  border-color: #2c3a47;
-  background: #17212b;
-  color: #e8eef4;
-}
-html[data-theme="dark"] .client-route-root .client-auth-form .studio-control > span {
-  color: #d7e0e8;
-}
-html[data-theme="dark"] .client-route-root .client-auth-form .studio-control input {
-  border-color: #3a4b59;
-  background: #1c2935;
-  color: #f2f6fa;
-}
-html[data-theme="dark"] .client-route-root .client-auth-form .studio-control input:-webkit-autofill {
-  -webkit-text-fill-color: #f2f6fa;
-  box-shadow: 0 0 0 1000px #1c2935 inset;
-}
+/* Client Portal is deliberately light-only and never mutates shared theme state. */
+.client-route-root { min-height:100vh; background:#f7f9fc; color-scheme:light; }
+.client-portal.studio-root { --studio-bg:#f7f9fc; --studio-workspace:#f7f9fc; --studio-surface:#fff; --studio-surface-soft:#fbfcfe; --studio-surface-muted:#f3f6fa; --studio-text:#22282e; --studio-text-primary:#202a30; --studio-text-secondary:#596260; --studio-text-muted:#69716f; --studio-border:#e3e9ef; --studio-border-strong:#d5dee7; background:#f7f9fc; color:#22282e; color-scheme:light; }
+.client-header__brand img { filter:invert(1); }
+.client-header__portal-name { display:flex; align-items:baseline; gap:.35rem; }
+.client-header__portal-name small { color:#94a3b8; font-size:9px; font-weight:400; letter-spacing:.08em; text-transform:none; }
+.client-shell > .client-project-navigation { margin-top:0; margin-bottom:1rem; }
+@media(max-width:767px){.client-shell > .client-project-navigation{margin-bottom:.75rem}}

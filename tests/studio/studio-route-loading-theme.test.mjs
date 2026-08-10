@@ -44,6 +44,7 @@ test("Studio light isolation and dark variables cover shared primitives",async()
 test("Studio dark scope cannot alter public or Client Portal theme scopes",async()=>{
   const[css,clientCss,chrome]=await Promise.all([read("app/globals.css"),read("app/client/client-portal.css"),read("components/PublicSiteChrome.tsx")]);
   assert.match(css,/\.studio-root:not\(\.client-portal\)/);
-  assert.match(clientCss,/html\[data-theme="dark"\] \.client-portal\.studio-root/);
+  assert.match(clientCss,/\.client-portal\.studio-root \{[^}]*color-scheme:light/);
+  assert.doesNotMatch(clientCss,/html\[data-theme="dark"\] \.client-(portal|route-root)/);
   assert.match(chrome,/pathname\.startsWith\("\/studio"\)/);
 });

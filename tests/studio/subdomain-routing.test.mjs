@@ -108,7 +108,8 @@ test("public chrome, noindex, themes and host-only Supabase cookies stay isolate
   assert.match(read("app/client/layout.tsx"),/robots:\{index:false,follow:false\}/);
   assert.match(read("app/studio/\(protected\)/layout.tsx"),/robots:\{index:false,follow:false\}/);
   assert.match(read("components/studio/StudioHeader.tsx"),/ThemeToggle/);
-  assert.match(read("components/client-portal/ClientPortalHeader.tsx"),/ThemeToggle/);
+  assert.doesNotMatch(read("components/client-portal/ClientPortalHeader.tsx"),/ThemeToggle|persistThemePreference/);
+  assert.match(read("app/client/client-portal.css"),/\.client-route-root \{[^}]*color-scheme:light/);
   assert.doesNotMatch(read("lib/studio/supabase/middleware.ts"),/domain\s*:/i);
 });
 

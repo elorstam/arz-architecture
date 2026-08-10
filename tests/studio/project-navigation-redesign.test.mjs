@@ -22,11 +22,12 @@ test("workspace navigation is sticky scrollable and motion-safe",()=>{
   assert.match(css,/prefers-reduced-motion:reduce/);
 });
 
-test("future project sections share the single navigation row",()=>{
-  for(const label of ["Revizyonlar","Görevler","Takvim","Müşteri"])assert.match(tabs,new RegExp(label));
+test("future project sections share the final navigation row",()=>{
+  for(const label of ["Revizyonlar","Takvim","Müşteri"])assert.match(tabs,new RegExp(label));
+  assert.doesNotMatch(tabs,/Görevler/);
   assert.doesNotMatch(tabs,/studio-project-tabs-future/);
-  assert.equal((tabs.match(/badge:"Yakında"/g)??[]).length,3);
-  assert.equal((tabs.match(/disabled:true/g)??[]).length,3);
+  assert.equal((tabs.match(/badge:"Yakında"/g)??[]).length,2);
+  assert.equal((tabs.match(/disabled:true/g)??[]).length,2);
   assert.match(shared,/studio-tab__badge/);
   assert.match(shared,/aria-disabled="true"/);
 });

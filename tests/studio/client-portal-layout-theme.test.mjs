@@ -37,27 +37,22 @@ test("public routes retain the existing navbar and public theme control",async()
   assert.match(themePreference,/localStorage\.setItem\(THEME_KEY, theme\)/);
 });
 
-test("client header reuses the persisted theme toggle",async()=>{
-  const[header,toggle]=await Promise.all([
-    read("components/client-portal/ClientPortalHeader.tsx"),
-    read("components/ThemeToggle.tsx"),
-  ]);
-  assert.match(header,/ThemeToggle className="client-theme-toggle"/);
-  assert.match(toggle,/document\.documentElement\.dataset\.theme = nextTheme/);
-  assert.match(toggle,/nextTheme: Theme = theme === "dark" \? "light" : "dark"/);
+test("client header is light-only without mutating persisted Studio or public theme",async()=>{
+  const[header,clientCss,toggle]=await Promise.all([read("components/client-portal/ClientPortalHeader.tsx"),read("app/client/client-portal.css"),read("components/ThemeToggle.tsx")]);
+  assert.doesNotMatch(header,/ThemeToggle|client-theme-toggle|persistThemePreference/);
+  assert.match(clientCss,/\.client-route-root \{[^}]*color-scheme:light/);
+  assert.match(toggle,/persistThemePreference\(nextTheme\)/);
 });
 
-test("client light and dark surfaces are scoped without weakening Studio isolation",async()=>{
+test("client light surfaces are explicit without weakening Studio isolation",async()=>{
   const[clientCss,globals,shell]=await Promise.all([
     read("app/client/client-portal.css"),
     read("app/globals.css"),
     read("components/client-portal/ClientPortalShell.tsx"),
   ]);
   assert.match(shell,/studio-root client-portal/);
-  assert.match(clientCss,/html\[data-theme="dark"\] \.client-portal\.studio-root/);
-  for(const token of["--studio-bg: #0f1720","--studio-surface: #17212b","--studio-text: #e8eef4","--studio-border: #2c3a47","color-scheme: dark"])assert.match(clientCss,new RegExp(token.replace(/[.*+?^${}()|[\]\\]/g,"\\$&")));
-  assert.match(clientCss,/\.client-portal :where\(input, select, textarea\)/);
-  assert.match(clientCss,/\.client-route-root > main/);
+  for(const token of["--studio-workspace:#f7f9fc","--studio-surface:#fff","--studio-surface-muted:#f3f6fa","--studio-border:#e3e9ef","color-scheme:light"])assert.match(clientCss,new RegExp(token.replace(/[.*+?^${}()|[\]\\]/g,"\\$&")));
+  assert.doesNotMatch(clientCss,/html\[data-theme="dark"\] \.client-(portal|route-root)/);
   assert.match(globals,/\.studio-root\s*\{/);
   assert.match(globals,/color-scheme:\s*light/);
   assert.doesNotMatch(clientCss,/(^|\n)\s*(html|body|input|label|button)\s*\{/);

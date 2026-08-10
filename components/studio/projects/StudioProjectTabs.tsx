@@ -11,7 +11,6 @@ export default function StudioProjectTabs({projectId,active="overview"}:{project
     {href: `/studio/projects/${projectId}/finance`,label:"Finans",icon:"wallet" as const},
     {href:`/studio/projects/${projectId}/client`,label:"Müşteri Erişimi",icon:"clients" as const},
     {label:"Revizyonlar",icon:"revision" as const,badge:"Yakında",disabled:true},
-    {label:"Görevler",icon:"check" as const,badge:"Yakında",disabled:true},
     {label:"Takvim",icon:"calendar" as const,badge:"Yakında",disabled:true},
   ];
   const activeHref=links[({overview:0,files:1,renders:2,"official-processes":3,stages:4,finance:5,client:6})[active]]?.href ?? `/studio/projects/${projectId}`;
