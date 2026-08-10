@@ -5,6 +5,7 @@ import test from "node:test";
 const page=readFileSync("app/odeme/[token]/page.tsx","utf8");
 const checkout=readFileSync("components/payments/PublicPaymentCheckoutButton.tsx","utf8");
 const css=readFileSync("app/odeme/[token]/public-payment.css","utf8");
+const layout=readFileSync("app/odeme/[token]/layout.tsx","utf8");
 
 test("public payment uses real ARZ and iyzico assets with isolated premium shell",()=>{
  assert.match(page,/\/arz-logo-final\.png/);
@@ -15,6 +16,11 @@ test("public payment uses real ARZ and iyzico assets with isolated premium shell
 });
 
 test("public payment typography and branded CTA contract is readable and responsive",()=>{
+ assert.match(layout,/localFont/);
+ assert.match(layout,/variable:"--font-studio"/);
+ assert.match(css,/font-family:var\(--font-studio\),Arial,Helvetica,sans-serif/);
+ assert.match(css,/public-payment-eyebrow\{[^}]*font-weight:650[^}]*letter-spacing:\.1em/);
+ assert.match(css,/public-payment-heading h1\{[^}]*font-weight:700[^}]*letter-spacing:-\.035em[^}]*line-height:1\.15/);
  assert.match(css,/public-payment-eyebrow\{[^}]*font-size:12px/);
  assert.match(css,/public-payment-details dt\{[^}]*font-size:13px/);
  assert.match(css,/public-payment-details dd\{[^}]*font-size:14px/);
