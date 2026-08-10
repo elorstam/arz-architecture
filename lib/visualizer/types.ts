@@ -1,6 +1,9 @@
 export type VisualizerRenderQuality="draft"|"standard"|"ultra_final";
 export type VisualizerComputeMode="auto"|"local"|"cloud";
 export type VisualizerJobStatus="queued"|"assigned"|"running"|"paused"|"completed"|"failed"|"cancelled";
+export type VisualizerJobDesiredState="running"|"paused"|"cancelled";
+export type VisualizerJobEventType="created"|"assigned"|"started"|"paused"|"resumed"|"cancel_requested"|"cancelled"|"failed"|"completed"|"requeued"|"lease_expired";
+export type VisualizerJobActorType="user"|"machine"|"system";
 export type VisualizerMachineStatus="online"|"busy"|"offline"|"disabled";
 export type VisualizerRenderMode="interior"|"exterior";
 export type VisualizerTimeOfDay="day"|"golden_hour"|"night";
@@ -14,3 +17,5 @@ export type VisualizerRenderSettings={width:number;height:number;steps?:number;s
 export type VisualizerRenderDNA={seed?:number;model?:string;workflowVersion:string;prompt:string;negativePrompt?:string;references:VisualizerReference[];settings:VisualizerRenderSettings;camera?:VisualizerCamera;quality:VisualizerRenderQuality;compute:VisualizerComputeMode;machineId?:string;createdBy:string;createdAt:string};
 export type VisualizerRenderRequest={organizationId:string;projectId:string;sceneId?:string;cameraId?:string;camera?:VisualizerCamera;quality:VisualizerRenderQuality;compute:VisualizerComputeMode;mode:VisualizerRenderMode;timeOfDay:VisualizerTimeOfDay;weather:VisualizerWeather;prompt:string;negativePrompt?:string;references?:VisualizerReference[];settings:VisualizerRenderSettings};
 export type VisualizerMachine={id:string;name:string;hostname:string;os:string;agentVersion:string;gpuName:string;gpuVramMb:number;status:VisualizerMachineStatus;lastHeartbeatAt?:string;maxConcurrentJobs:number;currentJobCount:number};
+export type VisualizerRenderJob={id:string;organizationId:string;projectId:string;createdBy:string;status:VisualizerJobStatus;desiredState:VisualizerJobDesiredState;priority:number;quality:VisualizerRenderQuality;requestedComputeMode:VisualizerComputeMode;resolvedComputeMode?:"local"|"cloud";renderMode:VisualizerRenderMode;timeOfDay:VisualizerTimeOfDay;weather:VisualizerWeather;requestSnapshot:VisualizerRenderRequest;assignedMachineId?:string;assignmentLeaseId?:string;assignmentLeaseExpiresAt?:string;minimumGpuVramMb?:number;progressPercent:number;etaSeconds?:number;attemptCount:number;maxAttempts:number;errorCode?:string;errorMessage?:string;queuedAt:string;assignedAt?:string;startedAt?:string;completedAt?:string;failedAt?:string;cancelledAt?:string;lastAgentUpdateAt?:string};
+export type VisualizerRenderJobProgress={status?:VisualizerJobStatus;progressPercent?:number;etaSeconds?:number;errorCode?:string;errorMessage?:string;leaseId:string};

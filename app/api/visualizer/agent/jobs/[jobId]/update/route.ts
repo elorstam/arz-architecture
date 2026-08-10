@@ -1,0 +1,4 @@
+import {NextResponse} from "next/server";
+import {updateAgentJob} from "@/lib/visualizer/server";
+const headers={"Cache-Control":"private, no-store","X-Content-Type-Options":"nosniff"};
+export async function POST(request:Request,{params}:{params:Promise<{jobId:string}>}){const match=/^Bearer\s+(.+)$/i.exec(request.headers.get("authorization")??"");if(!match)return NextResponse.json({error:"Unauthorized"},{status:401,headers});try{const {jobId}=await params;return NextResponse.json(await updateAgentJob(match[1],jobId,await request.json()),{headers});}catch(error){const code=error instanceof Error?error.message:"update_failed";const status=code==="invalid_agent_credential"?401:code==="job_lease_invalid"?409:code==="illegal_job_transition"||code==="job_terminal"?409:code.includes("Invalid input")?400:503;return NextResponse.json({error:status===401?"Unauthorized":status===409?"Job update rejected":"Job update unavailable"},{status,headers});}}
