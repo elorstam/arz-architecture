@@ -6,13 +6,14 @@ import{isCheckoutCustomerProfileComplete}from"@/lib/payments/customer-payment-pr
 import{isReusableInitializedCheckout}from"@/lib/payments/iyzico/checkout-attempt";
 import{attachAttemptToPublicLink,resolvePublicPayment}from"@/lib/payments/public-links";
 import{checkPublicPaymentRateLimit}from"@/lib/payments/public-rate-limit";
-import{isLocalHostname,scopeForHostname}from"@/lib/routing/app-domains";
+import{isAllowedPublicPaymentRequest,isLocalHostname,scopeForHostname}from"@/lib/routing/app-domains";
 
 export const runtime="nodejs";
 const headers={"Cache-Control":"private, no-store","X-Content-Type-Options":"nosniff","Referrer-Policy":"no-referrer","X-Robots-Tag":"noindex, nofollow"};
 const json=(body:unknown,status:number)=>NextResponse.json(body,{status,headers});
 export async function POST(request:Request,{params}:{params:Promise<{token:string}>}){
- const token=(await params).token,host=request.headers.get("x-forwarded-host")||request.headers.get("host"),scope=scopeForHostname(host),ip=(request.headers.get("x-forwarded-for")||request.headers.get("x-real-ip")||"unknown").split(",")[0].trim();
+ const token=(await params).token,host=request.headers.get("x-forwarded-host")||request.headers.get("host"),protocol=request.headers.get("x-forwarded-proto")||new URL(request.url).protocol.replace(":",""),scope=scopeForHostname(host),ip=(request.headers.get("x-forwarded-for")||request.headers.get("x-real-ip")||"unknown").split(",")[0].trim();
+ if(!isAllowedPublicPaymentRequest(host,protocol))return json({error:"Bu ödeme bağlantısı artık geçerli değil."},404);
  if(scope!=="public"&&scope!=="local"||!isLocalHostname(host)&&new URL(request.url).protocol!=="https:")return json({error:"Bu ödeme bağlantısı artık geçerli değil."},404);
  if(!checkPublicPaymentRateLimit(`${ip}:${token.slice(0,8)}`))return json({error:"Lütfen kısa süre sonra tekrar deneyin."},429);
  const contentLength=Number(request.headers.get("content-length")||0);if(contentLength){const body=await request.json().catch(()=>null);if(!body||typeof body!=="object"||Object.keys(body).length)return json({error:"Geçersiz ödeme isteği."},400);}

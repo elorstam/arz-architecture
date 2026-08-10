@@ -48,6 +48,19 @@ export function isLocalHostname(value: string | null | undefined) {
   return hostname === "localhost" || hostname === "127.0.0.1" || hostname === "::1" || hostname.endsWith(".localhost");
 }
 
+export type PublicPaymentHostClass="apex"|"www"|"local"|"invalid";
+export function classifyPublicPaymentHost(value:string|null|undefined):PublicPaymentHostClass{
+  const hostname=normalizeHostname(value);
+  if(isLocalHostname(hostname))return"local";
+  if(hostname==="arzmimarlik.net")return"apex";
+  if(hostname==="www.arzmimarlik.net")return"www";
+  return"invalid";
+}
+export function isAllowedPublicPaymentRequest(host:string|null|undefined,protocol:string|null|undefined){
+  const hostClass=classifyPublicPaymentHost(host);
+  return hostClass==="local"||((hostClass==="apex"||hostClass==="www")&&protocol?.split(",",1)[0]?.trim().toLowerCase()==="https");
+}
+
 export function appHostname(scope: ArzAppScope) {
   return new URL(configuredOrigin(scope)).hostname.toLowerCase();
 }
@@ -59,6 +72,8 @@ export function appOrigin(scope: ArzAppScope) {
 export function scopeForHostname(value: string | null | undefined): ArzAppScope | "local" | "unknown" {
   const hostname = normalizeHostname(value);
   if (isLocalHostname(hostname)) return "local";
+  const publicPaymentHost=classifyPublicPaymentHost(hostname);
+  if(publicPaymentHost==="apex"||publicPaymentHost==="www")return"public";
   if (hostname === appHostname("studio")) return "studio";
   if (hostname === appHostname("client")) return "client";
   if (hostname === appHostname("public") || hostname === `www.${appHostname("public")}`) return "public";
