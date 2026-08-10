@@ -19,13 +19,13 @@ test("Finance selection has exactly one non-null setter on the explicit row trig
 test("blank areas and pointer movement cannot open or close the Finance drawer",()=>{
  assert.equal((finance.match(/setSelectedPaymentId\(null\)/g)??[]).length,1);
  assert.doesNotMatch(finance,/onClick=\{[^}]*setSelectedPaymentId[^}]*\}[^>]*className="client-finance-(list|surface|page)/);
- assert.match(drawer,/client-finance-drawer-overlay" onClick=\{onClose\}/);
+ assert.match(drawer,/client-finance-payment-overlay" onClick=\{close\}/);
 });
 
 test("Finance drawer is fixed full-height and mobile-safe",()=>{
- assert.match(financeCss,/\.client-finance-payment-drawer\{position:fixed;top:0;right:0;bottom:0;/);
+ assert.match(financeCss,/\.client-finance-payment-panel\{position:absolute;top:0;right:0;bottom:0;/);
  assert.match(financeCss,/width:min\(520px,100vw\);height:100dvh/);
- assert.match(financeCss,/@media\(max-width:767px\)\{\.client-finance-payment-drawer\{width:100vw\}/);
+ assert.match(financeCss,/@media\(max-width:767px\)\{\.client-finance-payment-panel\{width:100vw\}/);
  assert.doesNotMatch(finance,/StudioDrawer/);
 });
 

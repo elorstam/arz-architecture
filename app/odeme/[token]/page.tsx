@@ -1,8 +1,48 @@
-import type{Metadata}from"next";
-import{connection}from"next/server";
-import PublicPaymentCheckoutButton from"@/components/payments/PublicPaymentCheckoutButton";
-import{resolvePublicPayment}from"@/lib/payments/public-links";
-import"./public-payment.css";
+import type {Metadata} from "next";
+import Image from "next/image";
+import {connection} from "next/server";
+import PublicPaymentCheckoutButton from "@/components/payments/PublicPaymentCheckoutButton";
+import {resolvePublicPayment} from "@/lib/payments/public-links";
+import "./public-payment.css";
 
 export const metadata:Metadata={title:"Güvenli Ödeme | ARZ Mimarlık",robots:{index:false,follow:false,nocache:true}};
-export default async function PublicPaymentPage({params,searchParams}:{params:Promise<{token:string}>;searchParams:Promise<{payment?:string}>}){await connection();const{token}=await params;await searchParams;const resolved=await resolvePublicPayment(token,true),paid=Boolean(resolved&&(resolved.linkStatus==="paid"||resolved.payment.status==="paid")),invalid=!resolved||resolved.linkStatus!=="active"||resolved.payment.status!=="pending"||Number(resolved.payment.amount)<=0||new Date(resolved.expiresAt)<=new Date();return <div className="public-payment-page"><section className="public-payment-card"><header><span className="public-payment-mark">ARZ</span><p>ARZ MİMARLIK</p></header>{paid?<div className="public-payment-state success"><span>✓</span><h1>Ödemeniz başarıyla alındı.</h1><p>Ödeme kaydınız güvenli biçimde tamamlandı.</p></div>:invalid?<div className="public-payment-state"><h1>{resolved?.linkStatus==="paid"?"Bu ödeme tamamlanmış.":"Bu ödeme bağlantısı artık geçerli değil."}</h1><p>Bilgi için ARZ Mimarlık ile iletişime geçebilirsiniz.</p></div>:<><div className="public-payment-heading"><small>ÖDEME TALEBİ</small><h1>{resolved.payment.title}</h1></div><dl><div><dt>Proje</dt><dd>{resolved.payment.project_name}</dd></div><div><dt>Tutar</dt><dd>{new Intl.NumberFormat("tr-TR",{style:"currency",currency:resolved.payment.currency}).format(Number(resolved.payment.amount))}</dd></div><div><dt>Bağlantı son kullanım tarihi</dt><dd>{new Intl.DateTimeFormat("tr-TR",{dateStyle:"long",timeStyle:"short",timeZone:"Europe/Istanbul"}).format(new Date(resolved.expiresAt))}</dd></div></dl><PublicPaymentCheckoutButton token={token}/><p className="public-payment-secure">Ödeme işleminiz iyzico güvenli ödeme altyapısı ile gerçekleştirilir.</p></>}</section></div>}
+
+export default async function PublicPaymentPage({params,searchParams}:{params:Promise<{token:string}>;searchParams:Promise<{payment?:string}>}){
+ await connection();
+ const {token}=await params;
+ await searchParams;
+ const resolved=await resolvePublicPayment(token,true);
+ const paid=Boolean(resolved&&(resolved.linkStatus==="paid"||resolved.payment.status==="paid"));
+ const invalid=!resolved||resolved.linkStatus!=="active"||resolved.payment.status!=="pending"||Number(resolved.payment.amount)<=0||new Date(resolved.expiresAt)<=new Date();
+ return <main className="public-payment-page">
+  <section className="public-payment-card">
+   <header className="public-payment-brand">
+    <Image src="/arz-logo-final.png" alt="ARZ Mimarlık" width={116} height={38} priority/>
+    <span aria-hidden="true"/>
+    <p>ARZ MİMARLIK</p>
+   </header>
+   {paid?<div className="public-payment-state success">
+    <span aria-hidden="true">✓</span>
+    <p className="public-payment-eyebrow">ÖDEME TAMAMLANDI</p>
+    <h1>Ödemeniz başarıyla alındı.</h1>
+    <p>Ödeme kaydınız güvenli biçimde tamamlandı.</p>
+   </div>:invalid?<div className="public-payment-state">
+    <p className="public-payment-eyebrow">ÖDEME BAĞLANTISI</p>
+    <h1>{resolved?.linkStatus==="paid"?"Bu ödeme tamamlanmış.":"Bu ödeme bağlantısı artık geçerli değil."}</h1>
+    <p>Bilgi için ARZ Mimarlık ile iletişime geçebilirsiniz.</p>
+   </div>:<>
+    <div className="public-payment-heading">
+     <p className="public-payment-eyebrow">ÖDEME TALEBİ</p>
+     <h1>{resolved.payment.title}</h1>
+    </div>
+    <dl className="public-payment-details">
+     <div><dt>Proje</dt><dd>{resolved.payment.project_name}</dd></div>
+     <div><dt>Tutar</dt><dd className="public-payment-amount">{new Intl.NumberFormat("tr-TR",{style:"currency",currency:resolved.payment.currency}).format(Number(resolved.payment.amount))}</dd></div>
+     <div><dt>Bağlantı son kullanım tarihi</dt><dd>{new Intl.DateTimeFormat("tr-TR",{dateStyle:"long",timeStyle:"short",timeZone:"Europe/Istanbul"}).format(new Date(resolved.expiresAt))}</dd></div>
+    </dl>
+    <PublicPaymentCheckoutButton token={token}/>
+    <p className="public-payment-secure">Ödeme işleminiz iyzico güvenli ödeme altyapısı ile gerçekleştirilir.</p>
+   </>}
+  </section>
+ </main>;
+}
