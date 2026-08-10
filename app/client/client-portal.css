@@ -62,4 +62,21 @@
 .client-portal .studio-empty-v2 p { font-size:.875rem; line-height:1.6; }
 .client-portal :where(.client-project-facts dt,.client-progress-title p) { font-size:.75rem; line-height:1.45; }
 .client-portal :where(.client-project-facts dd,.client-progress-meter>div:first-child,.client-progress-meter p,.client-welcome-meta>span,.client-muted-action) { font-size:.8125rem; line-height:1.5; }
+.client-portal :where(.client-welcome-meta strong,.client-render-card p,.client-render-card span,.client-operation-list span,.client-activity-list span) { font-size:.875rem; line-height:1.5; }
+.client-portal :where(.client-operation-list strong,.client-activity-list strong,.client-finance-value>strong,.client-render-card h3) { font-size:.875rem; line-height:1.45; }
+.client-portal .client-panel .studio-empty-v2 h3 { font-size:1rem; }
+.client-portal .client-panel .studio-empty-v2 p { font-size:.875rem; line-height:1.6; }
+.client-portal :where(.client-finance-header-meta,.client-stages-header-meta,.client-renders-header-meta,.client-files-header-meta,.client-documents-header-meta) { font-size:.8125rem; }
+.client-portal :where(.client-finance-toolbar__count,.client-render-toolbar__count,.client-file-toolbar__count,.client-document-toolbar__count,.client-notification-toolbar__count) { font-size:.8125rem; }
+.client-portal :where(.client-finance-list button span,.client-finance-date,.client-payment-request dt,.client-paid-payment-list article span,.client-file-main span,.client-file-date,.client-document-main span,.client-document-date,.client-render-gallery-top,.client-render-gallery-date,.client-stage-order,.client-stage-date,.client-notification-meta) { font-size:.8125rem; line-height:1.5; }
+.client-portal :where(.client-payment-request__description,.client-payment-checkout p,.client-payment-request-empty,.client-stage-description,.client-stage-detail p,.client-stage-detail__notice,.client-render-detail-preview p,.client-render-detail section p,.client-notification-list li>button>span:last-child,.client-notification-detail>p) { font-size:.875rem; line-height:1.6; }
+.client-portal :where(.client-payment-request dt,.client-file-detail dt,.client-document-detail dt,.client-render-detail dt,.client-stage-detail dt,.client-notification-detail dt) { font-size:.8125rem; }
+.client-portal :where(.client-payment-request dd,.client-file-detail dd,.client-document-detail dd,.client-render-detail dd,.client-stage-detail dd,.client-notification-detail dd) { font-size:.875rem; line-height:1.5; }
+.client-portal :where(.client-upcoming-payments article small,.client-upcoming-payments article b,.client-paid-payment-list article strong,.client-paid-payment-list article b,.client-render-gallery-preview,.client-render-gallery-link) { font-size:.8125rem; line-height:1.5; }
+.client-portal .client-center-tabs :where(a,span) { font-size:.8125rem; }
+.client-portal .client-center-tabs :where(a,span)[aria-selected="true"] { background:var(--studio-action-primary); color:#fff; }
+.client-portal .client-center-tabs :where(a,span)[aria-selected="true"]:hover { background:var(--studio-action-primary-hover); }
+.client-portal .client-center-tabs :where(a,span)[aria-selected="true"]:active { background:var(--studio-action-primary-pressed); }
+.client-portal [class~="text-xs"] { font-size:.8125rem; }
+.client-portal :where(.client-profile-menu p,.client-profile-menu button,.client-project-selector select,.client-project-name) { font-size:.8125rem; line-height:1.5; }
 @media(max-width:767px){.client-shell > .client-project-navigation{margin-bottom:.75rem}}
