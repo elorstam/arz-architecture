@@ -5,11 +5,11 @@ import {initializeCheckout,IyzicoError,type IyzicoErrorDetails} from "@/lib/paym
 import {authenticatedPayment,claimAttemptInitialization,createOrReuseAttempt,markAttemptFailed,markAwaiting,PaymentProfileLoadError} from "@/lib/payments/iyzico/repository";
 import {isCheckoutCustomerProfileComplete} from "@/lib/payments/customer-payment-profile";
 import {isReusableInitializedCheckout} from "@/lib/payments/iyzico/checkout-attempt";
+import{buildIyzicoCheckoutPayload,checkoutConfigFingerprint}from"@/lib/payments/iyzico/checkout-payload";
 
 export const runtime="nodejs";
 const noStore={"Cache-Control":"private, no-store","X-Content-Type-Options":"nosniff"};
 const json=(body:unknown,status:number)=>NextResponse.json(body,{status,headers:noStore});
-const amount=(value:unknown)=>Number(String(value));
 const safeException=(error:unknown)=>({exceptionName:error instanceof Error?error.name:"unknown",exceptionMessage:error instanceof Error?error.message.replace(/[\r\n\t]/g," ").slice(0,300):undefined});
 const checkoutError=(stage:string,fields:Record<string,unknown>)=>console.error("PAYMENT_CHECKOUT_FAILURE",{stage,...fields});
 
@@ -21,13 +21,14 @@ export async function POST(request:Request,{params}:{params:Promise<{paymentRequ
  const config=getIyzicoConfig();if(!config){checkoutError("iyzico_initialize_request",{paymentRequestId:parsed.data,normalizedCode:"PAYMENT_PROVIDER_NOT_CONFIGURED",configuration:iyzicoConfigStatus()});return json({error:"Ödeme sağlayıcısı henüz yapılandırılmadı.",code:"PAYMENT_PROVIDER_NOT_CONFIGURED"},503);}
  if(!isCheckoutCustomerProfileComplete(payment)){checkoutError("checkout_load_profile",{paymentRequestId:parsed.data,normalizedCode:"CUSTOMER_PAYMENT_PROFILE_INCOMPLETE"});return json({error:"Ödeme işlemi için müşteri bilgileriniz eksik. Lütfen ARZ Mimarlık ile iletişime geçin.",code:"CUSTOMER_PAYMENT_PROFILE_INCOMPLETE"},422);}
  if(config.environment==="live"&&!config.livePaymentsEnabled){checkoutError("iyzico_initialize_request",{paymentRequestId:parsed.data,normalizedCode:"LIVE_PAYMENTS_DISABLED",configuration:iyzicoConfigStatus()});return json({error:"Canlı ödeme sistemi henüz etkinleştirilmedi.",code:"LIVE_PAYMENTS_DISABLED"},503);}
- const names=String(payment.buyer_full_name).trim().split(/\s+/),surname=names.length>1?names.pop()!:names[0],name=names.join(" ")||surname;
  let attempt;
- try{attempt=await createOrReuseAttempt(payment.id,lookup.userId,config.environment);}catch(error){const code=error instanceof Error?error.message:"PAYMENT_ATTEMPT_FAILED";checkoutError("checkout_claim_attempt",{paymentRequestId:parsed.data,normalizedCode:code,...safeException(error)});return json({error:code==="PAYMENT_ALREADY_PAID"?"Bu ödeme zaten tamamlandı.":code==="PAYMENT_CANCELLED"?"Bu ödeme talebi iptal edildi.":"Ödeme başlatılamadı.",code},code.startsWith("PAYMENT_A")||code==="PAYMENT_CANCELLED"?409:503);}
+ const configFingerprint=checkoutConfigFingerprint(config.enabledInstallments);
+ try{attempt=await createOrReuseAttempt(payment.id,lookup.userId,config.environment,configFingerprint,config.enabledInstallments);}catch(error){const code=error instanceof Error?error.message:"PAYMENT_ATTEMPT_FAILED";checkoutError("checkout_claim_attempt",{paymentRequestId:parsed.data,normalizedCode:code,...safeException(error)});return json({error:code==="PAYMENT_ALREADY_PAID"?"Bu ödeme zaten tamamlandı.":code==="PAYMENT_CANCELLED"?"Bu ödeme talebi iptal edildi.":"Ödeme başlatılamadı.",code},code.startsWith("PAYMENT_A")||code==="PAYMENT_CANCELLED"?409:503);}
+ if(!attempt.configMatches)return json({error:"Mevcut ödeme oturumunun süresi dolduktan sonra tekrar deneyin.",code:"PAYMENT_CHECKOUT_CONFIG_CHANGED"},409);
  if(isReusableInitializedCheckout(attempt))return json({checkoutUrl:attempt.provider_checkout_url},200);
  try{if(!await claimAttemptInitialization(attempt.id))return json({error:"Ödeme bağlantısı hazırlanıyor. Lütfen kısa süre sonra tekrar deneyin.",code:"PAYMENT_INITIALIZATION_IN_PROGRESS"},409);}catch(error){checkoutError("checkout_claim_attempt",{paymentRequestId:parsed.data,attemptId:attempt.id,conversationId:attempt.conversation_id,normalizedCode:"PAYMENT_ATTEMPT_CLAIM_FAILED",...safeException(error)});return json({error:"Ödeme başlatılamadı.",code:"PAYMENT_ATTEMPT_CLAIM_FAILED"},503);}
- const price=amount(attempt.amount),ip=(request.headers.get("x-forwarded-for")||"").split(",")[0]?.trim()||"";
- const payload={locale:"tr",conversationId:attempt.conversation_id,price,paidPrice:price,currency:attempt.currency,basketId:attempt.basket_id,paymentGroup:"PRODUCT",callbackUrl:config.callbackUrl,enabledInstallments:config.enabledInstallments,buyer:{id:payment.buyer_id,name,surname,identityNumber:payment.buyer_identity_number,email:payment.buyer_email,gsmNumber:payment.buyer_gsm_number,registrationAddress:payment.buyer_registration_address,city:payment.buyer_city,country:payment.buyer_country,zipCode:payment.buyer_zip_code||undefined,ip},billingAddress:{contactName:payment.buyer_full_name,address:payment.buyer_registration_address,city:payment.buyer_city,country:payment.buyer_country,zipCode:payment.buyer_zip_code||undefined},basketItems:[{id:payment.id,price,name:payment.title,category1:"Mimarlık Hizmeti",itemType:"VIRTUAL"}]};
+ const ip=(request.headers.get("x-forwarded-for")||"").split(",")[0]?.trim()||"";
+ const payload=buildIyzicoCheckoutPayload({payment,attempt,callbackUrl:config.callbackUrl,enabledInstallments:config.enabledInstallments,ip});
  try{
   const response=await initializeCheckout(config,payload);if(response.conversationId!==attempt.conversation_id||typeof response.token!=="string")throw new IyzicoError("PAYMENT_PROVIDER_RESPONSE_INVALID");
   const checkout=new URL(String(response.paymentPageUrl));if(checkout.protocol!=="https:"||!(checkout.hostname==="iyzipay.com"||checkout.hostname.endsWith(".iyzipay.com")))throw new IyzicoError("PAYMENT_PROVIDER_URL_INVALID");

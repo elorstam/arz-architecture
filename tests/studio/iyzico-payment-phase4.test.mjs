@@ -11,7 +11,7 @@ const result={conversationId:"conversation",basketId:"basket",currency:"TRY",pri
 
 test("installment configuration is allowlisted normalized and defaults safely",()=>{assert.deepEqual(parseIyzicoInstallments(undefined),[1]);assert.deepEqual(parseIyzicoInstallments("1,2,3,6,9,12"),[1,2,3,6,9,12]);assert.deepEqual(parseIyzicoInstallments("6,3,6,garbage,99,-1"),[3,6]);assert.deepEqual(parseIyzicoInstallments("garbage,99"),[1]);assert.match(checkout,/enabledInstallments:config\.enabledInstallments/);assert.doesNotMatch(checkout,/body\.(?:installment|enabledInstallments)/);});
 
-test("checkout keeps installment configuration after temporary diagnostics cleanup",()=>{assert.match(checkout,/enabledInstallments:config\.enabledInstallments/);assert.match(client,/const body=JSON\.stringify\(finalPayload\)/);assert.doesNotMatch(client,/IYZICO_CF_INITIALIZE_DIAGNOSTIC/);});
+test("checkout keeps installment configuration after temporary diagnostics cleanup",()=>{const builder=read("lib/payments/iyzico/checkout-payload.ts");assert.match(checkout,/enabledInstallments:config\.enabledInstallments/);assert.match(builder,/enabledInstallments/);assert.match(client,/const body=JSON\.stringify\(finalPayload\)/);assert.doesNotMatch(client,/IYZICO_CF_INITIALIZE_DIAGNOSTIC/);});
 
 test("initialize result temporary diagnostic is absent",()=>{assert.doesNotMatch(client,/IYZICO_CF_INITIALIZE_RESULT/);});
 
