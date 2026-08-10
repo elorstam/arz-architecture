@@ -3,7 +3,7 @@ import fs from "node:fs";
 import test from "node:test";
 
 const migration=fs.readFileSync("supabase/migrations/028_permanent_project_delete.sql","utf8");
-const page=fs.readFileSync("components/studio/projects/StudioPermanentDeleteDialog.tsx","utf8");
+const page=fs.readFileSync("components/studio/projects/ProjectPermanentDeleteDialog.tsx","utf8");
 const actions=fs.readFileSync("app/studio/(protected)/projects/actions.ts","utf8");
 
 test("permanent deletion is owner-gated and audited server-side",()=>{
@@ -16,7 +16,7 @@ test("permanent deletion is owner-gated and audited server-side",()=>{
 });
 
 test("confirmation requires exact project name and is one-time",()=>{
- assert.match(page,/matches=name\.trim\(\)/);
+ assert.match(page,/confirmation\.trim\(\)/);
  assert.match(page,/Bu işlem geri alınamaz/);
  assert.match(page,/Kalıcı Olarak Sil/);
  assert.match(migration,/used_at/);
