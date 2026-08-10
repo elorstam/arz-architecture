@@ -12,11 +12,10 @@ const operation=(path:string)=>path===INITIALIZE_PATH?"initialize":path===REFUND
 function providerFields(result:IyzicoResponse|null){return{providerStatus:safeText(result?.status,60),providerErrorCode:safeText(result?.errorCode,100),providerErrorMessage:safeText(result?.errorMessage,300)};}
 function logFailure(details:IyzicoErrorDetails&{code:string}){console.error("IYZICO_PAYMENT_FAILURE",details);}
 
-async function call(config:IyzicoConfig,path:string,payload:Record<string,unknown>){
- const body=JSON.stringify(payload),randomKey=`${Date.now()}${randomBytes(12).toString("hex")}`;
+async function call(config:IyzicoConfig,path:string,finalPayload:Record<string,unknown>){
+ const body=JSON.stringify(finalPayload),randomKey=`${Date.now()}${randomBytes(12).toString("hex")}`;
  const controller=new AbortController(),timer=setTimeout(()=>controller.abort(),12000);
  try{
-  if(path===INITIALIZE_PATH){const enabledInstallments=Array.isArray(payload.enabledInstallments)?payload.enabledInstallments.filter(value=>Number.isInteger(value)).map(Number):[];console.info("IYZICO_INITIALIZE_INSTALLMENTS",{enabledInstallments});}
   const response=await fetch(`${config.baseUrl}${path}`,{method:"POST",headers:{Authorization:iyzicoAuthorization(config.apiKey,config.secretKey,randomKey,path,body),"x-iyzi-rnd":randomKey,"Content-Type":"application/json"},body,cache:"no-store",signal:controller.signal});
   const result=await response.json().catch(()=>null) as IyzicoResponse|null;
   if(!response.ok||!result){const details={stage:`iyzico_${operation(path)}_http`,httpStatus:response.status,...providerFields(result)};logFailure({code:"PAYMENT_PROVIDER_UNAVAILABLE",...details});throw new IyzicoError("PAYMENT_PROVIDER_UNAVAILABLE",details);}

@@ -25,8 +25,3 @@ export function getIyzicoConfig():IyzicoConfig|null{
  if(callback.protocol!=="https:")return null;
  return parsed.data;
 }
-
-export function iyzicoInstallmentConfigStatus(config:Pick<IyzicoConfig,"environment"|"enabledInstallments">){
- const raw=process.env.IYZICO_ENABLED_INSTALLMENTS;
- return{configured:Boolean(raw?.trim()),rawPresent:raw!==undefined,parsedInstallments:[...config.enabledInstallments],environment:config.environment};
-}

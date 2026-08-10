@@ -184,6 +184,7 @@ export default async function RootLayout({
   const messages = await getMessages();
   const requestHeaders = await headers();
   const hostScope = scopeForHostname(requestHeaders.get("x-forwarded-host") || requestHeaders.get("host"));
+  const sensitivePublicRoute=requestHeaders.get("x-arz-sensitive-public-route")==="1";
 
   return (
     <html lang={locale} data-theme="dark" suppressHydrationWarning>
@@ -208,7 +209,7 @@ export default async function RootLayout({
           <main>{children}</main>
         </NextIntlClientProvider>
 
-        <GoogleAnalytics gaId="G-7EMGB9PSVS" />
+        {sensitivePublicRoute?null:<GoogleAnalytics gaId="G-7EMGB9PSVS" />}
       </body>
     </html>
   );

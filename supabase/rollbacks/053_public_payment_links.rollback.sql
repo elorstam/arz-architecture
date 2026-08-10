@@ -1,0 +1,10 @@
+begin;
+drop trigger if exists studio_public_payment_link_payment_status on public.studio_client_payment_requests;
+drop function if exists public.sync_public_payment_link_status();
+drop function if exists public.studio_revoke_public_payment_link(uuid,uuid);
+drop function if exists public.studio_create_public_payment_link(uuid,uuid,text,timestamptz,text,text,text,text,text,text,text,text,text);
+drop function if exists public.studio_list_public_payment_links(uuid);
+alter table public.studio_client_payment_attempts drop column if exists public_payment_link_id,drop column if exists checkout_source;
+drop table if exists public.studio_public_payment_links;
+notify pgrst,'reload schema';
+commit;

@@ -19,6 +19,11 @@ export async function proxy(request: NextRequest) {
     return requestHeaders;
   };
 
+  if(request.nextUrl.pathname.startsWith("/odeme/")){
+    const requestHeaders=upstreamHeaders();requestHeaders.set("x-arz-sensitive-public-route","1");
+    return NextResponse.next({request:{headers:requestHeaders},headers:{"Cache-Control":"private, no-store","Referrer-Policy":"no-referrer","X-Robots-Tag":"noindex, nofollow"}});
+  }
+
   if (decision.kind === "redirect") {
     return NextResponse.redirect(decision.url, 308);
   }
