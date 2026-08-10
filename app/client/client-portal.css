@@ -54,4 +54,12 @@
 .client-header__portal-name { display:flex; align-items:baseline; gap:.35rem; }
 .client-header__portal-name small { color:#94a3b8; font-size:9px; font-weight:400; letter-spacing:.08em; text-transform:none; }
 .client-shell > .client-project-navigation { margin-top:0; margin-bottom:1rem; }
+.client-portal .client-project-navigation .studio-tab--workspace-navigation { font-size:.8125rem; }
+.client-portal :where(.studio-page-description,.studio-section-header p,.studio-helper-text) { font-size:.9375rem; line-height:1.6; }
+.client-portal :where(.studio-meta-label,.studio-label,.studio-form-label) { font-size:.8125rem; line-height:1.5; }
+.client-portal .studio-meta-value { font-size:.9375rem; line-height:1.6; }
+.client-portal .studio-empty-v2 h3 { font-size:1rem; }
+.client-portal .studio-empty-v2 p { font-size:.875rem; line-height:1.6; }
+.client-portal :where(.client-project-facts dt,.client-progress-title p) { font-size:.75rem; line-height:1.45; }
+.client-portal :where(.client-project-facts dd,.client-progress-meter>div:first-child,.client-progress-meter p,.client-welcome-meta>span,.client-muted-action) { font-size:.8125rem; line-height:1.5; }
 @media(max-width:767px){.client-shell > .client-project-navigation{margin-bottom:.75rem}}

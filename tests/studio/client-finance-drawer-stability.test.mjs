@@ -8,15 +8,16 @@ const notice=readFileSync("components/client-portal/ClientPaymentResultNotice.ts
 
 test("completed payment selection is stable local client state",()=>{
  assert.match(list,/useState<string\|null>\(null\)/);
- assert.match(list,/entries\.find\(item=>item\.id===selectedPaymentId\)\?\?null/);
+ assert.match(list,/entries\.find\(payment=>payment\.id===selectedPaymentId\)\?\?null/);
  assert.match(list,/onClick=\{\(\)=>setSelectedPaymentId\(item\.id\)\}/);
- assert.match(list,/open=\{selectedPaymentId!==null\}/);
+ assert.match(list,/selectedPayment\?<ClientFinancePaymentDrawer/);
 });
 
 test("drawer close handler is stable and a different row swaps content in place",()=>{
  assert.match(list,/useCallback\(\(\)=>setSelectedPaymentId\(null\),\[\]\)/);
  assert.match(list,/onClose=\{closeDrawer\}/);
- assert.equal((list.match(/<StudioDrawer /g)??[]).length,1);
+ assert.equal((list.match(/<ClientFinancePaymentDrawer /g)??[]).length,1);
+ assert.doesNotMatch(list,/StudioDrawer/);
  assert.doesNotMatch(list,/key=\{(?:Date\.now\(\)|Math\.random\(\)|selected)/);
 });
 
@@ -31,5 +32,5 @@ test("post-payment notice keeps history-only query cleanup",()=>{
 });
 
 test("payment status is rendered once in each list and detail presentation",()=>{
- assert.equal((list.match(/statusLabels\[selected\.status\]\?\?selected\.status/g)??[]).length,1);
+ assert.equal((list.match(/statusLabels\[selectedPayment\.status\]\?\?selectedPayment\.status/g)??[]).length,1);
 });

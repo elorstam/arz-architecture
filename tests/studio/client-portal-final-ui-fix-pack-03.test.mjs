@@ -4,7 +4,7 @@ import test from "node:test";
 
 const read=path=>readFileSync(path,"utf8");
 const finance=read("components/client-portal/ClientFinanceList.tsx");
-const drawer=read("components/studio/ui/StudioUiPrimitives.tsx");
+const drawer=read("components/client-portal/ClientFinancePaymentDrawer.tsx");
 const financeCss=read("app/client/(portal)/finance/client-finance.css");
 const projectTabs=read("components/studio/projects/StudioProjectTabs.tsx");
 const sharedTabs=read("components/studio/StudioTabs.tsx");
@@ -19,13 +19,14 @@ test("Finance selection has exactly one non-null setter on the explicit row trig
 test("blank areas and pointer movement cannot open or close the Finance drawer",()=>{
  assert.equal((finance.match(/setSelectedPaymentId\(null\)/g)??[]).length,1);
  assert.doesNotMatch(finance,/onClick=\{[^}]*setSelectedPaymentId[^}]*\}[^>]*className="client-finance-(list|surface|page)/);
- assert.match(drawer,/event\.target===event\.currentTarget\)onClose\(\)/);
+ assert.match(drawer,/client-finance-drawer-overlay" onClick=\{onClose\}/);
 });
 
-test("Finance drawer is fixed right below the desktop Client header and mobile-safe",()=>{
- assert.match(financeCss,/\.client-portal \.studio-drawer\{top:72px;bottom:0;width:min\(100%,32rem\)\}/);
- assert.match(financeCss,/@media\(max-width:767px\)\{\.client-portal \.studio-drawer-backdrop,\.client-portal \.studio-drawer\{top:0\}/);
- assert.match(globals,/\.studio-root \.studio-drawer \{[^}]*position:fixed/);
+test("Finance drawer is fixed full-height and mobile-safe",()=>{
+ assert.match(financeCss,/\.client-finance-payment-drawer\{position:fixed;top:0;right:0;bottom:0;/);
+ assert.match(financeCss,/width:min\(520px,100vw\);height:100dvh/);
+ assert.match(financeCss,/@media\(max-width:767px\)\{\.client-finance-payment-drawer\{width:100vw\}/);
+ assert.doesNotMatch(finance,/StudioDrawer/);
 });
 
 test("project navigation has the final nine items and no Tasks entry",()=>{

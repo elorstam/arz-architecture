@@ -1,6 +1,7 @@
 import Link from "next/link";
 import {notFound} from "next/navigation";
 import StudioProjectFilesPage from "@/components/studio/files/StudioProjectFilesPage";
+import StudioProjectTabs from "@/components/studio/projects/StudioProjectTabs";
 import StudioEntityTags from "@/components/studio/tags/StudioEntityTags";
 import StudioTagFilterForm from "@/components/studio/tags/StudioTagFilterForm";import{filterEntityIdsByTags}from"@/lib/studio/tags/tag-assignment-repository";
 import {STUDIO_FILE_CATEGORIES} from "@/lib/studio/files/file-constants";
@@ -16,7 +17,7 @@ export const dynamic="force-dynamic";
 export default async function ProjectFilesPage({params,searchParams}:{params:Promise<{projectId:string}>;searchParams:Promise<{folder?:string;q?:string;category?:string;extension?:string;archive?:string;error?:string;tags?:string|string[];tagMode?:string;favorites?:string}>}){
  const{projectId}=await params;const query=await searchParams;
  const status=await getStudioGoogleDriveStatus(projectId).catch(()=>notFound());
- if(!status.connected||status.needsReauth||!status.initialized)return <DriveBlockingState projectId={projectId} status={status} error={query.error}/>;
+ if(!status.connected||status.needsReauth||!status.initialized)return <><div className="mx-auto min-w-0 max-w-[1540px] px-4 pt-5 sm:px-6 lg:px-8"><StudioProjectTabs projectId={projectId} active="files"/></div><DriveBlockingState projectId={projectId} status={status} error={query.error}/></>;
  const workspace=await getStudioProjectFileWorkspace(projectId,{folderId:query.folder,query:query.q?.trim().slice(0,120),category:STUDIO_FILE_CATEGORIES.find(value=>value===query.category),extension:query.extension?.toLowerCase().replace(/[^a-z0-9]/g,"").slice(0,10),archive:(["active","archived","all"].includes(query.archive??"")?query.archive:"active") as StudioFileArchiveFilter}).catch(()=>notFound());
  const tagIds=(Array.isArray(query.tags)?query.tags:(query.tags??"").split(",")).filter(Boolean);const tagMode=query.tagMode==="all"?"all":"any";const[matched,favoriteKeys]=await Promise.all([filterEntityIdsByTags("file",tagIds,tagMode),listUserFavoriteKeys()]);let filtered=matched?{...workspace,files:workspace.files.filter(file=>matched.has(file.id))}:workspace;const favoritesOnly=query.favorites==="1";if(favoritesOnly)filtered={...filtered,files:filtered.files.filter(file=>favoriteKeys.has(`file:${file.id}`))};const[thumbnailMap,tags]=await Promise.all([listStudioFileThumbnails(projectId,filtered.files),listStudioFileTagNames(filtered.files.map(file=>file.id))]);const thumbnails=Object.fromEntries([...thumbnailMap].map(([id,value])=>[id,value]));return <><StudioTagFilterForm selected={tagIds} mode={tagMode}/><StudioProjectFilesPage workspace={filtered} favoriteKeys={favoriteKeys} favoritesOnly={favoritesOnly} thumbnails={thumbnails} tags={tags}/>{workspace.currentFolder?<div className="mx-auto max-w-[1540px] px-4 sm:px-6 lg:px-8"><StudioEntityTags entityType="folder" entityId={workspace.currentFolder.id} title="Klasör Etiketleri"/></div>:null}</>;
 }
