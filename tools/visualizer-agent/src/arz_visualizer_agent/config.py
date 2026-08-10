@@ -8,6 +8,13 @@ class AgentConfig:
     agent_version: str = "0.1.0"
     api_url: str = os.environ.get("ARZ_VISUALIZER_API_URL", "")
     agent_token: str = os.environ.get("ARZ_VISUALIZER_AGENT_TOKEN", "")
+    comfyui_url: str = os.environ.get("ARZ_VISUALIZER_COMFYUI_URL", "http://127.0.0.1:8188")
+    poll_interval_seconds: float = float(os.environ.get("ARZ_VISUALIZER_POLL_INTERVAL_SECONDS", "2"))
+    output_root: Path = Path(os.environ.get("ARZ_VISUALIZER_OUTPUT_ROOT", str(Path.home() / "Documents" / "ARZ Visualizer")))
+    smoke_checkpoint: str = os.environ.get("ARZ_VISUALIZER_SMOKE_CHECKPOINT", "")
+
+    def __repr__(self) -> str:
+        return f"AgentConfig(api_url={self.api_url!r}, comfyui_url={self.comfyui_url!r}, output_root={str(self.output_root)!r}, agent_token='[REDACTED]')"
 
 
 def heartbeat_payload(*, agent_version: str, hostname: str, os_name: str,

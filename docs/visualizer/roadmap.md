@@ -14,7 +14,7 @@ Scheduler, priority, machine assignment, pause/resume/cancel and progress/ETA. T
 
 ## PHASE 10A.3 - Local Agent
 
-GPU detection, ComfyUI integration, Workflow Library and local rendering.
+GPU detection, loopback ComfyUI integration, versioned Workflow Library, bounded claim/poll runtime, safe local PNG + `render.json` output and cancel bridge are implemented as development foundation. A real workstation/GPU render remains a manual acceptance test; no model download or cloud execution is included.
 
 ## PHASE 10A.4 - Studio Render Setup
 
