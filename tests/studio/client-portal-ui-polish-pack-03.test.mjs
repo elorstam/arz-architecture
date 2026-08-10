@@ -17,7 +17,8 @@ test("workspace navigation keeps the finance-size type while compacting layout",
 });
 
 test("studio and client navigation share the soft dark-gray active token",()=>{
-  assert.match(globals,/--studio-action-primary:\s*#444b51/);
+  assert.match(globals,/--studio-sidebar-bg:\s*#111923/);
+  assert.match(globals,/--studio-action-primary:\s*var\(--studio-sidebar-bg\)/);
   assert.match(globals,/studio-tab--workspace-navigation\.studio-tab-active[^}]*background:var\(--studio-action-primary\)/);
   assert.match(clientNav,/variant="workspace-navigation"/);
   assert.match(clientCss,/client-project-navigation \.studio-tab--workspace-navigation \{ font-size:\.8125rem/);

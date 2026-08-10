@@ -6,20 +6,14 @@ const globals = readFileSync("app/globals.css", "utf8");
 const client = readFileSync("app/client/client-portal.css", "utf8");
 const profile = readFileSync("components/client-portal/ClientProfilePage.tsx", "utf8");
 
-test("effective action palette resolves to the final graphite RGB contract", () => {
-  const colors = Object.fromEntries(
-    [...globals.matchAll(/--(studio-action-primary(?:-hover|-pressed)?):\s*(#[0-9a-f]{6})/gi)]
-      .map((match) => [match[1], match[2].toLowerCase()]),
-  );
-  assert.deepEqual(colors, {
-    "studio-action-primary": "#444b51",
-    "studio-action-primary-hover": "#525a61",
-    "studio-action-primary-pressed": "#393f44",
-  });
-  assert.equal(parseInt(colors["studio-action-primary"].slice(1, 3), 16), 68);
-  assert.equal(parseInt(colors["studio-action-primary"].slice(3, 5), 16), 75);
-  assert.equal(parseInt(colors["studio-action-primary"].slice(5, 7), 16), 81);
-  assert.doesNotMatch(globals, /--studio-action-primary:\s*#626970/i);
+test("effective action primary resolves to the exact sidebar background", () => {
+  const sidebar = globals.match(/--studio-sidebar-bg:\s*(#[0-9a-f]{6})/i)?.[1].toLowerCase();
+  assert.equal(sidebar, "#111923");
+  assert.match(globals, /--studio-action-primary:\s*var\(--studio-sidebar-bg\)/);
+  assert.match(globals, /studio-sidebar-v2 \{ background:var\(--studio-sidebar-bg\)/);
+  assert.match(globals, /--studio-action-primary-hover:\s*var\(--studio-navy\)/);
+  assert.match(globals, /--studio-action-primary-pressed:\s*color-mix\(in srgb, var\(--studio-sidebar-bg\) 88%, #000\)/);
+  assert.doesNotMatch(globals, /#444b51|#525a61|#393f44/i);
 });
 
 test("shared primary, active navigation and segmented controls resolve through the token", () => {
