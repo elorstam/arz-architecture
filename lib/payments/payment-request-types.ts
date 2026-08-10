@@ -4,7 +4,7 @@ export type PaymentRequestType=typeof PAYMENT_REQUEST_TYPES[number];
 export type PaymentRequestStatus=typeof PAYMENT_REQUEST_STATUSES[number];
 
 export type StudioPaymentRequest={
- id:string;title:string;description:string;paymentType:PaymentRequestType;amount:string;currency:string;dueDate:string|null;status:PaymentRequestStatus;paymentProvider:string|null;paidAt:string|null;createdAt:string;installment:number|null;paidPrice:string|null;merchantCommissionRate:string|null;merchantCommissionRateAmount:string|null;iyziCommissionRateAmount:string|null;iyziCommissionFee:string|null;paymentEnvironment:string|null;refundStatus:string|null;
+ id:string;title:string;description:string;paymentType:PaymentRequestType;amount:string;currency:string;dueDate:string|null;status:PaymentRequestStatus;paymentProvider:string|null;paidAt:string|null;createdAt:string;installment:number|null;paidPrice:string|null;merchantCommissionRate:string|null;merchantCommissionRateAmount:string|null;iyziCommissionRateAmount:string|null;iyziCommissionFee:string|null;paymentEnvironment:string|null;refundStatus:string|null;canReconcile?:boolean;
 };
 
 export type ClientPaymentRequest=StudioPaymentRequest&{projectId:string;projectName:string};
